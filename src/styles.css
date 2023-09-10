@@ -1,0 +1,5 @@
+body {
+    background-color: black !important; /* Usa !important para asegurarte de que este estilo se aplique */
+    color: white; /* Esto cambia el color del texto a blanco */
+  }
+  

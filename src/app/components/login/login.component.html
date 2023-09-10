@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card bg-dark text-white">
+          <div class="card-header">
+            <h2 class="text-center">Iniciar sesión</h2>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario:</label>
+                <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control">
+              </div>
+              <div class="text-danger mb-3">{{ errorMessage }}</div> <!-- Mostrar mensaje de error -->
+              <button type="submit" class="btn btn-primary btn-block" (click)="onSubmit()">Iniciar sesión</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
