@@ -1,5 +1,8 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+/* Estilos para el tema oscuro */
 body {
-    background-color: black !important; /* Usa !important para asegurarte de que este estilo se aplique */
-    color: white; /* Esto cambia el color del texto a blanco */
+    background-color: #333 !important; /* Fondo oscuro */
+    color: #fff !important; /* Texto en color claro */
   }
   
+ 

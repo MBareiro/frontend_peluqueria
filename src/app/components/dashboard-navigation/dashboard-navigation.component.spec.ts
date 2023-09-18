@@ -1,33 +1,34 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { DashboardComponent } from './dashboard.component';
+import { DashboardNavigationComponent } from './dashboard-navigation.component';
 
-describe('DashboardComponent', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+console.log(localStorage.getItem("userId"))
+describe('DashboardNavigationComponent', () => {
+  let component: DashboardNavigationComponent;
+  let fixture: ComponentFixture<DashboardNavigationComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [DashboardComponent],
+      declarations: [DashboardNavigationComponent],
       imports: [
         NoopAnimationsModule,
         MatButtonModule,
-        MatCardModule,
-        MatGridListModule,
         MatIconModule,
-        MatMenuModule,
+        MatListModule,
+        MatSidenavModule,
+        MatToolbarModule,
       ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(DashboardNavigationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

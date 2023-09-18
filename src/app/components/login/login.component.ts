@@ -7,24 +7,24 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  username: string = '';
-  password: string = '';
-  errorMessage: string = ''; // Propiedad para almacenar mensajes de error
+export class LoginComponent { 
+  username = '';
+  password = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private AuthService: AuthService, private router: Router) {}
 
-  onSubmit(): void {
-    if (this.username == "" || this.password == "") {
-      this.errorMessage = 'Rellene todos los campos'; // Establecer mensaje de error
-    } else {
-      const isAuthenticated = this.authService.login(this.username, this.password);
-      if (isAuthenticated) {
-        // Redireccionar a la página principal de la peluquería (dashboard)
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.errorMessage = 'Usuario o contraseña incorrectos'; // Establecer mensaje de error
+  onSubmit() {
+    this.AuthService.login(this.username, this.password).subscribe(
+      (response: any) => {  // Here, 'any' is used to avoid TypeScript errors
+        const userId = response.userId;
+        localStorage.setItem('userId', userId);
+        console.log('Login successful:', response);
+        this.router.navigate(['/dash']);
+      },
+      (error) => {
+        console.error('Login error:', error);
       }
-    }    
+    );
   }
+  
 }

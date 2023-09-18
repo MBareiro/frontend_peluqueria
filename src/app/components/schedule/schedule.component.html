@@ -1,0 +1,39 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+    <!-- Day Column -->
+    <ng-container matColumnDef="day">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dia</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+    <!-- morning-active Column -->
+    <ng-container matColumnDef="morning-active">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+     <!-- morning-schedule Column -->
+     <ng-container matColumnDef="morning-schedule">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Turno manana</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>  
+
+    <!-- afternoon-active Column -->
+    <ng-container matColumnDef="afternoon-active">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+     <!-- afternoon-schedule Column -->
+     <ng-container matColumnDef="afternoon-schedule">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Turno manana</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+  </table>
+</div>

@@ -1,0 +1,8 @@
+label {
+    margin-right: 15px;
+}
+
+.card-body, th, tr, td{
+    color: white;
+    background-color: gray;
+}

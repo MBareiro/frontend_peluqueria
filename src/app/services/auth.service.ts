@@ -1,25 +1,18 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root' // Esto significa que el servicio estará disponible en toda la aplicación
 })
 export class AuthService {
-  private loggedIn = false;
+ 
+  //private baseUrl = 'http://your-flask-backend-url'; // Replace with your backend URL
+  private baseUrl =  "http://localhost:5000/usuarios";
 
-  login(username: string, password: string): boolean {
-    // Lógica de autenticación aquí, por ejemplo, verificar credenciales
-    if (username === 'usuario' && password === 'contraseña') {
-      this.loggedIn = true;
-      return true;
-    }
-    return false;
-  }
+  constructor(private http: HttpClient) {}
 
-  logout(): void {
-    this.loggedIn = false;
-  }
-
-  isLoggedIn(): boolean {
-    return this.loggedIn;
+  login(username: string, password: string) {
+    const body = { email: username, password: password };
+    return this.http.post(`${this.baseUrl}/login`, body);
   }
 }

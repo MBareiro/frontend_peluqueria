@@ -3,11 +3,11 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-dashboard-appointment',
+  templateUrl: './dashboard-appointment.component.html',
+  styleUrls: ['./dashboard-appointment.component.css']
 })
-export class DashboardComponent {
+export class DashboardAppointmentComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   /** Based on the screen size, switch from standard to one column per row */
