@@ -1,0 +1,23 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Dashboard</h1>
+  <ul>
+    <li *ngFor="let user of users">
+      {{ user.nombre }} ({{ user.email }})
+      <button (click)="updateUser(user)">Update</button>
+      <button (click)="deleteUser(user.id)">Delete</button>
+    </li>
+  </ul>
+ 
+  <div *ngIf="selectedUser">
+    <h3>Edit User</h3>
+    <label>Nombre: <input [(ngModel)]="selectedUser.nombre" /></label>
+    <label>Apellido: <input [(ngModel)]="selectedUser.apellido" /></label>
+    <label>Dirección: <input [(ngModel)]="selectedUser.direccion" /></label>
+    <label>Password: <input type="password" [(ngModel)]="selectedUser.password" /></label>
+    <label>Email: <input [(ngModel)]="selectedUser.email" /></label>
+    <button (click)="saveChanges()">Save Changes</button>
+    <button (click)="cancelUpdate()">Cancel</button>
+  </div>
+  
+  </div>
+

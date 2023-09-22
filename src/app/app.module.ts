@@ -23,14 +23,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { CreateTurnComponent } from './components/create-turn/create-turn.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ScheduleComponent } from './components/schedule/schedule.component';
 import { DashboardAppointmentComponent } from './components/dashboard-appointment/dashboard-appointment.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { CronogramaComponent } from './components/cronograma/cronograma.component';
-
+import { DashboardAccountComponent } from './components/account/dashboard-account/dashboard-account.component';
+import { DashboardUserComponent } from './components/user/dashboard-user/dashboard-user.component';
+import { UserListComponent } from './components/user/user-list/user-list.component';
+import { UserCreateComponent } from './components/user/user-create/user-create.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ListAppointmentsComponent } from './components/list-appointments/list-appointments.component';
+import { ListAppointmentComponent } from './components/list-appointment/list-appointment.component';
 
 @NgModule({
   declarations: [
@@ -42,10 +47,14 @@ import { CronogramaComponent } from './components/cronograma/cronograma.componen
     LoginComponent,
     DashboardNavigationComponent,
     CreateTurnComponent,
-    DashboardComponent,
-    ScheduleComponent,
     DashboardAppointmentComponent,
-    CronogramaComponent,
+    ScheduleComponent,
+    DashboardAccountComponent,
+    DashboardUserComponent,
+    UserListComponent,
+    UserCreateComponent,
+    ListAppointmentsComponent,
+    ListAppointmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,7 +76,9 @@ import { CronogramaComponent } from './components/cronograma/cronograma.componen
     ReactiveFormsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent]

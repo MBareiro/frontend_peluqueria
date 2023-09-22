@@ -25,3 +25,6 @@
 .col:last-child {
   margin-right: 0;
 }
+.vertical-radio-button {
+  display: block; /* Display each radio button as a block, making them appear vertically */
+}

@@ -1,4 +1,11 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard Turnos</h1>
-  <app-create-turn></app-create-turn>
+  <div class="row">
+    <div class="col">
+      <button class="btn-primary" (click)="showCreateAppointmentComponent()">Crear turno</button>
+      <button class="btn-primary" style="margin-left: 10px;" (click)="showListAppointmentComponent()">Ver Turnos</button>
+    </div>
+  </div>
+  <app-create-turn *ngIf="showCreateAppointment"></app-create-turn>
+  <app-list-appointment *ngIf="showListAppointment"></app-list-appointment>
 </div>

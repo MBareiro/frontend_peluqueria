@@ -1,0 +1,10 @@
+<div class="grid-container">
+  <h3>Add User</h3>
+
+  <label>Nombre: <input [(ngModel)]="newUser.nombre" /></label>
+  <label>Apellido: <input [(ngModel)]="newUser.apellido" /></label>
+  <label>Dirección: <input [(ngModel)]="newUser.direccion" /></label>
+  <label>Password: <input type="password" [(ngModel)]="newUser.password" /></label>
+  <label>Email: <input [(ngModel)]="newUser.email" /></label>
+  <button (click)="addUser()">Add User</button> 
+</div>
