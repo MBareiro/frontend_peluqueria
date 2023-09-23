@@ -85,24 +85,18 @@ export class ScheduleComponent {
   } 
 
   onSelectMorningStart(event: Event, dia: number) {
-    console.log(dia);
     const selectedHora = (event.target as HTMLSelectElement).value;
-    // Puedes hacer lo que necesites con la hora seleccionada
-    //console.log('Hora seleccionada:', selectedHora);
     this.horarios[dia].morning_start = selectedHora;
   }
   onSelectMorningEnd(event: Event, dia: number) {
-    console.log(dia);
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_end = selectedHora;
   }
   onSelectAfternoonStart(event: Event, dia: number) {
-    console.log(dia);
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_start = selectedHora;
   }
   onSelectAfternoonEnd(event: Event, dia: number) {
-    console.log(dia);
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_end = selectedHora;
   }
@@ -111,7 +105,7 @@ export class ScheduleComponent {
       this.horarios[dia.key] = {
         active_morning: false,
         active_afternoon: false,
-        morning_start: '',
+        morning_start: '7:00 AM',
         morning_end: '12:00 PM',
         afternoon_start: '4:00 PM',
         afternoon_end: '8:00 PM',
@@ -123,6 +117,7 @@ export class ScheduleComponent {
   guardarCambios(): void {
     // Obtén los horarios para enviar al servidor
     const horariosToSend = this.horarios;
+    console.log(horariosToSend)
 
     // Llama al método del servicio para guardar los horarios
     this.scheduleService.guardarHorarios(horariosToSend).subscribe(

@@ -78,6 +78,7 @@ export class CreateTurnComponent {
     this.horarioService.getHorarioUsuario(peluquero).subscribe(
       (data: Horario[]) => {
         this.horario = data;
+        console.log(this.horario)
         this.createRadioButtonsForDay(); // Update radio buttons when horario changes
       },
       (error) => {

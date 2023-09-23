@@ -10,21 +10,33 @@ import { Router } from '@angular/router';
 export class LoginComponent { 
   username = '';
   password = '';
+  errorMessage = '';
 
-  constructor(private AuthService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    this.AuthService.login(this.username, this.password).subscribe(
-      (response: any) => {  // Here, 'any' is used to avoid TypeScript errors
+    if (!this.username || !this.password) {
+      this.errorMessage = 'Por favor, ingresa tanto el nombre de usuario como la contraseña.';
+      return;
+    }
+
+    this.authService.login(this.username, this.password).subscribe(
+      (response: any) => {
+        console.log(response)
         const userId = response.userId;
-        localStorage.setItem('userId', userId);
+        const userName = response.userName;
         console.log('Login successful:', response);
+
+        // Guardar el ID del usuario en localStorage
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('userName', userName);
+console.log(userId)
         this.router.navigate(['/dash']);
       },
       (error) => {
         console.error('Login error:', error);
+        this.errorMessage = 'Error al iniciar sesión. Verifica tu nombre de usuario y contraseña.';
       }
     );
   }
-  
 }

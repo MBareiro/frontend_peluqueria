@@ -36,6 +36,7 @@ export class UserListComponent implements OnInit {
 
   saveChanges(): void {
     if (this.selectedUser) {
+      console.log(this.selectedUser.nombre)
       this.userService.updateUser(this.selectedUser).subscribe(
         () => {
           console.log('User updated successfully.');

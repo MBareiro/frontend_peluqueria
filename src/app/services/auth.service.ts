@@ -15,4 +15,9 @@ export class AuthService {
     const body = { email: username, password: password };
     return this.http.post(`${this.baseUrl}/login`, body);
   }
+
+  logout() {
+    // Eliminar el ID del usuario del almacenamiento local al cerrar sesión
+    localStorage.removeItem('userId');
+  }
 }

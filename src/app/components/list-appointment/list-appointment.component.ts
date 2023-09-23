@@ -28,7 +28,7 @@ export class ListAppointmentComponent {
   onRadioChange(event: MatRadioChange) {
     this.selectedValue = event.value || 'morning';  // Update selectedValue
     this.dataSource.update(this.selectedValue);  // Update the data source
-    console.log(localStorage.getItem('userId') )
+ 
   }
 
   ngAfterViewInit(): void {

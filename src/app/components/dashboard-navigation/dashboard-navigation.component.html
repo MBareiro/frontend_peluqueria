@@ -26,6 +26,11 @@
       <span>Appointment List</span>
     </button>
 
+    <button mat-button class="menu-button" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Salir</span>
+    </button>
+
 
     <!--     <mat-nav-list>
 
@@ -40,7 +45,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>frontend_peluqueria</span>
+      <span>Bienvenido {{ this.userName }}</span>
     </mat-toolbar>
 
     <!-- Add Content Here -->
@@ -48,7 +53,7 @@
     <app-dashboard-appointment *ngIf="showCreateTurn"></app-dashboard-appointment> 
     <app-user-list *ngIf="showUserList"></app-user-list>
     <app-user-create *ngIf="showUserAdd"></app-user-create>
-    <app-list-appointments *ngIf="showAppointmentList"></app-list-appointments>
+    <app-list-appointment *ngIf="showAppointmentList"></app-list-appointment>
 
 
   </mat-sidenav-content>
