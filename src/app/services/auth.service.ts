@@ -19,5 +19,6 @@ export class AuthService {
   logout() {
     // Eliminar el ID del usuario del almacenamiento local al cerrar sesión
     localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
   }
 }

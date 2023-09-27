@@ -1,23 +1,61 @@
-<div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
-  <ul>
-    <li *ngFor="let user of users">
-      {{ user.nombre }} ({{ user.email }})
-      <button (click)="updateUser(user)">Update</button>
-      <button (click)="deleteUser(user.id)">Delete</button>
-    </li>
-  </ul>
- 
-  <div *ngIf="selectedUser">
-    <h3>Edit User</h3>
-    <label>Nombre: <input [(ngModel)]="selectedUser.nombre" /></label>
-    <label>Apellido: <input [(ngModel)]="selectedUser.apellido" /></label>
-    <label>Dirección: <input [(ngModel)]="selectedUser.direccion" /></label>
-    <label>Password: <input type="password" [(ngModel)]="selectedUser.password" /></label>
-    <label>Email: <input [(ngModel)]="selectedUser.email" /></label>
-    <button (click)="saveChanges()">Save Changes</button>
-    <button (click)="cancelUpdate()">Cancel</button>
-  </div>
-  
-  </div>
+<mat-card class="shipping-card">
 
+  <!-- Dashboard Title -->
+  <mat-card-header>
+    <mat-card-title>Usuarios</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <!-- List of Users -->
+    <ol id="usersList" *ngIf="!selectedUser">
+      <li *ngFor="let user of users">
+        {{ user.nombre }} {{ user.apellido }}
+        <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i
+            class="fa-solid fa-pen"></i></button>
+        <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
+          class="btn-eliminar"><i class="fa-solid fa-trash"></i></button>
+      </li>
+    </ol>
+
+    <mat-card-content id="formUpdate">
+      <div *ngIf="selectedUser" class="edit-user-section">
+        <h3>Editar Usuario</h3>
+
+        <div class="input-field">
+          <mat-form-field>
+            <input matInput placeholder="Nombre" [(ngModel)]="selectedUser.nombre" />
+          </mat-form-field>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field>
+            <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" />
+          </mat-form-field>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field>
+            <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" />
+          </mat-form-field>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field>
+            <input matInput type="password" placeholder="Password" [(ngModel)]="selectedUser.password" />
+          </mat-form-field>
+        </div>
+
+        <div class="input-field">
+          <mat-form-field>
+            <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" />
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" (click)="saveChanges()">Save Changes</button>
+        <button mat-raised-button (click)="cancelUpdate()">Cancel</button>
+      </div>
+    </mat-card-content>
+
+  </mat-card-content>
+</mat-card>

@@ -23,7 +23,8 @@ export class ListAppointmentComponent {
   }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'peluquero'];
+  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number'];/* 
+  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'peluquero']; */
 
   onRadioChange(event: MatRadioChange) {
     this.selectedValue = event.value || 'morning';  // Update selectedValue

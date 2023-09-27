@@ -1,21 +1,44 @@
-.grid-container {
-  margin: 20px;
+/* Establece el ancho máximo de la tarjeta */
+.shipping-card {
+  max-width: 400px; /* Ajusta este valor según tu preferencia para el ancho máximo */
+  margin: 20px auto;
+  background-color: #191c24 !important;
 }
 
-.dashboard-card {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  right: 15px;
-  bottom: 15px;
+/* Estilo para los botones radio */
+.mat-radio-button {
+  display: block;
+  margin: 10px 0; /* Ajusta el margen según tu preferencia */
 }
 
-.more-button {
-  position: absolute;
-  top: 5px;
-  right: 10px;
+/* Estilo para las filas */
+.row {
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a columna para que los elementos se apilen verticalmente */
+  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
 }
 
-.dashboard-card-content {
-  text-align: center;
+/* Estilo para las columnas */
+.col {
+  flex: 1;
+  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
+}
+
+/* Elimina el margen inferior del último elemento de la columna */
+.col:last-child {
+  margin-bottom: 0;
+}
+
+/* Estilo para los botones radio en posición vertical */
+.vertical-radio-button {
+  display: block;
+}
+
+/* Estilo para el título de la tarjeta */
+mat-card-title {
+  margin-bottom: 15px;
+}
+
+.error{
+  margin-bottom: 5px;
 }

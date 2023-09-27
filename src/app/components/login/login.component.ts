@@ -30,7 +30,6 @@ export class LoginComponent {
         // Guardar el ID del usuario en localStorage
         localStorage.setItem('userId', userId);
         localStorage.setItem('userName', userName);
-console.log(userId)
         this.router.navigate(['/dash']);
       },
       (error) => {

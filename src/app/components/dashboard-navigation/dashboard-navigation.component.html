@@ -3,35 +3,47 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
 
-    <button mat-button class="menu-button" (click)="showTurnComponent()">
-      <mat-icon>person</mat-icon>
-      <span>Turnos</span>
+    <button mat-menu-item [matMenuTriggerFor]="menu">
+      <mat-icon>person</mat-icon>Turnos
     </button>
-    <mat-divider></mat-divider>
-    <button mat-button class="menu-button" (click)="showSchuduleComponent()">
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="showCreateAppointmentComponent()">
+        <mat-icon>person</mat-icon>Crear
+      </button>
+      <button mat-menu-item (click)="showListAppointmentComponent()">
+        <mat-icon>list</mat-icon>Listar
+      </button>
+    </mat-menu>
+
+    <button mat-menu-item [matMenuTriggerFor]="menu2">
+      <mat-icon>group</mat-icon>Usuarios
+    </button>
+    <mat-menu #menu2="matMenu">
+      <button mat-menu-item (click)="showUserListComponent()">
+        <mat-icon>manage_accounts</mat-icon>Administrar Cuentas
+      </button>
+      <button mat-menu-item (click)="showUserAddComponent()">
+        <mat-icon>person_add</mat-icon>Crear Usuario
+      </button>
+    </mat-menu>
+
+    <button mat-menu-item class="menu-button" (click)="showSchuduleComponent()">
       <mat-icon>schedule</mat-icon>
       <span>Cronograma</span>
     </button>
-    <mat-divider></mat-divider>
-    <button mat-button class="menu-button" (click)="showUserListComponent()">
-      <mat-icon>settings</mat-icon>
-      <span>User list</span>
-    </button>
-    <button mat-button class="menu-button" (click)="showUserAddComponent()">
-      <mat-icon>settings</mat-icon>
-      <span>User add</span>
-    </button>
-    <button mat-button class="menu-button" (click)="showAppointmentListComponent()">
-      <mat-icon>settings</mat-icon>
-      <span>Appointment List</span>
-    </button>
 
-    <button mat-button class="menu-button" (click)="logout()">
+    <button mat-menu-item  class="menu-button" (click)="logout()">
       <mat-icon>logout</mat-icon>
       <span>Salir</span>
     </button>
-
-
+    <!-- <button mat-menu-item  class="menu-button" (click)="showUserListComponent()">
+      <mat-icon>manage_accounts</mat-icon>
+      <span>Administrar Cuentas</span>
+    </button>
+    <button mat-menu-item  class="menu-button" (click)="showUserAddComponent()">
+      <mat-icon>person_add</mat-icon>
+      <span>Crear Usuario</span>
+    </button> -->
     <!--     <mat-nav-list>
 
       <a mat-list-item class="mat-list-item" (click)="showTurnComponent()">Crear Turno</a>
@@ -40,20 +52,24 @@
     </mat-nav-list> -->
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="accent">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        *ngIf="isHandset$ | async" class="drawer-toggle">
+        <mat-icon aria-label="Side nav toggle icon" class="drawer-toggle">menu</mat-icon>
       </button>
       <span>Bienvenido {{ this.userName }}</span>
     </mat-toolbar>
 
     <!-- Add Content Here -->
-    <app-schedule *ngIf="showSchudule"></app-schedule>    
-    <app-dashboard-appointment *ngIf="showCreateTurn"></app-dashboard-appointment> 
+    <app-schedule *ngIf="showSchudule"></app-schedule>
+
+    <!-- Appointment -->
+    <app-create-turn *ngIf="showCreateAppointment"></app-create-turn>
+    <app-list-appointment *ngIf="showListAppointment"></app-list-appointment>
+
+    <!-- User -->
     <app-user-list *ngIf="showUserList"></app-user-list>
     <app-user-create *ngIf="showUserAdd"></app-user-create>
-    <app-list-appointment *ngIf="showAppointmentList"></app-list-appointment>
 
 
   </mat-sidenav-content>

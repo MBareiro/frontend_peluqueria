@@ -34,9 +34,8 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ListAppointmentsComponent } from './components/list-appointments/list-appointments.component';
 import { ListAppointmentComponent } from './components/list-appointment/list-appointment.component';
-
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,8 +52,8 @@ import { ListAppointmentComponent } from './components/list-appointment/list-app
     DashboardUserComponent,
     UserListComponent,
     UserCreateComponent,
-    ListAppointmentsComponent,
     ListAppointmentComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

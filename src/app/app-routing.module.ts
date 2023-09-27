@@ -5,6 +5,7 @@ import { LoginComponent } from '../app/components/login/login.component';
 import { CreateTurnComponent } from '../app/components/create-turn/create-turn.component'; 
 import { DashboardNavigationComponent } from '../app/components/dashboard-navigation/dashboard-navigation.component'; 
 import { DashboardUserComponent } from './components/user/dashboard-user/dashboard-user.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent},  
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'create-turn', component: CreateTurnComponent },
   { path: 'dash', component: DashboardNavigationComponent },
   { path: 'dashboard-user', component: DashboardUserComponent },
+  { path: 'error-page', component: ErrorPageComponent },
 ];
 
 @NgModule({

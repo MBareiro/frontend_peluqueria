@@ -19,8 +19,7 @@ export class CreateTurnComponent {
   selectedValue: string = '';
   inicio!: boolean;
   turnos: any[] = [];
-
-
+  error!: boolean;
   constructor(
     public userService: UserService,
     public horarioService: ScheduleService,
@@ -28,6 +27,7 @@ export class CreateTurnComponent {
   ) {
     this.chargeUser();
     this.inicio = false;
+    this.error = false;
   }
 
   private fb = inject(FormBuilder);
@@ -45,6 +45,7 @@ export class CreateTurnComponent {
   hasUnitNumber = false;
 
   onSubmit(): void {
+    console.log('onSubmit')
     // Aquí puedes acceder a los valores del formulario
     const formData = this.addressForm.value;
 
@@ -106,25 +107,27 @@ export class CreateTurnComponent {
   createRadioButtonsForDay(): any[] {
     let radioButtons = [];
     const periodo = this.addressForm.get('schedule')?.value;
-  
+    
     if (this.horario && this.selectedDate) {
+
       const selectedDay = this.selectedDate.getDay();
+      console.log(selectedDay)
  
   
       if (this.horario[selectedDay]) {
-        let morning_start: string | undefined;
-        let morning_end: string | undefined;
+        let period_start: string | undefined;
+        let period_end: string | undefined;
   
-        if (periodo === 'morning') {
-          morning_start = this.horario[selectedDay]?.morning_start;
-          morning_end = this.horario[selectedDay]?.morning_end;
-        } else if (periodo === 'afternoon') {
-          morning_start = this.horario[selectedDay]?.afternoon_start;
-          morning_end = this.horario[selectedDay]?.afternoon_end;
+        if (periodo === 'morning' && this.horario[selectedDay]?.active_morning) {
+          period_start = this.horario[selectedDay]?.morning_start;
+          period_end = this.horario[selectedDay]?.morning_end;
+        } else if (periodo === 'afternoon' && this.horario[selectedDay]?.active_afternoon) {
+          period_start = this.horario[selectedDay]?.afternoon_start;
+          period_end = this.horario[selectedDay]?.afternoon_end;
         }
   
-        if (morning_start && morning_end) {
-          const horariosDelDia = this.generarHorasAM(morning_start, morning_end);
+        if (period_start && period_end) {
+          const horariosDelDia = this.generarHorasAM(period_start, period_end);
           radioButtons.push(
             ...horariosDelDia.map((hora, index) => ({
               id: `radio_${index}`,
@@ -132,23 +135,29 @@ export class CreateTurnComponent {
               label: hora,
             }))
           );
+        } 
+        // si el periodo es elegido "morning" y el periodo morning es activo, no hay error
+        if(periodo === "morning" && !this.horario[selectedDay]?.active_morning || periodo === "afternoon" && !this.horario[selectedDay]?.active_afternoon){
+          this.error = true;
+        } else if(periodo === "morning" && this.horario[selectedDay]?.active_morning || periodo === "afternoon" && this.horario[selectedDay]?.active_afternoon){
+          this.error = false;
         }
+
       }
     }
     return radioButtons;
   }
   
 
-  generarHorasAM(morning_start: string, morning_end: string): string[] {
-    const startTimeParts = morning_start.split(':');
+  generarHorasAM(period_start: string, period_end: string): string[] {
+    const startTimeParts = period_start.split(':');
     const startHour = parseInt(startTimeParts[0], 10);
 
-    const endTimeParts = morning_end.split(':');
+    const endTimeParts = period_end.split(':');
     const endHour = parseInt(endTimeParts[0], 10);
     const endMinute = parseInt(endTimeParts[1], 10);
-
     const intervalInMinutes = 30;
-    const horasAM: string[] = [];
+    const horas: string[] = [];
 
     for (let hour = startHour; hour <= endHour; hour++) {
       for (let minute = 0; minute < 60; minute += intervalInMinutes) {
@@ -156,13 +165,14 @@ export class CreateTurnComponent {
           break;
         }
         const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-        const formattedMinute = minute === 0 ? '00' : `${minute}`;
-        const amPm = hour < 12 ? 'AM' : 'PM';
-        const formattedTime = `${formattedHour}:${formattedMinute} ${amPm}`;
-        horasAM.push(formattedTime);
+        const formattedMinute = minute === 0 ? '00' : `${minute}`;/* 
+        const amPm = hour < 12 ? 'AM' : 'PM'; */
+        const formattedTime = `${formattedHour}:${formattedMinute} `;
+        horas.push(formattedTime);
       }
     }
-    return horasAM;
+    console.log("horas " , horas)
+    return horas;
   }
   
 }

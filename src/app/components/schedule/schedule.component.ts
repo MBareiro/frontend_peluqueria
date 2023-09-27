@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ScheduleService } from '../../services/schedule.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-schedule',
@@ -7,41 +8,40 @@ import { ScheduleService } from '../../services/schedule.service';
   styleUrls: ['./schedule.component.css'],
 })
 export class ScheduleComponent {
- 
   dias = [
-    { key: 1, valor: 'Lunes' },
-    { key: 2, valor: 'Martes' },
-    { key: 3, valor: 'Miércoles' },
-    { key: 4, valor: 'Jueves' },
-    { key: 5, valor: 'Viernes' },
-    { key: 6, valor: 'Sábado' },
-    { key: 7, valor: 'Domingo' },
+    { key: 2, valor: 'Lunes' },
+    { key: 3, valor: 'Martes' },
+    { key: 4, valor: 'Miércoles' },
+    { key: 5, valor: 'Jueves' },
+    { key: 6, valor: 'Viernes' },
+    { key: 7, valor: 'Sábado' },
+    { key: 1, valor: 'Domingo' },
   ];
 
   horasAM = [
-    '7:00 AM',
-    '7:30 AM',
-    '8:00 AM',
-    '8:30 AM',
-    '9:00 AM',
-    '9:30 AM',
-    '10:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '11:30 AM',
-    '12:00 PM',
+    '7:00',
+    '7:30',
+    '8:00',
+    '8:30',
+    '9:00',
+    '9:30',
+    '10:00',
+    '10:30',
+    '11:00',
+    '11:30',
+    '12:00',
   ];
 
   horasPM = [
-    '16:00 PM',
-    '16:30 PM',
-    '17:00 PM',
-    '17:30 PM',
-    '18:00 PM',
-    '18:30 PM',
-    '19:00 PM',
-    '19:30 PM',
-    '20:00 PM',
+    '16:00',
+    '16:30',
+    '17:00',
+    '17:30',
+    '18:00',
+    '18:30',
+    '19:00',
+    '19:30',
+    '20:00',
   ];
 
   horarios: { [key: number]: any } = {};
@@ -107,8 +107,8 @@ export class ScheduleComponent {
         active_afternoon: false,
         morning_start: '7:00 AM',
         morning_end: '12:00 PM',
-        afternoon_start: '4:00 PM',
-        afternoon_end: '8:00 PM',
+        afternoon_start: '16:00 PM',
+        afternoon_end: '20:00 PM',
         userId: localStorage.getItem('userId'),
       };
     });

@@ -10,22 +10,24 @@
   background: inherit;
 }
 
-
 .mat-toolbar, .mat-primary {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #191c24;
+  background-color: #191c24 !important;
+  
   color: white;
-  justify-content: center;
 }
 
-
-.mat-sidenav, .mat-nav-list, a, span, .mat-list-item, mat-icon{
-  background: black;
+.mat-sidenav, .mat-nav-list, a, .mat-list-item{
+  text-align: center;  
+  background-color: #191c24 !important;
   color: white;
-  text-align: center;
 } 
-.mat-sidenav-container{
+.mat-sidenav-container, mat-icon, span{
   background: transparent;
+}
+
+.drawer-toggle{
+  color: white;
 }

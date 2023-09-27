@@ -15,14 +15,18 @@ export class DashboardNavigationComponent {
   userName: string | null;
   constructor(private authService: AuthService, private router: Router) {
     this.userName = localStorage.getItem('userName');
+    console.log(this.userName)
+    if(!this.userName){
+      this.router.navigate(['/error-page']);
+    }
   }
 
   private breakpointObserver = inject(BreakpointObserver);
-  showCreateTurn = true; // Mostrar el componente "Crear Turno" de forma predeterminada
+  showCreateAppointment = true; // Mostrar el componente "Crear Appointmento" de forma predeterminada
   showSchudule = false;
   showUserList= false;
   showUserAdd= false;
-  showAppointmentList= false;
+  showListAppointment= false;
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -33,45 +37,52 @@ export class DashboardNavigationComponent {
 
     logout() {
       this.authService.logout();
-      this.router.navigate(['/login']);  // Redirigir a la página de inicio de sesión
+      this.router.navigate(['/']);  // Redirigir a la página de inicio de sesión
     }
 
-  showTurnComponent() {
-    this.showCreateTurn = true;
+  showAppointmentComponent() {
+    this.showCreateAppointment = true;
     this.showSchudule = false;    
     this.showUserList = false;  
     this.showUserAdd = false; 
-    this.showAppointmentList = false;
+    this.showListAppointment = false;
+  }
+  showCreateAppointmentComponent(){
+    this.showCreateAppointment = true;
+    this.showSchudule = false;    
+    this.showUserList = false;  
+    this.showUserAdd = false; 
+    this.showListAppointment = false;
   }
 
   showSchuduleComponent() {
-    this.showCreateTurn = false;
+    this.showCreateAppointment = false;
     this.showSchudule = true;    
     this.showUserList = false; 
     this.showUserAdd = false; 
-    this.showAppointmentList = false;
+    this.showListAppointment = false;
   }
   
   showUserListComponent() {
-    this.showCreateTurn = false;
+    this.showCreateAppointment = false;
     this.showUserList = true;
     this.showSchudule = false;       
     this.showUserAdd = false; 
-    this.showAppointmentList = false;
+    this.showListAppointment = false;
   }
   
   showUserAddComponent() {
-    this.showCreateTurn = false;
+    this.showCreateAppointment = false;
     this.showUserList = false;
     this.showSchudule = false;   
     this.showUserAdd = true;
-    this.showAppointmentList = false;
+    this.showListAppointment = false;
   }
-  showAppointmentListComponent() {
-    this.showCreateTurn = false;
+  showListAppointmentComponent() {
+    this.showCreateAppointment = false;
     this.showUserList = false;
     this.showSchudule = false;   
     this.showUserAdd = false;
-    this.showAppointmentList = true;
+    this.showListAppointment = true;
   }
 }
