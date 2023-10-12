@@ -5,10 +5,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
-import { FooterComponent } from './components/footer/footer.component';
+import { FooterComponent } from './components/shared/footer/footer.component';
 import { DashboardNavigationComponent } from './components/dashboard-navigation/dashboard-navigation.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderComponent } from './components/shared/header/header.component';
 import { LoginComponent } from './components/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,20 +22,20 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { CreateTurnComponent } from './components/create-turn/create-turn.component';
-import { DashboardAppointmentComponent } from './components/dashboard-appointment/dashboard-appointment.component';
+import { CreateAppointmentComponent } from './components/appointment/create-appointment/create-appointment.component';
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { DashboardAccountComponent } from './components/account/dashboard-account/dashboard-account.component';
-import { DashboardUserComponent } from './components/user/dashboard-user/dashboard-user.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ListAppointmentComponent } from './components/list-appointment/list-appointment.component';
-import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { ListAppointmentComponent } from './components/appointment/list-appointment/list-appointment.component';
+import { ErrorPageComponent } from './components/shared/error-page/error-page.component';
+import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
+import { ProfileComponent } from './components/account/profile/profile.component';
+import { ChangeEmailComponent } from './components/account/change-email/change-email.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,15 +45,16 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
     HeaderComponent,
     LoginComponent,
     DashboardNavigationComponent,
-    CreateTurnComponent,
-    DashboardAppointmentComponent,
+    CreateAppointmentComponent,
     ScheduleComponent,
-    DashboardAccountComponent,
-    DashboardUserComponent,
     UserListComponent,
     UserCreateComponent,
     ListAppointmentComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    ChangePasswordComponent,
+    ProfileComponent,
+    ChangeEmailComponent,
+    
   ],
   imports: [
     BrowserModule,

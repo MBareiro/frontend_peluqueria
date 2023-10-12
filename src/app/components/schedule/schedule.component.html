@@ -1,10 +1,8 @@
 <mat-card class="shipping-card">
-  
-  <mat-card-header>
-    <mat-card-title>Crear Turno</mat-card-title>
-  </mat-card-header>
-
   <mat-card-content>
+    <mat-card-header>
+      <mat-card-title>Cronograma</mat-card-title>
+    </mat-card-header>
     <form id="formHorario" (ngSubmit)="guardarCambios()" class="form">
       <div class="table-responsive">
         <table class="table table-bordered">
@@ -21,7 +19,7 @@
             <tr *ngFor="let dia of dias">
               <td>{{ dia.valor }}</td>
               <td>
-                <div class="form-check form-switch">
+                <div class="form-group form-switch">
                   <input type="checkbox" name="active_morning" class="form-check-input"
                     [checked]="horarios[dia.key]?.active_morning" (change)="toggleCheckbox(dia.key, 'active_morning')">
                 </div>
@@ -29,40 +27,45 @@
               <td>
                 <div class="form-group">
                   <label for="morning_start">Desde:</label>
-                  <select name="morning_start"  (change)="onSelectMorningStart($event, dia.key)">
-                    <option *ngFor="let hora of horasAM" [value]="hora" [selected]="horarios[dia.key]?.morning_start === hora">
+                  <select name="morning_start" (change)="onSelectMorningStart($event, dia.key)">
+                    <option *ngFor="let hora of horasAM" [value]="hora"
+                      [selected]="horarios[dia.key]?.morning_start === hora">
                       {{ hora }}
                     </option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="morning_end">Hasta:</label>
-                  <select name="morning_end"  (change)="onSelectMorningEnd($event, dia.key)">
-                    <option *ngFor="let hora of horasAM" [value]="hora" [selected]="horarios[dia.key]?.morning_end === hora">
+                  <select name="morning_end" (change)="onSelectMorningEnd($event, dia.key)">
+                    <option *ngFor="let hora of horasAM" [value]="hora"
+                      [selected]="horarios[dia.key]?.morning_end === hora">
                       {{ hora }}
                     </option>
                   </select>
                 </div>
               </td>
               <td>
-                <div class="form-check form-switch">
+                <div class="form-group form-switch">
                   <input type="checkbox" name="active_afternoon" class="form-check-input"
-                    [checked]="horarios[dia.key]?.active_afternoon" (change)="toggleCheckbox(dia.key, 'active_afternoon')">
+                    [checked]="horarios[dia.key]?.active_afternoon"
+                    (change)="toggleCheckbox(dia.key, 'active_afternoon')">
                 </div>
               </td>
               <td>
                 <div class="form-group">
                   <label for="afternoon_start" class="ml-2">Desde:</label>
-                  <select name="afternoon_start"  (change)="onSelectAfternoonStart($event, dia.key)">
-                    <option *ngFor="let hora of horasPM" [value]="hora" [selected]="horarios[dia.key]?.afternoon_start === hora">
+                  <select name="afternoon_start" (change)="onSelectAfternoonStart($event, dia.key)">
+                    <option *ngFor="let hora of horasPM" [value]="hora"
+                      [selected]="horarios[dia.key]?.afternoon_start === hora">
                       {{ hora }}
                     </option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="afternoon_end">Hasta:</label>
-                  <select name="afternoon_end"  (change)="onSelectAfternoonEnd($event, dia.key)">
-                    <option *ngFor="let hora of horasPM" [value]="hora" [selected]="horarios[dia.key]?.afternoon_end === hora">
+                  <select name="afternoon_end" (change)="onSelectAfternoonEnd($event, dia.key)">
+                    <option *ngFor="let hora of horasPM" [value]="hora"
+                      [selected]="horarios[dia.key]?.afternoon_end === hora">
                       {{ hora }}
                     </option>
                   </select>
@@ -73,11 +76,8 @@
         </table>
       </div>
       <mat-card-actions>
-      
-          <button mat-raised-button color="accent" type="submit">Guardar</button>
-    
+        <button mat-raised-button color="accent" type="submit">Guardar</button>
       </mat-card-actions>
-      
     </form>
   </mat-card-content>
 

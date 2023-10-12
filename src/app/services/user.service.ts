@@ -30,4 +30,33 @@ export class UserService {
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
+    const body = {
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword
+    };
+    return this.http.post(`${this.apiUrl}/change-password/${userId}`, body);
+  }
+
+  verifyIdUser(): number | null {
+    const userId: string | null = localStorage.getItem('userId');
+  
+    if (userId !== null) {
+      const userIdNumber: number = parseInt(userId, 10); // Convertir a número
+  
+      if (!isNaN(userIdNumber)) {
+        // userIdNumber ahora es un número válido
+        console.log('User ID:', userIdNumber);
+        return userIdNumber;
+      } else {
+        console.error('No se pudo convertir a número:', userId);
+        return null;
+      }
+    } else {
+      console.error('No se pudo obtener el User ID desde localStorage.');
+      return null;
+    }
+  }
 }

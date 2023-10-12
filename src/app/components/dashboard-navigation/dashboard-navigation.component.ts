@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { ScheduleComponent } from '../schedule/schedule.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 @Component({
@@ -15,10 +14,7 @@ export class DashboardNavigationComponent {
   userName: string | null;
   constructor(private authService: AuthService, private router: Router) {
     this.userName = localStorage.getItem('userName');
-    console.log(this.userName)
-    if(!this.userName){
-      this.router.navigate(['/error-page']);
-    }
+    authService.authorized()
   }
 
   private breakpointObserver = inject(BreakpointObserver);
@@ -27,6 +23,9 @@ export class DashboardNavigationComponent {
   showUserList= false;
   showUserAdd= false;
   showListAppointment= false;
+  showChangePassword = false;
+  showProfile = false;
+  showEmail = false;
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -40,7 +39,41 @@ export class DashboardNavigationComponent {
       this.router.navigate(['/']);  // Redirigir a la página de inicio de sesión
     }
 
+    showEmailComponent(){
+      this.showEmail = true;
+      this.showProfile = false;
+      this.showChangePassword = false;
+      this.showCreateAppointment = false;
+      this.showSchudule = false;    
+      this.showUserList = false;  
+      this.showUserAdd = false; 
+      this.showListAppointment = false;
+    }
+
+    showProfileComponent() {
+      this.showEmail = false;
+      this.showProfile = true;
+      this.showChangePassword = false;
+      this.showCreateAppointment = false;
+      this.showSchudule = false;    
+      this.showUserList = false;  
+      this.showUserAdd = false; 
+      this.showListAppointment = false;
+    }
+    showChangePasswordComponent() {
+      this.showEmail = false;
+      this.showProfile = false;
+      this.showChangePassword = true;
+      this.showCreateAppointment = false;
+      this.showSchudule = false;    
+      this.showUserList = false;  
+      this.showUserAdd = false; 
+      this.showListAppointment = false;
+    }
   showAppointmentComponent() {
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = true;
     this.showSchudule = false;    
     this.showUserList = false;  
@@ -48,6 +81,9 @@ export class DashboardNavigationComponent {
     this.showListAppointment = false;
   }
   showCreateAppointmentComponent(){
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = true;
     this.showSchudule = false;    
     this.showUserList = false;  
@@ -56,6 +92,9 @@ export class DashboardNavigationComponent {
   }
 
   showSchuduleComponent() {
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = false;
     this.showSchudule = true;    
     this.showUserList = false; 
@@ -64,6 +103,9 @@ export class DashboardNavigationComponent {
   }
   
   showUserListComponent() {
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = false;
     this.showUserList = true;
     this.showSchudule = false;       
@@ -72,6 +114,9 @@ export class DashboardNavigationComponent {
   }
   
   showUserAddComponent() {
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = false;
     this.showUserList = false;
     this.showSchudule = false;   
@@ -79,6 +124,9 @@ export class DashboardNavigationComponent {
     this.showListAppointment = false;
   }
   showListAppointmentComponent() {
+    this.showEmail = false;
+    this.showChangePassword = false;
+    this.showProfile = false;
     this.showCreateAppointment = false;
     this.showUserList = false;
     this.showSchudule = false;   

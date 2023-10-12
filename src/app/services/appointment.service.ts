@@ -26,5 +26,11 @@ export class AppointmentService {
       `${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}`
     );
   }
+
+  getSpecificAppointments(selectedTime: string, selectedDate: string, peluqueroID: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`
+    );
+  }
   
 }

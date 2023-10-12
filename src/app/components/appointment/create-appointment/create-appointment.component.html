@@ -7,8 +7,8 @@
       
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Nombre" formControlName="firstName">
-          <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
+          <input matInput placeholder="Nombre" formControlName="firstName" (keydown)="onKeyDown($event)">
+          <mat-error *ngIf="!isFirstNameInvalid()">
             Nombre is <strong>required</strong>
           </mat-error>
         </mat-form-field>
@@ -16,7 +16,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Apellido" formControlName="lastName">
+          <input matInput placeholder="Apellido" formControlName="lastName" (keydown)="onKeyDown($event)">
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
             Apellido is <strong>required</strong>
           </mat-error>
@@ -25,9 +25,8 @@
 
 
       <div class="row">
-
         <mat-form-field class="full-width">
-          <input matInput placeholder="Telefono" formControlName="phoneNumber">
+          <input matInput placeholder="Telefono" formControlName="phoneNumber" (keydown)="onlyNumbers($event)">
           <mat-error *ngIf="addressForm.controls['phoneNumber'].hasError('required')">
             Telefono is <strong>required</strong>
           </mat-error>
@@ -35,9 +34,10 @@
       </div>
 
       <div class="row">
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Email" formControlName="email">
-          <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="john_doe@example.com" formControlName="email" required>
+          <mat-error *ngIf="addressForm.controls['email'].hasError('required') || addressForm.controls['email'].hasError('email')">
             Email is <strong>required</strong>
           </mat-error>
         </mat-form-field>
@@ -45,9 +45,8 @@
 
 
       <div class="row">
-
         <mat-form-field class="full-width">
-          <mat-select placeholder="Peluquero" formControlName="peluquero">
+          <mat-select placeholder="Peluquero" formControlName="peluquero" (valueChange)="peluquero()">
             <mat-option *ngFor="let user of users" [value]="user.id">
               {{ user.nombre }}
             </mat-option>
@@ -61,7 +60,7 @@
       <div class="row">
         <mat-form-field>
           <mat-label>Choose a date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" (dateChange)="fechaSeleccionada($event)">
+          <input matInput [matDatepicker]="picker"  formControlName="date" (dateChange)="fechaSeleccionada($event)" [min]="minDate" >
           <!--   <mat-hint>MM/DD/YYYY</mat-hint> -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
@@ -82,7 +81,10 @@
         </mat-error>
       </div>
 
-      <mat-radio-group formControlName="selectedRadio">
+      <mat-radio-group formControlName="selectedRadio" >
+        <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
+          Elija una opcion <strong>required</strong>
+        </mat-error>
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}

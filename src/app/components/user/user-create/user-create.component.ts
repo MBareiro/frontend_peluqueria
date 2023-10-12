@@ -14,7 +14,8 @@ export class UserCreateComponent {
   addressForm = this.fb.group({
     firstName: [null, Validators.required],
     lastName: [null, Validators.required],    
-    direccion: [null, Validators.required],    
+    direccion: [null, Validators.required],  
+    telefono: [null, Validators.required],      
     password: [null, Validators.required],
     email: [null, Validators.required],
   });
@@ -33,7 +34,8 @@ export class UserCreateComponent {
       apellido: formData.lastName || '',   // Provide a default empty string if null or undefined
       direccion: formData.direccion || '', // Provide a default empty string if null or undefined
       password: formData.password || '',   // Provide a default empty string if null or undefined
-      email: formData.email || ''          // Provide a default empty string if null or undefined
+      email: formData.email || ''  ,        // Provide a default empty string if null or undefined
+      telefono: formData.telefono || ''
     };
   
     // Call the service to add the user

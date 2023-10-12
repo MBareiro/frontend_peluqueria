@@ -22,15 +22,13 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe(
       (response: any) => {
-        console.log(response)
-        const userId = response.userId;
-        const userName = response.userName;
-        console.log('Login successful:', response);
+        const userId = response.usuario.id;
+        const userName = response.usuario.apellido;
 
         // Guardar el ID del usuario en localStorage
         localStorage.setItem('userId', userId);
         localStorage.setItem('userName', userName);
-        this.router.navigate(['/dash']);
+        this.router.navigate(['/dashboard']);
       },
       (error) => {
         console.error('Login error:', error);

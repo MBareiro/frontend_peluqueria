@@ -1,8 +1,32 @@
 <mat-card class="mat-elevation-z8">
-  <mat-radio-group (change)="onRadioChange($event)" class="radioGroup">
-    <mat-radio-button class="vertical-radio-button" value="morning" checked="true">Turno mañana</mat-radio-button>
-    <mat-radio-button class="vertical-radio-button" value="afternoon">Turno tarde</mat-radio-button>
-  </mat-radio-group>
+  <mat-card-content>
+    <mat-radio-group (change)="onRadioChange($event)" class="radioGroup">
+      <mat-radio-button class="vertical-radio-button" value="morning" checked="true">Turno mañana</mat-radio-button>
+      <mat-radio-button class="vertical-radio-button" value="afternoon">Turno tarde</mat-radio-button>    
+    </mat-radio-group>
+    
+    <!-- <mat-form-field>
+      <mat-select placeholder="Peluquero" formControlName="peluquero">
+        <mat-option>dfgd</mat-option>    
+      </mat-select>
+      <mat-error >
+        Peluquero es <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput formControlName="date" >
+        <mat-hint>MM/DD/YYYY</mat-hint> 
+      <mat-datepicker-toggle matIconSuffix ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error >
+        Fecha es <strong>required</strong>
+      </mat-error>
+    </mat-form-field> -->
+
+  </mat-card-content>
+  
   <mat-card-content>
     <div class="table-container"><table mat-table class="full-width-table" matSort aria-label="Elements">
       <!-- Id Column -->

@@ -105,10 +105,10 @@ export class ScheduleComponent {
       this.horarios[dia.key] = {
         active_morning: false,
         active_afternoon: false,
-        morning_start: '7:00 AM',
-        morning_end: '12:00 PM',
-        afternoon_start: '16:00 PM',
-        afternoon_end: '20:00 PM',
+        morning_start: '7:00',
+        morning_end: '12:00',
+        afternoon_start: '16:00',
+        afternoon_end: '20:00',
         userId: localStorage.getItem('userId'),
       };
     });

@@ -3,7 +3,7 @@ import { MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ListAppointmentDataSource, ListAppointmentItem } from './list-appointment-datasource';
-import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentService } from '../../../services/appointment.service';
 import { MatRadioChange } from '@angular/material/radio';
 
 @Component({

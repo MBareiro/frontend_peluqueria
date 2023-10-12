@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
-import { AppointmentService } from '../../services/appointment.service';
+import { AppointmentService } from '../../../services/appointment.service';
 import { BehaviorSubject } from 'rxjs';
 
 // TODO: Replace this with your own data model type

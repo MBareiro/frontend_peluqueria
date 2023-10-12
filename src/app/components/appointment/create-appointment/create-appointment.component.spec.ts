@@ -7,15 +7,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 
-import { CreateTurnComponent } from './create-turn.component';
+import { CreateAppointmentComponent } from './create-appointment.component';
 
-describe('CreateTurnComponent', () => {
-  let component: CreateTurnComponent;
-  let fixture: ComponentFixture<CreateTurnComponent>;
+describe('CreateAppointmentComponent', () => {
+  let component: CreateAppointmentComponent;
+  let fixture: ComponentFixture<CreateAppointmentComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CreateTurnComponent],
+      declarations: [CreateAppointmentComponent],
       imports: [
         NoopAnimationsModule,
         ReactiveFormsModule,
@@ -29,7 +29,7 @@ describe('CreateTurnComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateTurnComponent);
+    fixture = TestBed.createComponent(CreateAppointmentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

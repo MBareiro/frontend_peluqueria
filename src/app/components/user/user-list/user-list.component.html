@@ -1,61 +1,61 @@
 <mat-card class="shipping-card">
 
   <!-- Dashboard Title -->
-  <mat-card-header>
-    <mat-card-title>Usuarios</mat-card-title>
+  
+
+  <mat-card-content *ngIf="!selectedUser">
+    <mat-card-header>
+      <mat-card-title>Usuarios</mat-card-title>
+    </mat-card-header>
+    <mat-list >
+      <mat-list-item *ngFor="let user of users">
+        {{ user.nombre }} {{ user.apellido }} {{ user.email }} {{ user.direccion }}
+            <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i
+                class="fa-solid fa-pen"></i></button>
+            <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
+              class="btn-eliminar"><i class="fa-solid fa-trash"></i></button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+
+
+  <mat-card-header *ngIf="selectedUser">
+    <mat-card-title>Editar Usuario</mat-card-title>
   </mat-card-header>
-
-  <mat-card-content>
-
-    <!-- List of Users -->
-    <ol id="usersList" *ngIf="!selectedUser">
-      <li *ngFor="let user of users">
-        {{ user.nombre }} {{ user.apellido }}
-        <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i
-            class="fa-solid fa-pen"></i></button>
-        <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
-          class="btn-eliminar"><i class="fa-solid fa-trash"></i></button>
-      </li>
-    </ol>
-
-    <mat-card-content id="formUpdate">
-      <div *ngIf="selectedUser" class="edit-user-section">
-        <h3>Editar Usuario</h3>
-
-        <div class="input-field">
-          <mat-form-field>
-            <input matInput placeholder="Nombre" [(ngModel)]="selectedUser.nombre" />
-          </mat-form-field>
-        </div>
-
-        <div class="input-field">
-          <mat-form-field>
-            <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" />
-          </mat-form-field>
-        </div>
-
-        <div class="input-field">
-          <mat-form-field>
-            <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" />
-          </mat-form-field>
-        </div>
-
-        <div class="input-field">
-          <mat-form-field>
-            <input matInput type="password" placeholder="Password" [(ngModel)]="selectedUser.password" />
-          </mat-form-field>
-        </div>
-
-        <div class="input-field">
-          <mat-form-field>
-            <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" />
-          </mat-form-field>
-        </div>
-
-        <button mat-raised-button color="primary" (click)="saveChanges()">Save Changes</button>
-        <button mat-raised-button (click)="cancelUpdate()">Cancel</button>
+  <mat-card-content id="formUpdate">
+    <div *ngIf="selectedUser" class="edit-user-section">
+      <div class="row">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Nombre" [(ngModel)]="selectedUser.nombre" />
+        </mat-form-field>
       </div>
-    </mat-card-content>
 
+      <div class="row">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="full-width">
+          <input matInput type="password" placeholder="Password" [(ngModel)]="selectedUser.password" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" />
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="accent" (click)="saveChanges()">Guardar</button>
+      <button mat-raised-button (click)="cancelUpdate()">Cancelar</button>
+    </div>
   </mat-card-content>
 </mat-card>

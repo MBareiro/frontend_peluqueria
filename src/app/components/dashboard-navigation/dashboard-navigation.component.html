@@ -8,10 +8,10 @@
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="showCreateAppointmentComponent()">
-        <mat-icon>person</mat-icon>Crear
+        <mat-icon>person</mat-icon>Crear Turno
       </button>
       <button mat-menu-item (click)="showListAppointmentComponent()">
-        <mat-icon>list</mat-icon>Listar
+        <mat-icon>list</mat-icon>Listar Turnos
       </button>
     </mat-menu>
 
@@ -32,25 +32,30 @@
       <span>Cronograma</span>
     </button>
 
+   <!--  <button mat-menu-item class="menu-button" (click)="showChangePasswordComponent()">
+      <mat-icon>settings</mat-icon>
+      <span>Configuraciones</span>
+    </button>
+ -->   
+ <button mat-menu-item class="menu-button" (click)="showChangePasswordComponent()">
+  <mat-icon>lock</mat-icon>
+  <span>Seguridad</span>
+</button>
+    
+
+    <button mat-menu-item class="menu-button" (click)="showProfileComponent()">
+      <mat-icon>account_circle</mat-icon>
+      <span>Perfil</span>
+    </button>
+
     <button mat-menu-item  class="menu-button" (click)="logout()">
       <mat-icon>logout</mat-icon>
       <span>Salir</span>
     </button>
-    <!-- <button mat-menu-item  class="menu-button" (click)="showUserListComponent()">
-      <mat-icon>manage_accounts</mat-icon>
-      <span>Administrar Cuentas</span>
-    </button>
-    <button mat-menu-item  class="menu-button" (click)="showUserAddComponent()">
-      <mat-icon>person_add</mat-icon>
-      <span>Crear Usuario</span>
-    </button> -->
-    <!--     <mat-nav-list>
 
-      <a mat-list-item class="mat-list-item" (click)="showTurnComponent()">Crear Turno</a>
-      <a mat-list-item (click)="showSchuduleComponent()">Cronograma</a> 
-      <a mat-list-item href="#">cronmo</a>
-    </mat-nav-list> -->
   </mat-sidenav>
+
+
   <mat-sidenav-content>
     <mat-toolbar color="accent">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
@@ -64,13 +69,18 @@
     <app-schedule *ngIf="showSchudule"></app-schedule>
 
     <!-- Appointment -->
-    <app-create-turn *ngIf="showCreateAppointment"></app-create-turn>
+    <app-create-appointment *ngIf="showCreateAppointment"></app-create-appointment>
     <app-list-appointment *ngIf="showListAppointment"></app-list-appointment>
 
     <!-- User -->
     <app-user-list *ngIf="showUserList"></app-user-list>
     <app-user-create *ngIf="showUserAdd"></app-user-create>
 
+    <!-- Account settings -->
+    <app-change-password *ngIf="showChangePassword"></app-change-password>
+    <app-profile *ngIf="showProfile"></app-profile>
+
+    <app-footer></app-footer>
 
   </mat-sidenav-content>
 </mat-sidenav-container>

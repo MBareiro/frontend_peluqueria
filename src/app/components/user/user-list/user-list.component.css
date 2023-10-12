@@ -1,6 +1,6 @@
 /* Establece el ancho máximo de la tarjeta */
 .shipping-card {
-  max-width: 400px; /* Ajusta este valor según tu preferencia para el ancho máximo */
+  max-width: 600px; /* Ajusta este valor según tu preferencia para el ancho máximo */
   margin: 20px auto;
   background-color: #191c24 !important;
 }
@@ -41,4 +41,12 @@ mat-card-title {
 
 .error{
   margin-bottom: 5px;
+}
+
+.btn-actualizar, .btn-eliminar {
+  margin-left: 15px;
+}
+
+.title_users{
+  justify-content: center;
 }

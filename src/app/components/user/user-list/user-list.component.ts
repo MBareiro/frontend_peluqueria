@@ -9,7 +9,7 @@ import { User } from '../../../models/user.model';
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
-  newUser: User = { id: 0, nombre: '', apellido: '', direccion: '', password: '', email: '' };
+  newUser: User = { id: 0, nombre: '', apellido: '', direccion: '', password: '', email: '', telefono: ''};
   selectedUser: User | null = null;
 
   constructor(private userService: UserService) {}
@@ -37,6 +37,7 @@ export class UserListComponent implements OnInit {
 
   saveChanges(): void {
     if (this.selectedUser) {
+      console.log(this.selectedUser)
       this.userService.updateUser(this.selectedUser).subscribe(
         () => {
           console.log('User updated successfully.');

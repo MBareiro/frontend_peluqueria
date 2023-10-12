@@ -11,23 +11,43 @@
 }
 
 .mat-toolbar, .mat-primary {
-  position: sticky;
-  top: 0;
-  z-index: 1;
   background-color: #191c24 !important;
-  
   color: white;
 }
 
-.mat-sidenav, .mat-nav-list, a, .mat-list-item{
+.mat-sidenav, .mat-nav-list, a, .mat-list-item {
   text-align: center;  
   background-color: #191c24 !important;
   color: white;
-} 
-.mat-sidenav-container, mat-icon, span{
+}
+
+.mat-sidenav-container, mat-icon, span {
   background: transparent;
 }
 
-.drawer-toggle{
+.drawer-toggle {
   color: white;
+}
+
+/* Estilo para el footer */
+.mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+mat-sidenav-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  background-color: #191c24;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
