@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
       id: [''],
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
+      direccion: ['', [Validators.required]],
       telefono: ['', [Validators.required]], 
       email: ['', [Validators.required, Validators.email]],
     });

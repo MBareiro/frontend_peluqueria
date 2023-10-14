@@ -9,7 +9,7 @@ import { User } from '../../../models/user.model';
 })
 export class UserListComponent implements OnInit {
   users: User[] = [];
-  newUser: User = { id: 0, nombre: '', apellido: '', direccion: '', password: '', email: '', telefono: ''};
+  newUser: User = { id: 0, nombre: '', apellido: '', direccion: '', password: '', email: '', telefono: '', role: ''};
   selectedUser: User | null = null;
 
   constructor(private userService: UserService) {}

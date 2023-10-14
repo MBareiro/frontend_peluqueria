@@ -28,6 +28,16 @@
       </div>
 
       <div class="row">
+        <mat-form-field class="full-width"> 
+          <mat-label>Direccion</mat-label>
+          <input matInput placeholder="Direccion*" formControlName="direccion" (keydown)="formValidator.onKeyDown($event)">
+          <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['direccion'].hasError('required')">
+            Nombre is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Telefono</mat-label>
           <input matInput placeholder="Telefono*" formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">

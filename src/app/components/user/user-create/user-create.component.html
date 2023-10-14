@@ -53,6 +53,19 @@
         </mat-form-field>
       </div>
 
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Rol" formControlName="role">
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="peluquero">Peluquero</mat-option>
+          </mat-select>
+          <mat-error *ngIf="addressForm.controls['role'].hasError('required')">
+            El rol es <strong>requerido</strong>.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      
+      
       <mat-card-actions>
         <button  mat-raised-button color="accent" type="submit">Guardar</button>
       </mat-card-actions>

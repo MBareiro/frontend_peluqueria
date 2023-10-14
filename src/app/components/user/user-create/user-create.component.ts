@@ -18,6 +18,7 @@ export class UserCreateComponent {
     telefono: [null, Validators.required],      
     password: [null, Validators.required],
     email: [null, Validators.required],
+    role: [null, Validators.required],
   });
 
   constructor(private userService: UserService) {}
@@ -35,7 +36,8 @@ export class UserCreateComponent {
       direccion: formData.direccion || '', // Provide a default empty string if null or undefined
       password: formData.password || '',   // Provide a default empty string if null or undefined
       email: formData.email || ''  ,        // Provide a default empty string if null or undefined
-      telefono: formData.telefono || ''
+      telefono: formData.telefono || '',
+      role: formData.role || ''
     };
   
     // Call the service to add the user
