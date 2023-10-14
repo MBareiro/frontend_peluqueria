@@ -36,6 +36,8 @@ import { ErrorPageComponent } from './components/shared/error-page/error-page.co
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ProfileComponent } from './components/account/profile/profile.component';
 import { ChangeEmailComponent } from './components/account/change-email/change-email.component';
+import { FormValidators } from './components/shared/form-validators/form-validators';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +55,7 @@ import { ChangeEmailComponent } from './components/account/change-email/change-e
     ErrorPageComponent,
     ChangePasswordComponent,
     ProfileComponent,
-    ChangeEmailComponent,
+    ChangeEmailComponent,    
     
   ],
   imports: [
@@ -78,9 +80,9 @@ import { ChangeEmailComponent } from './components/account/change-email/change-e
     MatPaginatorModule,
     MatSortModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
   ],
-  providers: [],
+  providers: [FormValidators], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

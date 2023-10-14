@@ -9,7 +9,8 @@
       
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Nombre*" formControlName="nombre">
+          <mat-label>Nombre</mat-label>
+          <input matInput placeholder="Nombre*" formControlName="nombre" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['nombre'].hasError('required')">
             Nombre is <strong>required</strong>
           </mat-error>
@@ -17,23 +18,25 @@
       </div>
 
       <div class="row">
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Apellido*" formControlName="apellido">
+        <mat-form-field class="full-width"> 
+          <mat-label>Apellido</mat-label>
+          <input matInput placeholder="Apellido*" formControlName="apellido" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['apellido'].hasError('required')">
             Nombre is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
-      <!-- <div class="row">
+      <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Telefono*" formControlName="phoneNumber">
-          <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['phoneNumber'].hasError('required')">
+          <mat-label>Telefono</mat-label>
+          <input matInput placeholder="Telefono*" formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">
+          <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['telefono'].hasError('required')">
             Nombre is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
- -->
+
       <div class="row">
         <mat-form-field>
           <mat-label>Email</mat-label>
@@ -42,8 +45,8 @@
             Email is <strong>required</strong>
           </mat-error>
         </mat-form-field>
-      </div>
-
+      </div>      
+     
       <!-- Resto de los campos (Apellido, Telefono, Email) con estructura similar -->
 
       <button mat-raised-button color="accent" type="submit">Guardar</button>

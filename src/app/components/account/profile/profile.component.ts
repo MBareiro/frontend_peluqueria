@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-
+import { FormValidators } from '../../shared/form-validators/form-validators';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -13,13 +13,14 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    public formValidator: FormValidators
   ) {
     this.addressForm = this.formBuilder.group({
       id: [''],
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
-      /* phoneNumber: ['', [Validators.required]], */
+      telefono: ['', [Validators.required]], 
       email: ['', [Validators.required, Validators.email]],
     });
   }

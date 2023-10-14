@@ -1,10 +1,17 @@
 <mat-card class="mat-elevation-z8">
   <mat-card-content>
+    <mat-form-field>
+      <mat-label>Fecha</mat-label>
+      <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)">
+     <!--  <mat-hint>MM/DD/YYYY</mat-hint> -->
+      <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker #datepicker></mat-datepicker>
+    </mat-form-field>
     <mat-radio-group (change)="onRadioChange($event)" class="radioGroup">
       <mat-radio-button class="vertical-radio-button" value="morning" checked="true">Turno mañana</mat-radio-button>
       <mat-radio-button class="vertical-radio-button" value="afternoon">Turno tarde</mat-radio-button>    
-    </mat-radio-group>
-    
+    </mat-radio-group>  
+
     <!-- <mat-form-field>
       <mat-select placeholder="Peluquero" formControlName="peluquero">
         <mat-option>dfgd</mat-option>    

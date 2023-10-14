@@ -21,9 +21,9 @@ export class AppointmentService {
     return this.http.get<any[]>(`${this.apiUrl}/get-afternoon-appointments`);
   } // En appointment.service.ts
 
-  getSelectedAppointments(selectedTime: string, peluqueroID: number): Observable<any[]> {
+  getSelectedAppointments(selectedTime: string, peluqueroID: number, selectedDate: string): Observable<any[]> {
     return this.http.get<any[]>(
-      `${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}`
+      `${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`
     );
   }
 

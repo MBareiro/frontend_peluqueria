@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ScheduleService } from '../../services/schedule.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-schedule',

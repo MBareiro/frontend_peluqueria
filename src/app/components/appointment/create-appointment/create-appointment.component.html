@@ -7,7 +7,7 @@
       
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Nombre" formControlName="firstName" (keydown)="onKeyDown($event)">
+          <input matInput placeholder="Nombre" formControlName="firstName" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="!isFirstNameInvalid()">
             Nombre is <strong>required</strong>
           </mat-error>
@@ -16,7 +16,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Apellido" formControlName="lastName" (keydown)="onKeyDown($event)">
+          <input matInput placeholder="Apellido" formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
             Apellido is <strong>required</strong>
           </mat-error>
@@ -26,7 +26,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Telefono" formControlName="phoneNumber" (keydown)="onlyNumbers($event)">
+          <input matInput placeholder="Telefono" formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)">
           <mat-error *ngIf="addressForm.controls['phoneNumber'].hasError('required')">
             Telefono is <strong>required</strong>
           </mat-error>

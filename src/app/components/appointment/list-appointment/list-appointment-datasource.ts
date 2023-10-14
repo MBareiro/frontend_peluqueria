@@ -27,46 +27,61 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
   sort: MatSort | undefined;
   private dataSubject: BehaviorSubject<ListAppointmentItem[]> = new BehaviorSubject<ListAppointmentItem[]>([]);
 
-  private selectedValue: string;
+  private selectedRadio: string;
+  private selectedDate: string;
 
-  constructor(private appointmentService: AppointmentService, selectedValue: string) {
+  constructor(private appointmentService: AppointmentService, selectedRadio: string, selectedDate: string) {
     super();
-    this.selectedValue = selectedValue;
+    this.selectedRadio = selectedRadio;
+    this.selectedDate = selectedDate;
   }
 
-  update(selectedValue: string) {
-    this.selectedValue = selectedValue;
+  update(selectedRadio: string, selectedDate: string) {
+    this.selectedRadio = selectedRadio;
+    this.selectedDate = selectedDate;
+  
+    // Log para verificar los datos
+    console.log('Selected Radio:', selectedRadio);
+    console.log('Selected Date:', selectedDate);
+  
     this.connect().subscribe(); // Actualiza la conexión con la nueva selección
   }
-
+  
+ 
   connect(): Observable<ListAppointmentItem[]> {
     if (this.paginator && this.sort) {
       const userId = localStorage.getItem('userId');
-      
       if (userId !== null) {
         // Si userId no es null, lo convertimos a número
         const userIdNumber = +userId;
-        
-        const obs = this.appointmentService.getSelectedAppointments(this.selectedValue, userIdNumber).pipe(
+        console.log(this.selectedDate)
+        console.log(this.selectedRadio)
+        const obs = this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).pipe(
           map(data => this.getPagedData(this.getSortedData([...data])))
         );
   
-        obs.subscribe(data => this.dataSubject.next(data));
-  
+        obs.subscribe(data => {
+          console.log('Data from service:', data);  // Log para verificar los datos
+          this.data = data;
+          this.paginator!.length = data.length;  // Asegura que el paginador tenga la longitud correcta
+          this.dataSubject.next(data);  // Notifica a los observadores de cambios en los datos
+        });
+      
         return merge(this.dataSubject.asObservable(), this.paginator.page, this.sort.sortChange)
           .pipe(map(() => {
-            return this.getPagedData(this.getSortedData([...this.dataSubject.value]));
+            return this.getPagedData(this.getSortedData([...this.data]));
           }));
       } else {
+        console.log("else")/* 
         // Si userId es null, maneja esta situación según tu lógica
         // Por ejemplo, podrías mostrar un mensaje de error o asignar un valor predeterminado para userId
         // Aquí asumiremos un valor predeterminado de 0
-        const obs = this.appointmentService.getSelectedAppointments(this.selectedValue, 0).pipe(
+        const obs = this.appointmentService.get_selected_appointments(this.selectedRadio, this.selectedDate, userIdNumber).pipe(
           map(data => this.getPagedData(this.getSortedData([...data])))
         );
   
         obs.subscribe(data => this.dataSubject.next(data));
-  
+   */
         return merge(this.dataSubject.asObservable(), this.paginator.page, this.sort.sortChange)
           .pipe(map(() => {
             return this.getPagedData(this.getSortedData([...this.dataSubject.value]));
