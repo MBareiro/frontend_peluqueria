@@ -29,7 +29,8 @@
                   <label for="morning_start">Desde:</label>
                   <select name="morning_start" (change)="onSelectMorningStart($event, dia.key)">
                     <option *ngFor="let hora of horasAM" [value]="hora"
-                      [selected]="horarios[dia.key]?.morning_start === hora">
+                            [attr.disabled]="horarios[dia.key]?.morning_end && timeToNumber(horarios[dia.key].morning_end) <= timeToNumber(hora) ? true : null"
+                            [selected]="horarios[dia.key]?.morning_start === hora">
                       {{ hora }}
                     </option>
                   </select>
@@ -38,6 +39,7 @@
                   <label for="morning_end">Hasta:</label>
                   <select name="morning_end" (change)="onSelectMorningEnd($event, dia.key)">
                     <option *ngFor="let hora of horasAM" [value]="hora"
+                    [attr.disabled]="horarios[dia.key]?.morning_start && timeToNumber(horarios[dia.key].morning_start) >= timeToNumber(hora) ? true : null"
                       [selected]="horarios[dia.key]?.morning_end === hora">
                       {{ hora }}
                     </option>
@@ -56,7 +58,8 @@
                   <label for="afternoon_start" class="ml-2">Desde:</label>
                   <select name="afternoon_start" (change)="onSelectAfternoonStart($event, dia.key)">
                     <option *ngFor="let hora of horasPM" [value]="hora"
-                      [selected]="horarios[dia.key]?.afternoon_start === hora">
+                            [attr.disabled]="horarios[dia.key]?.afternoon_end && timeToNumber(horarios[dia.key].afternoon_end) <= timeToNumber(hora) ? true : null"
+                            [selected]="horarios[dia.key]?.afternoon_start === hora">
                       {{ hora }}
                     </option>
                   </select>
@@ -65,6 +68,8 @@
                   <label for="afternoon_end">Hasta:</label>
                   <select name="afternoon_end" (change)="onSelectAfternoonEnd($event, dia.key)">
                     <option *ngFor="let hora of horasPM" [value]="hora"
+                    
+                      [attr.disabled]="horarios[dia.key]?.afternoon_start && timeToNumber(horarios[dia.key].afternoon_start) >= timeToNumber(hora) ? true : null"
                       [selected]="horarios[dia.key]?.afternoon_end === hora">
                       {{ hora }}
                     </option>

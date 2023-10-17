@@ -46,7 +46,7 @@ export class ScheduleComponent {
 
   horarios: { [key: number]: any } = {};
 
-  constructor(private scheduleService: ScheduleService) {}
+  constructor(private scheduleService: ScheduleService) { }
 
   ngOnInit(): void {
     this.horarios = {}; // Inicializamos horarios aquí
@@ -82,24 +82,55 @@ export class ScheduleComponent {
         this.horarios[diaKey][property] = !this.horarios[diaKey][property];
       }
     }
-  } 
+  }
 
-  onSelectMorningStart(event: Event, dia: number) {
+  /* onSelectMorningStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_start = selectedHora;
-  }
+  } */
   onSelectMorningEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_end = selectedHora;
   }
-  onSelectAfternoonStart(event: Event, dia: number) {
+
+  /* onSelectAfternoonStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_start = selectedHora;
-  }
+  } */
   onSelectAfternoonEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_end = selectedHora;
   }
+
+
+  onSelectMorningStart(event: Event, dia: number) {
+    const selectedHora = (event.target as HTMLSelectElement).value;
+    const morningEnd = this.horarios[dia].morning_end;
+  
+    if (this.timeToNumber(selectedHora) >= this.timeToNumber(morningEnd)) {
+      alert('La hora de inicio de la mañana debe ser anterior a la hora de fin.');
+    } else {
+      this.horarios[dia].morning_start = selectedHora;
+    }
+  }
+
+  onSelectAfternoonStart(event: Event, dia: number) {
+    const selectedHora = (event.target as HTMLSelectElement).value;
+    const afternoonEnd = this.horarios[dia].afternoon_end;
+  
+    if (this.timeToNumber(selectedHora) >= this.timeToNumber(afternoonEnd)) {
+      alert('La hora de inicio de la tarde debe ser anterior a la hora de fin.');
+    } else {
+      this.horarios[dia].afternoon_start = selectedHora;
+    }
+  }
+
+  // Convert time strings to numbers for comparison
+  timeToNumber(time: string): number {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
   private inicializarHorarios(): void {
     this.dias.forEach((dia) => {
       this.horarios[dia.key] = {
