@@ -37,6 +37,8 @@ import { ChangePasswordComponent } from './components/account/change-password/ch
 import { ProfileComponent } from './components/account/profile/profile.component';
 import { ChangeEmailComponent } from './components/account/change-email/change-email.component';
 import { FormValidators } from './components/shared/form-validators/form-validators';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -81,6 +83,8 @@ import { FormValidators } from './components/shared/form-validators/form-validat
     MatSortModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSlideToggleModule,
+    MatDividerModule
   ],
   providers: [FormValidators], 
   bootstrap: [AppComponent]

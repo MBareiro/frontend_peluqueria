@@ -50,3 +50,7 @@ mat-card-title {
 .title_users{
   justify-content: center;
 }
+/* Add margin utility classes */
+.mr-2 {
+  margin-right: 16px; /* Adjust the value as needed */
+}

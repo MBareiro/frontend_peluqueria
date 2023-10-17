@@ -37,7 +37,8 @@ export class UserCreateComponent {
       password: formData.password || '',   // Provide a default empty string if null or undefined
       email: formData.email || ''  ,        // Provide a default empty string if null or undefined
       telefono: formData.telefono || '',
-      role: formData.role || ''
+      role: formData.role || '',
+      active: true
     };
   
     // Call the service to add the user

@@ -7,5 +7,6 @@ export interface User {
     email: string;
     telefono: string;
     role: string;
+    active: boolean;
   }
   
