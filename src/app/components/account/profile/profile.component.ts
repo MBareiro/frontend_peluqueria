@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
       direccion: ['', [Validators.required]],
       telefono: ['', [Validators.required]], 
       email: ['', [Validators.required, Validators.email]],
+      active: ['', [Validators.required]],
     });
   }
 
@@ -30,13 +31,9 @@ export class ProfileComponent implements OnInit {
     const userId: number | null = this.userService.verifyIdUser(); // Llamada a verifyIdUser()
 
     if (userId !== null) {
-      // userId ahora es un número válido
-      console.log('User ID:', userId);
-
       // Llamada a getUserById dentro de esta condición
       this.userService.getUserById(userId).subscribe(
         (userData) => {
-          console.log(userData);
           this.addressForm.patchValue(userData); // Pobla el formulario con los datos del usuario
         },
         (error) => {

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/user.model';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-create',
@@ -24,7 +25,6 @@ export class UserCreateComponent {
   constructor(private userService: UserService) {}
 
   addUser(): void {
-    console.log("addUser")
     // Access the form values
     const formData = this.addressForm.value;
   
@@ -46,6 +46,13 @@ export class UserCreateComponent {
       () => {
         console.log('User added successfully.');
         this.addressForm.reset();  // Reset the form after successful addition
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Usuario Creado!',
+          background: '#191c24',
+          timer: 1500,
+        })
       },
       (error) => {
         console.error('Error adding user:', error);

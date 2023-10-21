@@ -57,9 +57,14 @@
         </mat-form-field>
       </div>      
      
-      <!-- Resto de los campos (Apellido, Telefono, Email) con estructura similar -->
-
-      <button mat-raised-button color="accent" type="submit">Guardar</button>
+      <div class="row">
+        <mat-slide-toggle mat-mini-fab color="accent" formControlName="active">Activo</mat-slide-toggle>
+      </div>
+      
+      <mat-action-list>
+        <button mat-raised-button color="accent" type="submit">Guardar</button>
+      </mat-action-list>
+      
     </form>
   </mat-card-content>
 </mat-card>

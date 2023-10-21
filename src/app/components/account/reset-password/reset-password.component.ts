@@ -1,50 +1,56 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
-import { UserService } from '../../../services/user.service';
-
 @Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.css'],
+  selector: 'app-reset-password',
+  templateUrl: './reset-password.component.html',
+  styleUrls: ['./reset-password.component.css']
 })
-export class ChangePasswordComponent {
-  hide1 = true;
+export class ResetPasswordComponent {
+  private token?: string;
   hide2 = true;
   hide3 = true;
 
-  passwordForm: FormGroup = new FormGroup({
-    oldPassword: new FormControl('', [Validators.required]),
+  passwordForm: FormGroup = new FormGroup({   
     newPassword: new FormControl('', [Validators.required, Validators.minLength(10)]),
     confirmPassword:  new FormControl('', [Validators.required, Validators.minLength(10)]),
-  });  
+  }); 
 
-  oldPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService) {}
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private route: ActivatedRoute,) {}
   
-  changePassword(): void {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
+  ngOnInit() {
+    // Obtiene el token de la URL
+    this.route.params.subscribe(params => {
+      this.token = params['token'];
+    });
+  }
+
+  changePassword(): void {    
+    if (this.token) {
+      
+      
       const user = {
-        old_password: this.passwordForm.value.oldPassword,
+        token: this.token,
         new_password: this.passwordForm.value.newPassword,
-        confirm_password: this.passwordForm.value.confirmPassword,
+        confirm_password: this.passwordForm.value.confirmPassword,        
       };
+      console.log(user.new_password);
       // Agregar validaciones de contraseña si es necesario
       this.userService
-        .changePassword(
-          parseInt(userId),
-          user.old_password,
+        .resetPassword(
+          user.token,
           user.new_password,
-          user.confirm_password
+          user.confirm_password          
         )
         .subscribe(
           (data) => {
-            //console.log('Password changed successfully:', data);
+            console.log('Password changed successfully:', data);
             Swal.fire({
               icon: 'success',
               color: 'white',
@@ -65,11 +71,14 @@ export class ChangePasswordComponent {
             // Mostrar un mensaje de error al usuario
           }
         );
-    } else {
-      console.error('No user ID found in localStorage.');
-    }
+    } 
+
+
+      
+
+      
   }  
-  
+
   onSubmit() {
     if (this.passwordForm.value.newPassword !== this.passwordForm.value.confirmPassword) {
       Swal.fire({
@@ -81,7 +90,6 @@ export class ChangePasswordComponent {
       // Mostrar un mensaje de error al usuario
     } else {
       // Implementa aquí las validaciones de complejidad de contraseña si es necesario
-
       // Llama a la función para cambiar la contraseña
       this.changePassword();
     }

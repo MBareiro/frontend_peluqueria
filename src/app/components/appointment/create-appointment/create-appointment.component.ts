@@ -9,6 +9,7 @@ import { ScheduleService } from '../../../services/schedule.service';
 import { catchError, tap  } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormValidators } from '../../shared/form-validators/form-validators';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-create-appointment',
   templateUrl: './create-appointment.component.html',
@@ -85,6 +86,13 @@ export class CreateAppointmentComponent {
       (response) => {
         console.log('Formulario enviado con éxito:', response);
         this.clearValidatorsAndResetForm();
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Turno Creado!',
+          background: '#191c24',
+          timer: 1500,
+        })
       },
       (error) => {
         console.error('Error al enviar el formulario:', error);
@@ -135,11 +143,15 @@ export class CreateAppointmentComponent {
     this.turnos = [];
     this.addressForm.updateValueAndValidity();
   }
-
+  filterActiveUsers(): void {
+    this.users = this.users.filter(user => user.active);
+  }
   chargeUser(): void {
     this.userService.getUsers().subscribe(
       (data) => {
+        console.log(data)        
         this.users = data;
+        this.filterActiveUsers()
       },
       (error) => {
         console.error('Error fetching users:', error);
@@ -163,6 +175,7 @@ export class CreateAppointmentComponent {
   }
 
   fechaSeleccionada(event: any): void {
+    this.error = false
     this.selectedDate = event.value;
     this.createRadioButtonsForDay(); // Update radio buttons when date changes
     this.chargeHorario();
@@ -178,6 +191,9 @@ export class CreateAppointmentComponent {
     this.selectedValue = selectedValue || ''; // If undefined, assign an empty string
     this.chargeHorario();
     this.turnos = this.createRadioButtonsForDay();
+    if(this.turnos.length === 0){
+      this.error = true;
+    }
     this.appointmentBD()
   }
 
@@ -204,7 +220,7 @@ export class CreateAppointmentComponent {
         ) {
           period_start = this.horario[selectedDay]?.afternoon_start;
           period_end = this.horario[selectedDay]?.afternoon_end;
-        }
+        } 
   
         if (period_start && period_end) {
           const horariosDelDia = this.generarHorasAM(period_start, period_end);

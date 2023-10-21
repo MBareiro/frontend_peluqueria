@@ -1,0 +1,37 @@
+.shipping-card {
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #191c24;
+}
+
+.mat-radio-button {
+    display: block;
+    margin: 10px 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.col {
+    flex: 1;
+    margin-bottom: 10px;
+}
+
+.col:last-child {
+    margin-bottom: 0;
+}
+
+.vertical-radio-button {
+    display: block;
+}
+
+.error {
+    margin-bottom: 5px;
+}
+
+.card-title {
+    margin-bottom: 15px;
+}

@@ -24,6 +24,7 @@
                     [checked]="horarios[dia.key]?.active_morning" (change)="toggleCheckbox(dia.key, 'active_morning')">
                 </div>
               </td>
+              <!-- MORNING -------------------------------------------->
               <td>
                 <div class="form-group">
                   <label for="morning_start">Desde:</label>
@@ -39,13 +40,15 @@
                   <label for="morning_end">Hasta:</label>
                   <select name="morning_end" (change)="onSelectMorningEnd($event, dia.key)">
                     <option *ngFor="let hora of horasAM" [value]="hora"
-                    [attr.disabled]="horarios[dia.key]?.morning_start && timeToNumber(horarios[dia.key].morning_start) >= timeToNumber(hora) ? true : null"
-                      [selected]="horarios[dia.key]?.morning_end === hora">
+                            [attr.disabled]="horarios[dia.key]?.morning_start && timeToNumber(horarios[dia.key].morning_start) >= timeToNumber(hora) ? true : null"
+                            [selected]="horarios[dia.key]?.morning_end === hora">
                       {{ hora }}
                     </option>
                   </select>
+                  
                 </div>
               </td>
+              <!-- ------------------------------------------------------------------------------------------- -->
               <td>
                 <div class="form-group form-switch">
                   <input type="checkbox" name="active_afternoon" class="form-check-input"

@@ -9,7 +9,7 @@ import { User } from '../models/user.model';
 export class UserService {
   private apiUrl = 'http://localhost:5000/usuarios';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
@@ -31,21 +31,12 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
-    const body = {
-      old_password: oldPassword,
-      new_password: newPassword,
-      confirm_password: confirmPassword
-    };
-    return this.http.post(`${this.apiUrl}/change-password/${userId}`, body);
-  }
-
   verifyIdUser(): number | null {
     const userId: string | null = localStorage.getItem('userId');
-  
+
     if (userId !== null) {
       const userIdNumber: number = parseInt(userId, 10); // Convertir a número
-  
+
       if (!isNaN(userIdNumber)) {
         // userIdNumber ahora es un número válido
         console.log('User ID:', userIdNumber);
@@ -58,5 +49,37 @@ export class UserService {
       console.error('No se pudo obtener el User ID desde localStorage.');
       return null;
     }
+  }
+
+  changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string
+  ): Observable<any> {
+    const body = {
+      old_password: oldPassword,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    };
+    return this.http.post(`${this.apiUrl}/change-password/${userId}`, body);
+  }
+  //Es utilizada por reset-password.ts
+  resetPassword(
+    token: string,
+    newPassword: string,
+    confirmPassword: string
+  ): Observable<any> {
+    const body = {
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    };
+    return this.http.post(`http://localhost:5000/reset-password/${token}`, body);
+  }
+
+  //Es utilizada por forgot-password.ts
+  requestPasswordReset(email: string): Observable<any> {
+    const resetData = { email: email };
+    return this.http.post(`http://localhost:5000/forgot-password`, resetData);
   }
 }

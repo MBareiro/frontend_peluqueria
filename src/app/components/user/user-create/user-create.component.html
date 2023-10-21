@@ -8,6 +8,7 @@
       
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>Nombre</mat-label>
           <input matInput placeholder="Nombre" formControlName="firstName">
           <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
             Nombre is <strong>required</strong>
@@ -17,6 +18,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>Apellido</mat-label>
           <input matInput placeholder="Apellido" formControlName="lastName">
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
             Apellido is <strong>required</strong>
@@ -27,6 +29,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>Telefono</mat-label>
           <input matInput placeholder="Telefono" formControlName="direccion">
           <mat-error *ngIf="addressForm.controls['direccion'].hasError('required')">
             Telefono is <strong>required</strong>
@@ -36,6 +39,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
           <input matInput placeholder="Email" formControlName="email">
           <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
             Email is <strong>required</strong>
@@ -46,6 +50,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>password</mat-label>
           <input matInput placeholder="password" formControlName="password">
           <mat-error *ngIf="addressForm.controls['password'].hasError('required')">
             password is <strong>required</strong>
@@ -55,6 +60,7 @@
 
       <div class="row">
         <mat-form-field class="full-width">
+          <mat-label>Rol</mat-label>
           <mat-select placeholder="Rol" formControlName="role">
             <mat-option value="admin">Admin</mat-option>
             <mat-option value="peluquero">Peluquero</mat-option>
@@ -64,7 +70,6 @@
           </mat-error>
         </mat-form-field>
       </div>
-      
       
       <mat-card-actions>
         <button  mat-raised-button color="accent" type="submit">Guardar</button>

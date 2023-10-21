@@ -6,7 +6,6 @@ import { Observable, of as observableOf, merge } from 'rxjs';
 import { AppointmentService } from '../../../services/appointment.service';
 import { BehaviorSubject } from 'rxjs';
 
-// TODO: Replace this with your own data model type
 export interface ListAppointmentItem {
   id: number;
   firstName: string;
@@ -14,7 +13,7 @@ export interface ListAppointmentItem {
   email: string;
   phoneNumber: string;
   peluquero: number;
-  date: string; // O podrías usar un tipo Date si es más adecuado
+  date: string; 
   schedule: string;
   selectedRadio: string;
 }
@@ -39,29 +38,20 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
   update(selectedRadio: string, selectedDate: string) {
     this.selectedRadio = selectedRadio;
     this.selectedDate = selectedDate;
-  
-    // Log para verificar los datos
-    console.log('Selected Radio:', selectedRadio);
-    console.log('Selected Date:', selectedDate);
-  
     this.connect().subscribe(); // Actualiza la conexión con la nueva selección
   }
-  
- 
+   
   connect(): Observable<ListAppointmentItem[]> {
     if (this.paginator && this.sort) {
       const userId = localStorage.getItem('userId');
       if (userId !== null) {
         // Si userId no es null, lo convertimos a número
         const userIdNumber = +userId;
-        console.log(this.selectedDate)
-        console.log(this.selectedRadio)
         const obs = this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).pipe(
           map(data => this.getPagedData(this.getSortedData([...data])))
         );
   
-        obs.subscribe(data => {
-          console.log('Data from service:', data);  // Log para verificar los datos
+        obs.subscribe(data => { // Log para verificar los datos
           this.data = data;
           this.paginator!.length = data.length;  // Asegura que el paginador tenga la longitud correcta
           this.dataSubject.next(data);  // Notifica a los observadores de cambios en los datos
@@ -71,8 +61,7 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
           .pipe(map(() => {
             return this.getPagedData(this.getSortedData([...this.data]));
           }));
-      } else {
-        console.log("else")/* 
+      } else {/* 
         // Si userId es null, maneja esta situación según tu lógica
         // Por ejemplo, podrías mostrar un mensaje de error o asignar un valor predeterminado para userId
         // Aquí asumiremos un valor predeterminado de 0
@@ -91,8 +80,6 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
       throw Error('Please set the paginator and sort on the data source before connecting.');
     }
   }
-  
-   
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up

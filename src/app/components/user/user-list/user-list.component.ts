@@ -16,8 +16,7 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.chargeUser()
-  }
-  
+  } 
  
   chargeUser(): void {
     this.userService.getUsers().subscribe(
@@ -67,10 +66,10 @@ export class UserListComponent implements OnInit {
   cancelUpdate(): void {
     this.selectedUser = null;
   }
+  
   toggleActive(user: User): void {
     if (user) {
       user.active = !user.active;
-      console.log(user.active);
         // Invertir el estado
     }
   }

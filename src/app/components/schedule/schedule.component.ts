@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ScheduleService } from '../../services/schedule.service';
 import { MatSelect } from '@angular/material/select';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-schedule',
@@ -84,45 +85,22 @@ export class ScheduleComponent {
     }
   }
 
-  /* onSelectMorningStart(event: Event, dia: number) {
+  onSelectMorningStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_start = selectedHora;
-  } */
+  } 
   onSelectMorningEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_end = selectedHora;
   }
 
-  /* onSelectAfternoonStart(event: Event, dia: number) {
+  onSelectAfternoonStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_start = selectedHora;
-  } */
+  } 
   onSelectAfternoonEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_end = selectedHora;
-  }
-
-
-  onSelectMorningStart(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    const morningEnd = this.horarios[dia].morning_end;
-  
-    if (this.timeToNumber(selectedHora) >= this.timeToNumber(morningEnd)) {
-      alert('La hora de inicio de la mañana debe ser anterior a la hora de fin.');
-    } else {
-      this.horarios[dia].morning_start = selectedHora;
-    }
-  }
-
-  onSelectAfternoonStart(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    const afternoonEnd = this.horarios[dia].afternoon_end;
-  
-    if (this.timeToNumber(selectedHora) >= this.timeToNumber(afternoonEnd)) {
-      alert('La hora de inicio de la tarde debe ser anterior a la hora de fin.');
-    } else {
-      this.horarios[dia].afternoon_start = selectedHora;
-    }
   }
 
   // Convert time strings to numbers for comparison
@@ -155,6 +133,13 @@ export class ScheduleComponent {
       (response) => {
         console.log('Horarios guardados exitosamente', response);
         // Puedes realizar acciones adicionales aquí después de guardar los horarios
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Exito!',
+          background: '#191c24',
+          timer: 1500,
+        })
       },
       (error) => {
         console.error('Error al guardar los horarios', error);

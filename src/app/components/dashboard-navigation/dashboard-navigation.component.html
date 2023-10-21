@@ -1,60 +1,53 @@
 <mat-sidenav-container class="sidenav-container dark-theme">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Menu</mat-toolbar>
 
     <button mat-menu-item [matMenuTriggerFor]="menu">
       <mat-icon>person</mat-icon>Turnos
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="showCreateAppointmentComponent()">
+      <button mat-menu-item (click)="showComponent('createAppointment')">
         <mat-icon>person</mat-icon>Crear Turno
       </button>
-      <button mat-menu-item (click)="showListAppointmentComponent()">
+      <button mat-menu-item (click)="showComponent('listAppointment')">
         <mat-icon>list</mat-icon>Listar Turnos
       </button>
     </mat-menu>
 
-    <button mat-menu-item [matMenuTriggerFor]="menu2">
+    <button mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="userRole === 'admin'" >
       <mat-icon>group</mat-icon>Usuarios
     </button>
-    <mat-menu #menu2="matMenu">
-      <button mat-menu-item (click)="showUserListComponent()">
-        <mat-icon>manage_accounts</mat-icon>Administrar Cuentas
+    <mat-menu #menu2="matMenu" >
+      <button mat-menu-item (click)="showComponent('userList')">
+        <mat-icon>manage_accounts</mat-icon>Administrar Cuentas <!-- EN ESTA PARTE SOLO DEBEN ACCEDER LOS ADMIN -->
       </button>
-      <button mat-menu-item (click)="showUserAddComponent()">
+      <button mat-menu-item (click)="showComponent('userAdd')">
         <mat-icon>person_add</mat-icon>Crear Usuario
       </button>
     </mat-menu>
 
-    <button mat-menu-item class="menu-button" (click)="showSchuduleComponent()">
+    <button mat-menu-item class="menu-button" (click)="showComponent('schedule')">
       <mat-icon>schedule</mat-icon>
       <span>Cronograma</span>
     </button>
 
-   <!--  <button mat-menu-item class="menu-button" (click)="showChangePasswordComponent()">
-      <mat-icon>settings</mat-icon>
-      <span>Configuraciones</span>
+    <button mat-menu-item class="menu-button" (click)="showComponent('password')">
+      <mat-icon>lock</mat-icon>
+      <span>Seguridad</span>
     </button>
- -->   
- <button mat-menu-item class="menu-button" (click)="showChangePasswordComponent()">
-  <mat-icon>lock</mat-icon>
-  <span>Seguridad</span>
-</button>
-    
 
-    <button mat-menu-item class="menu-button" (click)="showProfileComponent()">
+    <button mat-menu-item class="menu-button" (click)="showComponent('profile')">
       <mat-icon>account_circle</mat-icon>
       <span>Perfil</span>
     </button>
 
-    <button mat-menu-item  class="menu-button" (click)="logout()">
+    <button mat-menu-item class="menu-button" (click)="logout()">
       <mat-icon>logout</mat-icon>
       <span>Salir</span>
     </button>
 
   </mat-sidenav>
-
 
   <mat-sidenav-content>
     <mat-toolbar color="accent">
@@ -62,25 +55,17 @@
         *ngIf="isHandset$ | async" class="drawer-toggle">
         <mat-icon aria-label="Side nav toggle icon" class="drawer-toggle">menu</mat-icon>
       </button>
-      <span>Bienvenido {{ this.userName }}</span>
+      <span>Bienvenido {{ userName }}</span>
     </mat-toolbar>
 
     <!-- Add Content Here -->
     <app-schedule *ngIf="showSchudule"></app-schedule>
-
-    <!-- Appointment -->
     <app-create-appointment *ngIf="showCreateAppointment"></app-create-appointment>
     <app-list-appointment *ngIf="showListAppointment"></app-list-appointment>
-
-    <!-- User -->
     <app-user-list *ngIf="showUserList"></app-user-list>
     <app-user-create *ngIf="showUserAdd"></app-user-create>
-
-    <!-- Account settings -->
     <app-change-password *ngIf="showChangePassword"></app-change-password>
     <app-profile *ngIf="showProfile"></app-profile>
-
     <app-footer></app-footer>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

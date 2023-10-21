@@ -9,11 +9,11 @@
     </mat-card-header>
     <mat-list>
       <mat-list-item *ngFor="let user of users">
-        {{ user.nombre }} {{ user.apellido }} {{ user.email }} {{ user.direccion }}
+        {{ user.nombre }} {{ user.apellido }}
         <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i
             class="fa-solid fa-pen"></i></button>
-        <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
-          class="btn-eliminar"><i class="fa-solid fa-trash"></i></button>
+        <!-- <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
+          class="btn-eliminar"><i class="fa-solid fa-trash"></i></button> -->
       </mat-list-item>
     </mat-list>
   </mat-card-content>
@@ -52,6 +52,15 @@
       <div class="row">
         <mat-form-field class="full-width">
           <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" />
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Rol" [(ngModel)]="selectedUser.role">
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="peluquero">Peluquero</mat-option>
+          </mat-select>         
         </mat-form-field>
       </div>
 

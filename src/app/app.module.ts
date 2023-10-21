@@ -39,6 +39,8 @@ import { ChangeEmailComponent } from './components/account/change-email/change-e
 import { FormValidators } from './components/shared/form-validators/form-validators';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
+import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { MatDividerModule } from '@angular/material/divider';
     ErrorPageComponent,
     ChangePasswordComponent,
     ProfileComponent,
-    ChangeEmailComponent,    
+    ChangeEmailComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,    
     
   ],
   imports: [

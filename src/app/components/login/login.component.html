@@ -1,25 +1,35 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card bg-dark text-white">
-        <div class="card-header">
-          <h2 class="text-center">Iniciar sesión</h2>
-        </div>
-        <div class="card-body">
-          <form>
-            <div class="mb-3">
-              <label for="username" class="form-label">Nombre de usuario:</label>
-              <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Contraseña:</label>
-              <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required>
-            </div>
-            <div class="text-danger mb-3">{{ errorMessage }}</div> <!-- Mostrar mensaje de error -->
-            <button type="submit" class="btn btn-primary btn-block" (click)="onSubmit()">Iniciar sesión</button>
-          </form>
-        </div>
+<mat-card class="shipping-card">
+  <mat-card-header>
+    <mat-card-title class="card-title">Iniciar Sesión</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="email">
+          <mat-error *ngIf="loginForm.controls['email'].hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
       </div>
-    </div>
-  </div>
-</div>
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-label>password</mat-label>
+          <input matInput placeholder="password" formControlName="password">
+          <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
+            password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="text-danger mb-3">{{ errorMessage }}</div>
+      <button type="submit" mat-raised-button color="accent">Iniciar sesión</button>
+    </form>
+    <mat-card-footer>
+      <p class="forgot-password">
+        <a routerLink="/forgot-password">Olvidé mi contraseña</a>
+      </p>
+    </mat-card-footer>
+    
+  </mat-card-content>
+</mat-card>

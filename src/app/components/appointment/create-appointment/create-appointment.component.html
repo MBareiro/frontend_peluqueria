@@ -47,7 +47,7 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-select placeholder="Peluquero" formControlName="peluquero" (valueChange)="peluquero()">
-            <mat-option *ngFor="let user of users" [value]="user.id">
+            <mat-option *ngFor="let user of users" [value]="user.id" >
               {{ user.nombre }}
             </mat-option>
           </mat-select>
@@ -82,9 +82,9 @@
       </div>
 
       <mat-radio-group formControlName="selectedRadio" >
-        <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
+        <!-- <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
           Elija una opcion <strong>required</strong>
-        </mat-error>
+        </mat-error> -->
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}
