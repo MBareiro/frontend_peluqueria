@@ -10,8 +10,7 @@
     <mat-list>
       <mat-list-item *ngFor="let user of users">
         {{ user.nombre }} {{ user.apellido }}
-        <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i
-            class="fa-solid fa-pen"></i></button>
+        <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i class="fa fa-search" aria-hidden="true"></i></button>
         <!-- <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
           class="btn-eliminar"><i class="fa-solid fa-trash"></i></button> -->
       </mat-list-item>
@@ -21,42 +20,48 @@
 
   <mat-card-header *ngIf="selectedUser">
     <mat-card-title>Editar Usuario</mat-card-title>
-
   </mat-card-header>
+
   <mat-card-content id="formUpdate">
     <div *ngIf="selectedUser" class="edit-user-section">
-      <div class="row">
+      <div class="row">        
         <mat-form-field class="full-width">
-          <input matInput placeholder="Nombre" [(ngModel)]="selectedUser.nombre" />
+          <mat-label>Nombre</mat-label>
+          <input matInput placeholder="Nombre"  [(ngModel)]="selectedUser.nombre" readonly >
+        </mat-form-field>
+      </div>
+
+      <div class="row">        
+        <mat-form-field class="full-width">
+          <mat-label>Apellido</mat-label>
+          <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" readonly>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" />
+          <mat-label>Dirección</mat-label>
+          <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" readonly >
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" />
+          <mat-label>Telefono</mat-label>
+          <input matInput placeholder="Telefono" [(ngModel)]="selectedUser.telefono" readonly>
+        </mat-form-field>
+      </div>      
+
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" readonly>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput type="password" placeholder="Password" [(ngModel)]="selectedUser.password" />
-        </mat-form-field>
-      </div>
-
-      <div class="row">
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" />
-        </mat-form-field>
-      </div>
-
-      <div class="row">
-        <mat-form-field class="full-width">
+          <mat-label>Rol</mat-label>
           <mat-select placeholder="Rol" [(ngModel)]="selectedUser.role">
             <mat-option value="admin">Admin</mat-option>
             <mat-option value="peluquero">Peluquero</mat-option>
@@ -74,4 +79,6 @@
       </mat-action-list>
     </div>
   </mat-card-content>
+
+  
 </mat-card>

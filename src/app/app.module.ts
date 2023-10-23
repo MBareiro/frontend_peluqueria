@@ -41,6 +41,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
+import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
+import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { ResetPasswordComponent } from './components/account/reset-password/rese
     ProfileComponent,
     ChangeEmailComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent,    
+    ResetPasswordComponent,
+    CancelAppointmentComponent,
+    AppointmentCancelledComponent,    
     
   ],
   imports: [

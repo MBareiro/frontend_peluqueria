@@ -32,5 +32,8 @@ export class AppointmentService {
       `${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`
     );
   }
-  
+  // Método para cancelar un turno
+  cancelAppointment(appointmentId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/cancel-appointment/${appointmentId}`);
+  }
 }

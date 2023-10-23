@@ -38,15 +38,13 @@ export class ProfileComponent implements OnInit {
         },
         (error) => {
           console.error('Error al obtener datos del usuario:', error);
-          // Podrías mostrar un mensaje de error al usuario en la interfaz
         }
       );
     } else {
       console.error('No se pudo obtener el User ID desde localStorage.');
     }
   }    
-  
-  // Este método puede ser utilizado para enviar el formulario
+
   onSubmit() {
     this.formularioEnviadoExitoso = true;
     const formData = this.addressForm.value;
@@ -59,12 +57,8 @@ export class ProfileComponent implements OnInit {
           console.error('Error updating user:', error);
         }
       );
-      // Aquí puedes enviar los datos del formulario
-      //console.log('Formulario válido. Datos:', this.addressForm.value);
-      // Puedes agregar la lógica para enviar los datos al servidor
     } else {
       console.log('Formulario inválido. Por favor, revisa los campos.');
-      // Podrías mostrar un mensaje de error al usuario en la interfaz
     }
   }
 }

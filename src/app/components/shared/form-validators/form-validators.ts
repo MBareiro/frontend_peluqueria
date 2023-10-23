@@ -30,4 +30,21 @@ export class FormValidators {
       event.preventDefault(); // Evita que se escriban caracteres que no sean números
     }
   }
+
+  allowAlphanumeric(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const inputValue = input.value;
+  
+     // Verifica si el carácter es alfanumérico (letra, número o espacio)
+  const isAllowedChar = /[a-zA-Z0-9 ]/.test(event.key);
+
+  if (!isAllowedChar) {
+    event.preventDefault(); // Evita que se escriban caracteres no permitidos
+  }
+
+  // Verifica si el carácter es un espacio y si hay espacios consecutivos
+  if (event.key === ' ' && /\s{2,}/.test(inputValue)) {
+    event.preventDefault(); // Evita escribir más de un espacio consecutivo
+  }
+  }
 }

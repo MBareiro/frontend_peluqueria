@@ -69,8 +69,7 @@ export class CreateAppointmentComponent {
   isFirstNameInvalid() {
     const firstNameControl = this.addressForm.get('firstName');
     return firstNameControl?.hasError('required') && (firstNameControl.dirty || firstNameControl.touched);
-  }
-  
+  }  
   
   onSubmit(): void {
     console.log( this.isFirstNameInvalid())
@@ -99,7 +98,7 @@ export class CreateAppointmentComponent {
       }
     );
   }
-
+  
   appointmentBD(): Observable<string[]> {
     const periodo = this.addressForm.get('schedule')?.value;
     const date = this.addressForm.get('date')?.value;
@@ -148,8 +147,7 @@ export class CreateAppointmentComponent {
   }
   chargeUser(): void {
     this.userService.getUsers().subscribe(
-      (data) => {
-        console.log(data)        
+      (data) => {      
         this.users = data;
         this.filterActiveUsers()
       },

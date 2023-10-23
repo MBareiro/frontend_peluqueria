@@ -9,7 +9,7 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Nombre</mat-label>
-          <input matInput placeholder="Nombre" formControlName="firstName">
+          <input matInput placeholder="Nombre" formControlName="firstName"  (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
             Nombre is <strong>required</strong>
           </mat-error>
@@ -19,19 +19,28 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Apellido</mat-label>
-          <input matInput placeholder="Apellido" formControlName="lastName">
+          <input matInput placeholder="Apellido" formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
             Apellido is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
+      <div class="row">
+        <mat-form-field class="full-width">
+          <mat-label>Direccion</mat-label>
+          <input matInput placeholder="Direccion" formControlName="direccion" (keydown)="formValidator.allowAlphanumeric($event)">
+          <mat-error *ngIf="addressForm.controls['direccion'].hasError('required')">
+            Direccion is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
 
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Telefono</mat-label>
-          <input matInput placeholder="Telefono" formControlName="direccion">
-          <mat-error *ngIf="addressForm.controls['direccion'].hasError('required')">
+          <input matInput placeholder="Telefono" formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">
+          <mat-error *ngIf="addressForm.controls['telefono'].hasError('required')">
             Telefono is <strong>required</strong>
           </mat-error>
         </mat-form-field>
@@ -48,7 +57,7 @@
       </div>
 
 
-      <div class="row">
+     <!--  <div class="row">
         <mat-form-field class="full-width">
           <mat-label>password</mat-label>
           <input matInput placeholder="password" formControlName="password">
@@ -56,7 +65,7 @@
             password is <strong>required</strong>
           </mat-error>
         </mat-form-field>
-      </div>
+      </div> -->
 
       <div class="row">
         <mat-form-field class="full-width">
