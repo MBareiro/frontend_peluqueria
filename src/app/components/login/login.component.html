@@ -7,29 +7,35 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Email</mat-label>
-          <input matInput placeholder="Email" formControlName="email">
+          <input matInput placeholder="Email" formControlName="email" required>
           <mat-error *ngIf="loginForm.controls['email'].hasError('required')">
             Email is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
+
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>password</mat-label>
-          <input matInput placeholder="password" formControlName="password">
+          <input matInput [type]="hide3 ? 'password' : 'text'" placeholder="password" formControlName="password"
+            required>
+            <button type="button" mat-icon-button matSuffix (click)="hide3 = !hide3" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide3">
+              <mat-icon>{{hide3 ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            
           <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
             password is <strong>required</strong>
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="text-danger mb-3">{{ errorMessage }}</div>
+      
       <button type="submit" mat-raised-button color="accent">Iniciar sesión</button>
     </form>
     <mat-card-footer>
       <p class="forgot-password">
-        <a routerLink="/forgot-password">Olvidé mi contraseña</a>
+        <a routerLink="/forgot-password"><br>Olvidé mi contraseña</a>
       </p>
     </mat-card-footer>
-    
+
   </mat-card-content>
 </mat-card>
