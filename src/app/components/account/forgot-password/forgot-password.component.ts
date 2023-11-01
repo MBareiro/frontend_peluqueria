@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -8,46 +8,40 @@ import { UserService } from '../../../services/user.service';
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent {
-  
+
   @Component({
     selector: 'app-change-email',
     templateUrl: './change-email.component.html',
     styleUrls: ['./change-email.component.css']
   })
- 
-    email = new FormControl('', [Validators.required, Validators.email]);
-  
-    constructor(private userService: UserService){
-      
+
+  email = new FormControl('', [Validators.required, Validators.email]);
+  responseMessage: any;
+
+  constructor(private userService: UserService) { }
+
+  getErrorMessage() {
+    if (this.email.hasError('required')) {
+      return 'Debe ingresar un Ingrese su correo electrónico';
     }
-  
-    getErrorMessage() {
-      if (this.email.hasError('required')) {
-        return 'You must enter a value';
-      }
-      return this.email.hasError('email') ? 'Not a valid email' : '';
-    }
-    onSubmit() {
-      const emailValue = this.email.value; // Obtener el valor del campo de correo electrónico
-    
-      if (emailValue !== null) {
-        console.log(emailValue);
-        
-        this.userService.requestPasswordReset(emailValue).subscribe(
-          response => {
-            console.log(response)
-          },
-          error => {
-            console.log(error)
-          }
-        );
-      } else {
-        // Manejar el caso en que el valor de correo electrónico sea nulo
-        // Puedes mostrar un mensaje al usuario o realizar alguna otra acción apropiada.
-      }
-    }
-    
-  
+    return this.email.hasError('email') ? 'Correo electrónico inválido' : '';
+  }
+  onSubmit() {
+    const emailValue = this.email.value; // Obtener el valor del campo de correo electrónico
+
+    if (emailValue !== null) {
+      console.log(emailValue);
+      this.userService.requestPasswordReset(emailValue).subscribe(
+        response => {
+          console.log(response)
+          this.responseMessage = response.message;
+        },
+        error => {
+          console.log(error)
+        }
+      );
+    } 
+  }
 }
-  
+
 

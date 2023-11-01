@@ -22,14 +22,15 @@ export class FormValidators {
 
   onlyNumbers(event: KeyboardEvent): void {
     const isNumber = /^\d+$/.test(event.key);
-    // Permitir el uso de teclas de retroceso, suprimir y flechas izquierda y derecha
-    if (event.key === 'Backspace' || event.key === 'Delete' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    // Permitir el uso de teclas de retroceso, suprimir, flechas izquierda, derecha y la tecla Tab
+    if (event.key === 'Backspace' || event.key === 'Delete' || event.key === 'ArrowLeft' || event.key === 'ArrowRight' || event.key === 'Tab') {
       return;
     }
     if (!isNumber) {
       event.preventDefault(); // Evita que se escriban caracteres que no sean números
     }
   }
+  
 
   allowAlphanumeric(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;

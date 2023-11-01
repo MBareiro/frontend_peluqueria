@@ -9,8 +9,9 @@ import { ForgotPasswordComponent } from './components/account/forgot-password/fo
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
+
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent }, 
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardNavigationComponent },
   { path: 'error-page', component: ErrorPageComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'reset-password/:token', component: ResetPasswordComponent },
   { path: 'cancel-appointment/:id', component: CancelAppointmentComponent },
   { path: 'appointment-cancelled', component: AppointmentCancelledComponent },
+  { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({

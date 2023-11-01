@@ -32,7 +32,7 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
   constructor(private appointmentService: AppointmentService, selectedRadio: string, selectedDate: string) {
     super();
     this.selectedRadio = selectedRadio;
-    this.selectedDate = selectedDate;
+    this.selectedDate = selectedDate;    
   }
 
   update(selectedRadio: string, selectedDate: string) {

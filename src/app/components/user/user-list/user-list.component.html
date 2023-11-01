@@ -19,7 +19,7 @@
 
 
   <mat-card-header *ngIf="selectedUser">
-    <mat-card-title>Editar Usuario</mat-card-title>
+    <mat-card-title>Información del usuario</mat-card-title>
   </mat-card-header>
 
   <mat-card-content id="formUpdate">
@@ -27,42 +27,42 @@
       <div class="row">        
         <mat-form-field class="full-width">
           <mat-label>Nombre</mat-label>
-          <input matInput placeholder="Nombre"  [(ngModel)]="selectedUser.nombre" readonly >
+          <input matInput [(ngModel)]="selectedUser.nombre" readonly >
         </mat-form-field>
       </div>
 
       <div class="row">        
         <mat-form-field class="full-width">
           <mat-label>Apellido</mat-label>
-          <input matInput placeholder="Apellido" [(ngModel)]="selectedUser.apellido" readonly>
+          <input matInput [(ngModel)]="selectedUser.apellido" readonly>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Dirección</mat-label>
-          <input matInput placeholder="Dirección" [(ngModel)]="selectedUser.direccion" readonly >
+          <input matInput [(ngModel)]="selectedUser.direccion" readonly >
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Telefono</mat-label>
-          <input matInput placeholder="Telefono" [(ngModel)]="selectedUser.telefono" readonly>
+          <input matInput  [(ngModel)]="selectedUser.telefono" readonly>
         </mat-form-field>
       </div>      
 
       <div class="row">
         <mat-form-field class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="Email" [(ngModel)]="selectedUser.email" readonly>
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput [(ngModel)]="selectedUser.email" readonly>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Rol</mat-label>
-          <mat-select placeholder="Rol" [(ngModel)]="selectedUser.role">
+          <mat-select [(ngModel)]="selectedUser.role">
             <mat-option value="admin">Admin</mat-option>
             <mat-option value="peluquero">Peluquero</mat-option>
           </mat-select>         

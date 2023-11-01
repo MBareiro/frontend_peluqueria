@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
-
+import { environment } from '../../environments/environment'; 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:5000/usuarios';
-
+  private apiUrl = environment.URL + '/usuarios';
   constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
@@ -74,12 +73,12 @@ export class UserService {
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    return this.http.post(`http://localhost:5000/reset-password/${token}`, body);
+    return this.http.post(`${environment.URL}/reset-password/${token}`, body);
   }
 
   //Es utilizada por forgot-password.ts
   requestPasswordReset(email: string): Observable<any> {
     const resetData = { email: email };
-    return this.http.post(`http://localhost:5000/forgot-password`, resetData);
+    return this.http.post(`${environment.URL}/forgot-password`, resetData);
   }
 }

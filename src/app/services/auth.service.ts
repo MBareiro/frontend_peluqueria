@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { environment } from '../../environments/environment'; 
 @Injectable({
   providedIn: 'root' // Esto significa que el servicio estará disponible en toda la aplicación
 })
 export class AuthService {
  
   //private baseUrl = 'http://your-flask-backend-url'; // Replace with your backend URL
-  private baseUrl =  "http://localhost:5000/usuarios";
-
-  constructor(private http: HttpClient, private router: Router) {    
-    
-  }
+  //private baseUrl =  "http://localhost:5000/usuarios";
+  private baseUrl = environment.URL + "/usuarios";
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(username: string, password: string) {
     const body = { email: username, password: password };

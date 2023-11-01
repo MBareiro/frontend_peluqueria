@@ -7,18 +7,20 @@
       
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Nombre" formControlName="firstName" (keydown)="formValidator.onKeyDown($event)">
-          <mat-error *ngIf="!isFirstNameInvalid()">
-            Nombre is <strong>required</strong>
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="firstName" (keydown)="formValidator.onKeyDown($event)">
+          <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
+            Nombre es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Apellido" formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
+          <mat-label>Apellido</mat-label>
+          <input matInput formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
-            Apellido is <strong>required</strong>
+            Apellido es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -26,19 +28,23 @@
 
       <div class="row">
         <mat-form-field class="full-width">
-          <input matInput placeholder="Telefono" formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)">
           <mat-error *ngIf="addressForm.controls['phoneNumber'].hasError('required')">
-            Telefono is <strong>required</strong>
+            Teléfono es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="john_doe@example.com" formControlName="email" required>
-          <mat-error *ngIf="addressForm.controls['email'].hasError('required') || addressForm.controls['email'].hasError('email')">
-            Email is <strong>required</strong>
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput formControlName="email" required>
+          <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
+            Correo electrónico es <strong>requerido</strong>
+          </mat-error>
+          <mat-error *ngIf="addressForm.controls['email'].hasError('email')">
+            Correo electrónico es <strong>inválido</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -46,26 +52,27 @@
 
       <div class="row">
         <mat-form-field class="full-width">
-          <mat-select placeholder="Peluquero" formControlName="peluquero" (valueChange)="peluquero()">
+          <mat-label>Peluquero</mat-label>
+          <mat-select formControlName="peluquero" (valueChange)="peluquero()">
             <mat-option *ngFor="let user of users" [value]="user.id" >
               {{ user.nombre }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="addressForm.controls['peluquero'].hasError('required')">
-            Peluquero es <strong>required</strong>
+            Peluquero es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field>
-          <mat-label>Choose a date</mat-label>
+          <mat-label>Fecha</mat-label>
           <input matInput [matDatepicker]="picker"  formControlName="date" (dateChange)="fechaSeleccionada($event)" [min]="minDate" >
           <!--   <mat-hint>MM/DD/YYYY</mat-hint> -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <mat-error *ngIf="addressForm.controls['date'].hasError('required')">
-            Fecha es <strong>required</strong>
+            Fecha es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -77,14 +84,11 @@
           <mat-radio-button value="afternoon">Tarde</mat-radio-button>
         </mat-radio-group>
         <mat-error *ngIf="addressForm.controls['schedule'].hasError('required')">
-          Elija una opcion <strong>required</strong>
+          Elija una opcion <strong>requerido</strong>
         </mat-error>
       </div>
 
-      <mat-radio-group formControlName="selectedRadio" >
-        <!-- <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
-          Elija una opcion <strong>required</strong>
-        </mat-error> -->
+      <mat-radio-group formControlName="selectedRadio" >       
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}

@@ -3,102 +3,84 @@
     <mat-form-field>
       <mat-label>Fecha</mat-label>
       <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)">
-     <!--  <mat-hint>MM/DD/YYYY</mat-hint> -->
+      <!--  <mat-hint>MM/DD/YYYY</mat-hint> -->
       <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
       <mat-datepicker #datepicker></mat-datepicker>
     </mat-form-field>
+    
+  </mat-card-content>
+  <mat-card-content>
     <mat-radio-group (change)="onRadioChange($event)" class="radioGroup">
       <mat-radio-button class="vertical-radio-button" value="morning" checked="true">Turno mañana</mat-radio-button>
-      <mat-radio-button class="vertical-radio-button" value="afternoon">Turno tarde</mat-radio-button>    
-    </mat-radio-group>  
-
-    <!-- <mat-form-field>
-      <mat-select placeholder="Peluquero" formControlName="peluquero">
-        <mat-option>dfgd</mat-option>    
-      </mat-select>
-      <mat-error >
-        Peluquero es <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Choose a date</mat-label>
-      <input matInput formControlName="date" >
-        <mat-hint>MM/DD/YYYY</mat-hint> 
-      <mat-datepicker-toggle matIconSuffix ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-error >
-        Fecha es <strong>required</strong>
-      </mat-error>
-    </mat-form-field> -->
-
+      <mat-radio-button class="vertical-radio-button" value="afternoon">Turno tarde</mat-radio-button>
+    </mat-radio-group>
   </mat-card-content>
-  
+
   <mat-card-content>
-    <div class="table-container"><table mat-table class="full-width-table" matSort aria-label="Elements">
-      <!-- Id Column -->
-      <!--  <ng-container matColumnDef="id">
+    <div class="table-container">
+      <table mat-table class="full-width-table" matSort aria-label="Elements">
+        <!-- Id Column -->
+        <!--  <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
       <td mat-cell *matCellDef="let row">{{row.id}}</td>
     </ng-container>
  -->
-      <!-- selectedRadio Column -->
-      <ng-container matColumnDef="selectedRadio">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
-        <td mat-cell *matCellDef="let row">{{row.selectedRadio}}</td>
-      </ng-container>
+        <!-- selectedRadio Column -->
+        <ng-container matColumnDef="selectedRadio">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+          <td mat-cell *matCellDef="let row">{{row.selectedRadio}}</td>
+        </ng-container>
 
-      <!-- first_name Column -->
-      <ng-container matColumnDef="first_name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-        <td mat-cell *matCellDef="let row">{{row.first_name}}</td>
-      </ng-container>
-      <!-- last_name Column -->
-      <ng-container matColumnDef="last_name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
-        <td mat-cell *matCellDef="let row">{{row.last_name}}</td>
-      </ng-container>
-      <!-- email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let row">{{row.email}}</td>
-      </ng-container>
+        <!-- first_name Column -->
+        <ng-container matColumnDef="first_name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+          <td mat-cell *matCellDef="let row">{{row.first_name}}</td>
+        </ng-container>
+        <!-- last_name Column -->
+        <ng-container matColumnDef="last_name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
+          <td mat-cell *matCellDef="let row">{{row.last_name}}</td>
+        </ng-container>
+        <!-- email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let row">{{row.email}}</td>
+        </ng-container>
 
-      <!-- phone_number Column -->
-      <ng-container matColumnDef="phone_number">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Telefono</th>
-        <td mat-cell *matCellDef="let row">{{row.phone_number}}</td>
-      </ng-container>
+        <!-- phone_number Column -->
+        <ng-container matColumnDef="phone_number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
+          <td mat-cell *matCellDef="let row">{{row.phone_number}}</td>
+        </ng-container>
 
-      <!-- peluquero Column -->
-      <ng-container matColumnDef="peluquero">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>peluquero</th>
-        <td mat-cell *matCellDef="let row">{{row.peluquero}}</td>
-      </ng-container>
-      <!-- date Column -->
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>date</th>
-        <td mat-cell *matCellDef="let row">{{row.date}}</td>
-      </ng-container>
+        <!-- peluquero Column -->
+        <ng-container matColumnDef="peluquero">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>peluquero</th>
+          <td mat-cell *matCellDef="let row">{{row.peluquero}}</td>
+        </ng-container>
+        <!-- date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>date</th>
+          <td mat-cell *matCellDef="let row">{{row.date}}</td>
+        </ng-container>
 
-      <!-- schedule Column -->
-      <ng-container matColumnDef="schedule">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>schedule</th>
-        <td mat-cell *matCellDef="let row">{{row.schedule}}</td>
-      </ng-container>
+        <!-- schedule Column -->
+        <ng-container matColumnDef="schedule">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>schedule</th>
+          <td mat-cell *matCellDef="let row">{{row.schedule}}</td>
+        </ng-container>
 
+        <!-- schedule Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>actions</th>
+          <td mat-cell *matCellDef="let row"> <button>Eliminar</button></td>
+        </ng-container>
 
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
 
-      <!-- schedule Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>actions</th>
-        <td mat-cell *matCellDef="let row"> <button>Eliminar</button></td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table></div>
-    
   </mat-card-content>
 
   <mat-card-actions>

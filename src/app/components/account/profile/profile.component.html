@@ -10,9 +10,9 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Nombre</mat-label>
-          <input matInput placeholder="Nombre*" formControlName="nombre" (keydown)="formValidator.onKeyDown($event)">
+          <input matInput formControlName="nombre" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['nombre'].hasError('required')">
-            Nombre is <strong>required</strong>
+            Nombre es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
@@ -20,39 +20,45 @@
       <div class="row">
         <mat-form-field class="full-width"> 
           <mat-label>Apellido</mat-label>
-          <input matInput placeholder="Apellido*" formControlName="apellido" (keydown)="formValidator.onKeyDown($event)">
+          <input matInput formControlName="apellido" (keydown)="formValidator.onKeyDown($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['apellido'].hasError('required')">
-            Nombre is <strong>required</strong>
+            Apellido es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width"> 
-          <mat-label>Direccion</mat-label>
-          <input matInput placeholder="Direccion*" formControlName="direccion" (keydown)="formValidator.onKeyDown($event)">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="direccion" (keydown)="formValidator.allowAlphanumeric($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['direccion'].hasError('required')">
-            Nombre is <strong>required</strong>
+            Dirección es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field class="full-width">
-          <mat-label>Telefono</mat-label>
-          <input matInput placeholder="Telefono*" formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" (keydown)="formValidator.onlyNumbers($event)">
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['telefono'].hasError('required')">
-            Nombre is <strong>required</strong>
+            Teléfono es <strong>requerido</strong>
           </mat-error>
+          <mat-error *ngIf="!formularioEnviadoExitoso && (addressForm.controls['telefono'].hasError('minlength') || addressForm.controls['telefono'].hasError('maxlength'))">
+            Teléfono es <strong>inválido</strong>
+          </mat-error>          
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="john_doe@example.com" formControlName="email" required>
+          <mat-label>Correo electrónico</mat-label>
+          <input matInput  formControlName="email" required>
           <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['email'].hasError('required')">
-            Email is <strong>required</strong>
+            Correo electrónico es <strong>requerido</strong>
+          </mat-error>
+          <mat-error *ngIf="!formularioEnviadoExitoso && addressForm.controls['email'].hasError('email')">
+            Correo electrónico es <strong>inválido</strong>
           </mat-error>
         </mat-form-field>
       </div>      

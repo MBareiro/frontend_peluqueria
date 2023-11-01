@@ -6,7 +6,7 @@ import { Horario } from '../../../models/horario.model';
 import { UserService } from '../../../services/user.service';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ScheduleService } from '../../../services/schedule.service';
-import { catchError, tap  } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormValidators } from '../../shared/form-validators/form-validators';
 import Swal from 'sweetalert2';
@@ -47,7 +47,7 @@ export class CreateAppointmentComponent {
     this.inicio = false;
     this.error = false;
     const currentDay = new Date();  // Obtiene la fecha actual
-    this.minDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate());
+    this.minDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate()+1);
     this.configureForm();  // Call method to configure the form
   }
 
@@ -66,20 +66,13 @@ export class CreateAppointmentComponent {
       schedule: [{ value: '', disabled: true }, Validators.required],
     });
   }
-  isFirstNameInvalid() {
-    const firstNameControl = this.addressForm.get('firstName');
-    return firstNameControl?.hasError('required') && (firstNameControl.dirty || firstNameControl.touched);
-  }  
-  
+
   onSubmit(): void {
-    console.log( this.isFirstNameInvalid())
-    if (this.addressForm.invalid && !this.isFirstNameInvalid()) {
+    if (this.addressForm.invalid) {
       console.log('Formulario inválido. Por favor, revisa los campos.');
       return;
     }
-    if(this.isFirstNameInvalid()){
-      return
-    }
+
     const formData = this.addressForm.value;
     this.appointmentService.enviarFormulario(formData).subscribe(
       (response) => {
@@ -98,13 +91,13 @@ export class CreateAppointmentComponent {
       }
     );
   }
-  
+
   appointmentBD(): Observable<string[]> {
     const periodo = this.addressForm.get('schedule')?.value;
     const date = this.addressForm.get('date')?.value;
     const peluqueroID = this.addressForm.get('peluquero')?.value;
     const peluquero = peluqueroID ? peluqueroID : '';
-  
+
     return this.appointmentService.getSpecificAppointments(periodo, date, peluquero)
       .pipe(
         tap(response => console.log('Éxito:', response)),  // Loguea la respuesta
@@ -113,7 +106,7 @@ export class CreateAppointmentComponent {
           return [];  // Retorna un array vacío en caso de error
         })
       );
-  } 
+  }
 
   private clearValidatorsAndResetForm(): void {
     const controlsToClear = [
@@ -136,7 +129,7 @@ export class CreateAppointmentComponent {
         console.error(`El control ${controlName} es nulo.`);
       }
     });
-    
+
     this.addressForm.get('date')?.disable();
     this.addressForm.get('schedule')?.disable();
     this.turnos = [];
@@ -147,7 +140,7 @@ export class CreateAppointmentComponent {
   }
   chargeUser(): void {
     this.userService.getUsers().subscribe(
-      (data) => {      
+      (data) => {
         this.users = data;
         this.filterActiveUsers()
       },
@@ -158,12 +151,13 @@ export class CreateAppointmentComponent {
   }
 
   chargeHorario(): void {
+    this.error = false;
     const peluqueroID = this.addressForm.get('peluquero')?.value;
     const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
     this.horarioService.getHorarioUsuario(peluquero).subscribe(
       (data: Horario[]) => {
         this.horario = data;
-        console.log(this.horario);
+        // console.log(this.horario);
         this.createRadioButtonsForDay(); // Update radio buttons when horario changes
       },
       (error) => {
@@ -173,39 +167,41 @@ export class CreateAppointmentComponent {
   }
 
   fechaSeleccionada(event: any): void {
-    this.error = false
+    this.error = false;
     this.selectedDate = event.value;
     this.createRadioButtonsForDay(); // Update radio buttons when date changes
+    this.error = false;
     this.chargeHorario();
     this.addressForm.get('schedule')?.clearValidators();
     this.addressForm.get('schedule')?.reset();
     this.turnos = [];
     this.addressForm.get('schedule')?.enable();
     this.addressForm.get('selectedRadio')?.enable();
+    this.error = false;
   }
 
-  onRadioChange(event: MatRadioChange) {
+  onRadioChange(event: MatRadioChange) {    
+    this.error = false;
     const selectedValue = event.value; // This is the selected value (morning or afternoon)
     this.selectedValue = selectedValue || ''; // If undefined, assign an empty string
     this.chargeHorario();
+    this.error = false;
     this.turnos = this.createRadioButtonsForDay();
-    if(this.turnos.length === 0){
-      this.error = true;
-    }
     this.appointmentBD()
   }
 
   createRadioButtonsForDay(): any[] {
+    this.error = false;
     let radioButtons: any[] = [];
     const periodo = this.addressForm.get('schedule')?.value;
-  
+
     if (this.horario && this.selectedDate) {
       const selectedDay = this.selectedDate.getDay();
-  
+
       if (this.horario[selectedDay]) {
         let period_start: string | undefined;
         let period_end: string | undefined;
-  
+
         if (
           periodo === 'morning' &&
           this.horario[selectedDay]?.active_morning
@@ -218,18 +214,18 @@ export class CreateAppointmentComponent {
         ) {
           period_start = this.horario[selectedDay]?.afternoon_start;
           period_end = this.horario[selectedDay]?.afternoon_end;
-        } 
-  
+        }
+
         if (period_start && period_end) {
           const horariosDelDia = this.generarHorasAM(period_start, period_end);
-          
+
           // Obtener los horarios ocupados del servidor
           this.appointmentBD().subscribe(occupiedHours => {
             // Filtrar los horarios disponibles
             const horariosDisponibles = horariosDelDia.filter(hora => {
               return !occupiedHours.includes(hora);
             });
-  
+
             radioButtons.push(
               ...horariosDisponibles.map((hora, index) => ({
                 id: `radio_${index}`,
@@ -237,30 +233,32 @@ export class CreateAppointmentComponent {
                 label: hora,
               }))
             );
-  
+
             // si el periodo es elegido "morning" y el periodo morning es activo, no hay error
-            if (
-              (periodo === 'morning' &&
-                !this.horario[selectedDay]?.active_morning) ||
-              (periodo === 'afternoon' &&
-                !this.horario[selectedDay]?.active_afternoon)
-            ) {
+            if ((periodo === 'morning' && !this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && !this.horario[selectedDay]?.active_afternoon)) {
               this.error = true;
-            } else if (
-              (periodo === 'morning' &&
-                this.horario[selectedDay]?.active_morning) ||
-              (periodo === 'afternoon' &&
-                this.horario[selectedDay]?.active_afternoon)
-            ) {
+              console.log("if");
+
+            } else if ((periodo === 'morning' && this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && this.horario[selectedDay]?.active_afternoon)) {
+              this.error = false;
+              console.log("else");
+            } else {
               this.error = false;
             }
           });
         }
       }
     }
+    /* if (radioButtons.length === 0 && periodo) {
+      console.log(periodo);
+      
+      this.error = true;
+    } else {
+      this.error = false;
+    } */
     return radioButtons;
   }
-  
+
 
   generarHorasAM(period_start: string, period_end: string): string[] {
     const startTimeParts = period_start.split(':');
@@ -292,6 +290,6 @@ export class CreateAppointmentComponent {
     this.addressForm.get('date')?.enable();
   }
 
- 
+
 
 }

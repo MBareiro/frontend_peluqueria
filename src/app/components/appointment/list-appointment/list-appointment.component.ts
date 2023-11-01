@@ -1,13 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ListAppointmentDataSource, ListAppointmentItem } from './list-appointment-datasource';
 import { AppointmentService } from '../../../services/appointment.service';
 import { MatRadioChange } from '@angular/material/radio';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { formatDate } from '@angular/common';
+import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator";
 @Component({
   selector: 'app-list-appointment',
   templateUrl: './list-appointment.component.html',
@@ -54,15 +55,14 @@ export class ListAppointmentComponent {
       this.dataSource.connect();
     }
   }
-  
-   
-  
 
   ngAfterViewInit(): void {
     // Configura el paginador y la ordenación en la fuente de datos
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  
+    this.dataSource.paginator = this.paginator;  
+    this.paginator._intl.itemsPerPageLabel = "Registros por página";
+    this.paginator._intl.getRangeLabel = this.getRangeLabel.bind(this);
+
     // Llama a update con la fecha de hoy y el valor seleccionado por defecto (morning)
     this.dataSource.update(this.selectedRadio, this.selectedDate);   
     
@@ -71,6 +71,19 @@ export class ListAppointmentComponent {
   
     // Llamar a connect después de establecer el paginador y la ordenación
     this.dataSource.connect();
+  }
+
+  //Personalizar la etiqueta rango (0 of 0)
+  getRangeLabel(page: number, pageSize: number, length: number) {
+    if (length === 0 || pageSize === 0) {
+      return `0 de ${length}`;
+    }
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    const endIndex = startIndex < length ?
+      Math.min(startIndex + pageSize, length) :
+      startIndex + pageSize;
+    return `${startIndex + 1} - ${endIndex} de ${length}`;
   }
   
   

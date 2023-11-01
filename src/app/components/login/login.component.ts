@@ -23,35 +23,45 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
-    
-    if(email !== "" && password !== ""){
-      this.authService.login(email, password)
-      .subscribe(
-        (response: any) => {
+  
+    if (email !== "" && password !== "") {
+      this.login(email, password)
+        .then((response: any) => {
           const userId = response.usuario.id;
           const userName = response.usuario.nombre;
-          const userRole = response.usuario.role; // Suponiendo que el rol del usuario se encuentra en 'role' en la respuesta
-        
+          const userRole = response.usuario.role;
+  
           // Guardar la información del usuario en localStorage
           localStorage.setItem('userId', userId);
           localStorage.setItem('userName', userName);
-          localStorage.setItem('userRole', userRole); // Almacenar el rol del usuario
-    
+          localStorage.setItem('userRole', userRole);
+  
           this.router.navigate(['/dashboard']);
-        },
-        (error) => {
-          //console.error('Login error:', error);
+        })
+        .catch((error) => {
           Swal.fire({
             icon: 'error',
             color: 'white',
             text: error.error.message,
             background: '#191c24',
             timer: 1500,
-          })
-        }
-      );
+          });
+        });
     }
-  
-
   }
+  
+  async login(email: string, password: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.authService.login(email, password)
+        .subscribe(
+          (response: any) => {
+            resolve(response);
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+    });
+  }
+  
 }

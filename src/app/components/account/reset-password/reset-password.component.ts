@@ -21,6 +21,7 @@ export class ResetPasswordComponent {
 
   newPassword: string = '';
   confirmPassword: string = '';
+  responseMessage: any;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private route: ActivatedRoute,) {}
   
@@ -33,8 +34,6 @@ export class ResetPasswordComponent {
 
   changePassword(): void {    
     if (this.token) {
-      
-      
       const user = {
         token: this.token,
         new_password: this.passwordForm.value.newPassword,
@@ -49,34 +48,29 @@ export class ResetPasswordComponent {
           user.confirm_password          
         )
         .subscribe(
-          (data) => {
-            console.log('Password changed successfully:', data);
-            Swal.fire({
+          (response) => {
+            this.responseMessage = "Contraseña actualizada exitosamente!";
+            /* Swal.fire({
               icon: 'success',
               color: 'white',
               text: 'Exito!',
               background: '#191c24',
               timer: 1500,
-            })
+            }) */
             this.passwordForm.reset()
           },
           (error) => {
-            console.error('Error changing password:', error);
-            Swal.fire({
+            /* Swal.fire({
               icon: 'error',
               color: 'white',
-              text: 'Contraseña antigua incorrecta',
+              text: 'Ups! Ha habido un error.',
               background: '#191c24',
-            })
+            }) */
+            this.responseMessage = error.message;
             // Mostrar un mensaje de error al usuario
           }
         );
     } 
-
-
-      
-
-      
   }  
 
   onSubmit() {

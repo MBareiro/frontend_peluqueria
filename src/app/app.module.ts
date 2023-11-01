@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
 import { HttpClientModule } from '@angular/common/http';
@@ -35,7 +35,6 @@ import { ListAppointmentComponent } from './components/appointment/list-appointm
 import { ErrorPageComponent } from './components/shared/error-page/error-page.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ProfileComponent } from './components/account/profile/profile.component';
-import { ChangeEmailComponent } from './components/account/change-email/change-email.component';
 import { FormValidators } from './components/shared/form-validators/form-validators';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
@@ -61,7 +60,6 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
     ErrorPageComponent,
     ChangePasswordComponent,
     ProfileComponent,
-    ChangeEmailComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
     CancelAppointmentComponent,
@@ -94,7 +92,7 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
     MatSlideToggleModule,
     MatDividerModule
   ],
-  providers: [FormValidators], 
+  providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }, FormValidators], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

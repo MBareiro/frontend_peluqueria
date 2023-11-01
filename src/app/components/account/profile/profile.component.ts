@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 import { FormValidators } from '../../shared/form-validators/form-validators';
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,7 @@ export class ProfileComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      telefono: ['', [Validators.required]], 
+      telefono: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]], 
       email: ['', [Validators.required, Validators.email]],
       active: ['', [Validators.required]],
     });
@@ -52,6 +53,13 @@ export class ProfileComponent implements OnInit {
       this.userService.updateUser(formData).subscribe(
         (Response) => {
           console.log('User updated successfully.', Response);
+          Swal.fire({
+            icon: 'success',
+            color: 'white',
+            text: 'Perfil actualizado',
+            background: '#191c24',
+            timer: 1500,
+          })
         },
         (error) => {
           console.error('Error updating user:', error);
@@ -60,5 +68,6 @@ export class ProfileComponent implements OnInit {
     } else {
       console.log('Formulario inválido. Por favor, revisa los campos.');
     }
+    this.formularioEnviadoExitoso = false;
   }
 }

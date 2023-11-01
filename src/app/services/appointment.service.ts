@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/environment'; 
 @Injectable({
   providedIn: 'root',
 })
 export class AppointmentService {
-  private apiUrl = 'http://localhost:5000'; // Reemplaza con la URL de tu backend
-
+  //private apiUrl = 'http://localhost:5000'; // Reemplaza con la URL de tu backend
+  private apiUrl = environment.URL;
   constructor(private http: HttpClient) {}
 
   enviarFormulario(data: any): Observable<any> {
