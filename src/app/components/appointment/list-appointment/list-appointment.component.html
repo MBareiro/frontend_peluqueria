@@ -1,5 +1,7 @@
 <mat-card class="mat-elevation-z8">
+  
   <mat-card-content>
+    <mat-card-title style="font-size: 34px;">Turnos</mat-card-title><br>
     <mat-form-field>
       <mat-label>Fecha</mat-label>
       <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)">

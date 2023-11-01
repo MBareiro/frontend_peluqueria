@@ -48,7 +48,6 @@ export class ResetPasswordComponent {
         )
         .subscribe(
           (response) => {
-            console.log("response");
             this.responseMessage = response.message;           
             this.passwordForm.reset()
           },
@@ -69,10 +68,7 @@ export class ResetPasswordComponent {
         text: 'Las contraseñas no coinciden',
         background: '#191c24'
       })
-      // Mostrar un mensaje de error al usuario
     } else {
-      // Implementa aquí las validaciones de complejidad de contraseña si es necesario
-      // Llama a la función para cambiar la contraseña
       this.changePassword();
     }
   }
