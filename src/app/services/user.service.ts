@@ -76,9 +76,8 @@ export class UserService {
     return this.http.post(`${environment.URL}/reset-password/${token}`, body);
   }
 
-  //Es utilizada por forgot-password.ts
-  requestPasswordReset(email: string): Observable<any> {
-    const resetData = { email: email };
-    return this.http.post(`${environment.URL}/forgot-password`, resetData);
+  //Es utilizada por forgot-password.ts  
+  requestPasswordReset(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${environment.URL}/forgot-password`, { email });
   }
 }

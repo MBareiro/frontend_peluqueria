@@ -39,7 +39,6 @@ export class ResetPasswordComponent {
         new_password: this.passwordForm.value.newPassword,
         confirm_password: this.passwordForm.value.confirmPassword,        
       };
-      console.log(user.new_password);
       // Agregar validaciones de contraseña si es necesario
       this.userService
         .resetPassword(
@@ -49,25 +48,14 @@ export class ResetPasswordComponent {
         )
         .subscribe(
           (response) => {
-            this.responseMessage = "Contraseña actualizada exitosamente!";
-            /* Swal.fire({
-              icon: 'success',
-              color: 'white',
-              text: 'Exito!',
-              background: '#191c24',
-              timer: 1500,
-            }) */
+            console.log("response");
+            this.responseMessage = response.message;           
             this.passwordForm.reset()
           },
           (error) => {
-            /* Swal.fire({
-              icon: 'error',
-              color: 'white',
-              text: 'Ups! Ha habido un error.',
-              background: '#191c24',
-            }) */
-            this.responseMessage = error.message;
-            // Mostrar un mensaje de error al usuario
+            if (error.status === 500) {              
+              this.responseMessage = 'Token inválido o expirado. Por favor, solicita otro enlace de restablecimiento de contraseña.';
+            } 
           }
         );
     } 

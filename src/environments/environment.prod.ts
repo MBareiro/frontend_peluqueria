@@ -1,8 +1,8 @@
 export const environment = {
     production: true,
         
-    //URL: 'http://localhost:5000',
-    URL: 'https://backend-peluqueria.onrender.com/',
+   //URL: 'http://localhost:5000',
+     URL: 'https://backend-peluqueria.onrender.com/',
     // otras variables de entorno específicas del entorno de producción
 
     /* firebase: {

@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
-    URL: 'https://backend-peluqueria.onrender.com',
-    //URL: 'http://localhost:5000',
+    //URL: 'https://backend-peluqueria.onrender.com',
+    URL: 'http://localhost:5000',
     /* firebase: {
       apiKey:
        "AIzaSyAhMu1daR5cDWD6kvu2jBLaBUDRaeLvxyI",

@@ -26,7 +26,7 @@ export class ForgotPasswordComponent {
     }
     return this.email.hasError('email') ? 'Correo electrónico inválido' : '';
   }
-  onSubmit() {
+  async onSubmit() {
     const emailValue = this.email.value; // Obtener el valor del campo de correo electrónico
 
     if (emailValue !== null) {
