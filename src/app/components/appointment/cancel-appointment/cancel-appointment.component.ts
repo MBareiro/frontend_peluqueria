@@ -29,13 +29,30 @@ export class CancelAppointmentComponent implements OnInit {
         this.router.navigate(['/appointment-cancelled']);
       },
       (error) => {
-        console.error('Error cancelling appointment:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Hubo un error al cancelar el turno. Por favor, inténtalo de nuevo más tarde.',
-          showConfirmButton: true
-        });
+        if (error.status === 400) {                  
+          const statusCode = error.status;                  
+          const errorMessage = error.error.message;   
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            color: 'white',
+            background: '#191c24',
+            text: errorMessage,            
+            showConfirmButton: true
+          });                
+        } else {
+          console.error('Error cancelling appointment:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            color: 'white',
+            background: '#191c24',
+            text: 'Hubo un error al cancelar el turno. Por favor, inténtalo de nuevo más tarde.',            
+            showConfirmButton: true
+          }); 
+        }
+
+        
       }
     );
   }

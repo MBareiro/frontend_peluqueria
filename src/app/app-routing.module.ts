@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardNavigationComponent },
   { path: 'error-page', component: ErrorPageComponent },
-  { path: 'create-turn', component: CreateAppointmentComponent },
+  { path: 'create-appointment', component: CreateAppointmentComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password/:token', component: ResetPasswordComponent },
   { path: 'cancel-appointment/:id', component: CancelAppointmentComponent },

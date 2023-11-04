@@ -10,8 +10,11 @@ export class AppointmentService {
   private apiUrl = environment.URL;
   constructor(private http: HttpClient) {}
 
-  enviarFormulario(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/submit-form`, data);
+  confirmAppointment(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/confirm-appointment`, data);
+  }
+  send_confirmation_code(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/send-confirmation-code`, data);
   }
 
   getMorningAppointments(): Observable<any[]> {

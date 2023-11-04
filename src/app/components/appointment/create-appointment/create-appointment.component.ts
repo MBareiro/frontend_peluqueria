@@ -72,25 +72,78 @@ export class CreateAppointmentComponent {
       console.log('Formulario inválido. Por favor, revisa los campos.');
       return;
     }
-
+  
+    const email = this.addressForm.get('email')?.value;
     const formData = this.addressForm.value;
-    this.appointmentService.enviarFormulario(formData).subscribe(
+  
+    // Primero, envía una solicitud para enviar el código de confirmación
+    this.appointmentService.send_confirmation_code({ email: email }).subscribe(
       (response) => {
-        console.log('Formulario enviado con éxito:', response);
-        this.clearValidatorsAndResetForm();
+        console.log('Código enviado con éxito:', response);
+  
         Swal.fire({
-          icon: 'success',
-          color: 'white',
-          text: 'Turno Creado!',
+          icon: 'info',
+          title: 'Verificación de Código',
+          input: 'text',
+          color: "white",
+          text: "Por favor, verifica tu correo electrónico. Hemos enviado un código de confirmación. Ingrésalo a continuación:",
           background: '#191c24',
-          timer: 1500,
-        })
+          inputAttributes: {
+            autocapitalize: 'off',
+          },
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Cargar',
+          
+          showLoaderOnConfirm: true,
+          preConfirm: (code) => {
+            return this.appointmentService.confirmAppointment({ email: email, code: code, formData: formData }).toPromise()
+              .then((response) => {
+                console.log(response[0].message);
+                
+                if (response && response[0].message === 'Código de confirmación incorrecto') {
+                  // Accede al código de respuesta y al mensaje de error aquí
+                  const statusCode = response[1];
+                  const errorMessage = response[0].message;
+                  Swal.showValidationMessage(`Error (${statusCode}): ${errorMessage}`);
+                  return false;
+                }
+                return response;
+              })
+              .catch((error) => {            
+                // En caso de error, también puedes acceder al código de respuesta y al mensaje de error
+                if (error.status === 400) {                  
+                  const statusCode = error.status;                  
+                  const errorMessage = error.error.message;                  
+                  Swal.showValidationMessage(`Error (${statusCode}): ${errorMessage}`);
+                } else {
+                  Swal.showValidationMessage(`Error: ${error}`);
+                }
+                return false;
+              });
+          },
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {         
+            Swal.fire({
+              icon: 'success',
+              color: 'white',
+              title: 'Turno Creado Exitosamente',
+              text: 'Hemos enviado un correo electrónico con los detalles. ¡Gracias por elegir nuestros servicios!',
+              background: '#191c24',
+              timer: 6500,
+              showConfirmButton: false,
+            });
+            this.addressForm.reset();
+            this.turnos = [];            
+          }
+        });     
       },
       (error) => {
-        console.error('Error al enviar el formulario:', error);
+        console.error('Error al enviar el código:', error);
       }
     );
-  }
+  }  
 
   appointmentBD(): Observable<string[]> {
     const periodo = this.addressForm.get('schedule')?.value;
@@ -107,85 +160,52 @@ export class CreateAppointmentComponent {
         })
       );
   }
-
-  private clearValidatorsAndResetForm(): void {
-    const controlsToClear = [
-      'firstName',
-      'lastName',
-      'email',
-      'phoneNumber',
-      'peluquero',
-      'date',
-      'selectedRadio',
-      'schedule'
-    ];
-
-    controlsToClear.forEach((controlName) => {
-      const control = this.addressForm.get(controlName);
-      if (control) {
-        control.clearValidators();
-        control.reset();
-      } else {
-        console.error(`El control ${controlName} es nulo.`);
-      }
-    });
-
-    this.addressForm.get('date')?.disable();
-    this.addressForm.get('schedule')?.disable();
-    this.turnos = [];
-    this.addressForm.updateValueAndValidity();
-  }
+   
   filterActiveUsers(): void {
     this.users = this.users.filter(user => user.active);
   }
-  chargeUser(): void {
-    this.userService.getUsers().subscribe(
-      (data) => {
-        this.users = data;
-        this.filterActiveUsers()
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-      }
-    );
-  }
 
-  chargeHorario(): void {
-    this.error = false;
-    const peluqueroID = this.addressForm.get('peluquero')?.value;
-    const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
-    this.horarioService.getHorarioUsuario(peluquero).subscribe(
-      (data: Horario[]) => {
-        this.horario = data;
-        // console.log(this.horario);
-        this.createRadioButtonsForDay(); // Update radio buttons when horario changes
-      },
-      (error) => {
-        console.error('Error fetching horario:', error);
-      }
-    );
-  }
+  async chargeUser() {
+    try {
+      const data = await this.userService.getUsers().toPromise();
+      this.users = data!;
+      this.filterActiveUsers();
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  }  
 
-  fechaSeleccionada(event: any): void {
-    this.error = false;
+  async chargeHorario(): Promise<void> {
+    try {
+      this.error = false;
+      const peluqueroID = this.addressForm.get('peluquero')?.value;
+      const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
+      const data: Horario[] = await this.horarioService.getHorarioUsuario(peluquero).toPromise();
+      this.horario = data;
+      this.createRadioButtonsForDay(); // Update radio buttons when horario changes
+    } catch (error) {
+      console.error('Error fetching horario:', error);
+    }
+  }  
+
+  fechaSeleccionada(event: any): void {    
+    this.turnos = [];
     this.selectedDate = event.value;
     this.createRadioButtonsForDay(); // Update radio buttons when date changes
-    this.error = false;
     this.chargeHorario();
     this.addressForm.get('schedule')?.clearValidators();
     this.addressForm.get('schedule')?.reset();
-    this.turnos = [];
     this.addressForm.get('schedule')?.enable();
     this.addressForm.get('selectedRadio')?.enable();
     this.error = false;
   }
 
   onRadioChange(event: MatRadioChange) {    
-    this.error = false;
+    this.turnos = [];
+    this.addressForm.get('selectedRadio')?.reset();
     const selectedValue = event.value; // This is the selected value (morning or afternoon)
     this.selectedValue = selectedValue || ''; // If undefined, assign an empty string
     this.chargeHorario();
-    this.error = false;
     this.turnos = this.createRadioButtonsForDay();
     this.appointmentBD()
   }
@@ -249,13 +269,6 @@ export class CreateAppointmentComponent {
         }
       }
     }
-    /* if (radioButtons.length === 0 && periodo) {
-      console.log(periodo);
-      
-      this.error = true;
-    } else {
-      this.error = false;
-    } */
     return radioButtons;
   }
 
@@ -276,13 +289,11 @@ export class CreateAppointmentComponent {
           break;
         }
         const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-        const formattedMinute = minute === 0 ? '00' : `${minute}`; /* 
-        const amPm = hour < 12 ? 'AM' : 'PM'; */
+        const formattedMinute = minute === 0 ? '00' : `${minute}`; 
         const formattedTime = `${formattedHour}:${formattedMinute} `;
         horas.push(formattedTime);
       }
     }
-    console.log('horas ', horas);
     return horas;
   }
 
