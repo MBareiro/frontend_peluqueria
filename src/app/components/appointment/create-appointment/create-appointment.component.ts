@@ -10,6 +10,8 @@ import { catchError, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormValidators } from '../../shared/form-validators/form-validators';
 import Swal from 'sweetalert2';
+import { BloquedDayService } from 'src/app/services/bloqued-day.service';
+import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 @Component({
   selector: 'app-create-appointment',
   templateUrl: './create-appointment.component.html',
@@ -29,20 +31,25 @@ export class CreateAppointmentComponent {
   addressForm: FormGroup = new FormGroup({
     firstName: new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
     lastName: new FormControl(null, Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl(null, Validators.required),
+    email: new FormControl(null, this.isUser() ? [] : [Validators.required, Validators.email]), // Condición para requerir email
+    phoneNumber: new FormControl(null, this.isUser() ? [] : Validators.required), // Condición para requerir teléfono
     peluquero: new FormControl(null, Validators.required),
     date: new FormControl({ value: '', disabled: true }, Validators.required),
     selectedRadio: new FormControl(null, Validators.required),
     schedule: new FormControl({ value: '', disabled: true }, Validators.required)
   });
+  userRole: string | null;
 
   constructor(
     public userService: UserService,
     public horarioService: ScheduleService,
     public appointmentService: AppointmentService,
-    public formValidator: FormValidators
+    public formValidator: FormValidators,
+    public blockedDayService: BloquedDayService
   ) {
+    this.userRole = localStorage.getItem('userRole');  
+    console.log(this.userRole);
+    
     this.chargeUser();
     this.inicio = false;
     this.error = false;
@@ -58,25 +65,35 @@ export class CreateAppointmentComponent {
     this.addressForm = this.fb.group({
       firstName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
       lastName: [null, Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: [null, Validators.required],
+      email: new FormControl(null, this.isUser() ? [] : [Validators.required, Validators.email]), // Condición para requerir email
+      phoneNumber: new FormControl(null, this.isUser() ? [] : Validators.required), // Condición para requerir teléfono
       peluquero: [null, Validators.required],
       date: [{ value: '', disabled: true }, Validators.required],
       selectedRadio: [{ value: '', disabled: true }, Validators.required],
       schedule: [{ value: '', disabled: true }, Validators.required],
     });
   }
-
+  isUser(): boolean {    
+    return this.userRole === 'admin' || this.userRole === 'peluquero'; // Reemplaza esto con tu lógica real
+  }
   onSubmit(): void {
     if (this.addressForm.invalid) {
       console.log('Formulario inválido. Por favor, revisa los campos.');
       return;
-    }
-  
+    }  
     const email = this.addressForm.get('email')?.value;
-    const formData = this.addressForm.value;
+    const formData = this.addressForm.value;  
+    if (email) {
+      // El turno tiene un correo electrónico, por lo que se debe enviar la confirmación
+      this.sendConfirmationAndCreateAppointment(email, formData);
+    } else {      
+      // El turno no tiene un correo electrónico, simplemente crea el turno
+      this.createAppointment(formData);
+    }
+  }
   
-    // Primero, envía una solicitud para enviar el código de confirmación
+  private sendConfirmationAndCreateAppointment(email: string, formData: any): void {
+    // Envía una solicitud para enviar el código de confirmación
     this.appointmentService.send_confirmation_code({ email: email }).subscribe(
       (response) => {
         console.log('Código enviado con éxito:', response);
@@ -99,8 +116,7 @@ export class CreateAppointmentComponent {
           preConfirm: (code) => {
             return this.appointmentService.confirmAppointment({ email: email, code: code, formData: formData }).toPromise()
               .then((response) => {
-                console.log(response[0].message);
-                
+                console.log(response[0].message);                
                 if (response && response[0].message === 'Código de confirmación incorrecto') {
                   // Accede al código de respuesta y al mensaje de error aquí
                   const statusCode = response[1];
@@ -125,22 +141,45 @@ export class CreateAppointmentComponent {
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {         
-            Swal.fire({
-              icon: 'success',
-              color: 'white',
-              title: 'Turno Creado Exitosamente',
-              text: 'Hemos enviado un correo electrónico con los detalles. ¡Gracias por elegir nuestros servicios!',
-              background: '#191c24',
-              timer: 6500,
-              showConfirmButton: false,
-            });
-            this.addressForm.reset();
-            this.turnos = [];            
+            this.handleSuccessfulConfirmationAndCreate(email, formData);
           }
         });     
       },
       (error) => {
         console.error('Error al enviar el código:', error);
+      }
+    );
+  }
+  
+  private handleSuccessfulConfirmationAndCreate(email: string, formData: any): void {
+    // Lógica para manejar la confirmación exitosa, como enviar un correo de confirmación al cliente
+  
+    // A continuación, se crea el turno
+    this.createAppointment(formData);
+  }
+  
+  private createAppointment(formData: any): void {    
+    // Lógica para crear el turno
+    this.appointmentService.createAppointment(formData).subscribe(
+      (response) => {
+        console.log(response);
+        
+        // Lógica para manejar la creación exitosa del turno, como mostrar un mensaje al usuario
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          title: 'Turno Creado Exitosamente',
+          text: '¡Gracias por elegir nuestros servicios!',
+          background: '#191c24',
+          timer: 6500,
+          showConfirmButton: false,
+        });
+        this.addressForm.reset();
+        this.turnos = [];
+      },
+      (error) => {
+        // Lógica para manejar errores en la creación del turno
+        console.error('Error al crear el turno:', error);
       }
     );
   }  
@@ -201,6 +240,7 @@ export class CreateAppointmentComponent {
   }
 
   onRadioChange(event: MatRadioChange) {    
+    console.log("asdasdasd")
     this.turnos = [];
     this.addressForm.get('selectedRadio')?.reset();
     const selectedValue = event.value; // This is the selected value (morning or afternoon)
@@ -208,6 +248,8 @@ export class CreateAppointmentComponent {
     this.chargeHorario();
     this.turnos = this.createRadioButtonsForDay();
     this.appointmentBD()
+    console.log(this.turnos);
+    
   }
 
   createRadioButtonsForDay(): any[] {
@@ -241,6 +283,8 @@ export class CreateAppointmentComponent {
 
           // Obtener los horarios ocupados del servidor
           this.appointmentBD().subscribe(occupiedHours => {
+            console.log("occupiedHours ",occupiedHours);
+            
             // Filtrar los horarios disponibles
             const horariosDisponibles = horariosDelDia.filter(hora => {
               return !occupiedHours.includes(hora);
@@ -257,11 +301,8 @@ export class CreateAppointmentComponent {
             // si el periodo es elegido "morning" y el periodo morning es activo, no hay error
             if ((periodo === 'morning' && !this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && !this.horario[selectedDay]?.active_afternoon)) {
               this.error = true;
-              console.log("if");
-
             } else if ((periodo === 'morning' && this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && this.horario[selectedDay]?.active_afternoon)) {
               this.error = false;
-              console.log("else");
             } else {
               this.error = false;
             }
@@ -269,6 +310,8 @@ export class CreateAppointmentComponent {
         }
       }
     }
+    console.log("radioButtons", radioButtons);
+    
     return radioButtons;
   }
 
@@ -290,7 +333,7 @@ export class CreateAppointmentComponent {
         }
         const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
         const formattedMinute = minute === 0 ? '00' : `${minute}`; 
-        const formattedTime = `${formattedHour}:${formattedMinute} `;
+        const formattedTime = `${formattedHour}:${formattedMinute}`;
         horas.push(formattedTime);
       }
     }
@@ -299,8 +342,61 @@ export class CreateAppointmentComponent {
 
   peluquero() {
     this.addressForm.get('date')?.enable();
+
+    const peluqueroID = this.addressForm.get('peluquero')?.value;
+    console.log(peluqueroID);
+    
+    const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
+    console.log(peluquero);
+    
+    this.blockedDayService.getBlockedDays(peluqueroID)
+      .subscribe(
+        (response) => {
+          console.log(response);
+          if (response.length > 0) {
+            // Obtén la primera y última fecha de los días bloqueados
+          }
+        },
+        (error) => {
+          console.error('Error al obtener días bloqueados:', error);
+        }
+      );
   }
 
-
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    // Inicializa una variable para el atributo aria-disabled
+    let ariaDisabled = '';
+  
+    // Comprueba si la fecha actual es el día 15 del mes
+    if (cellDate.getDate() === 15) {
+      ariaDisabled = 'true'; // Establece aria-disabled en "true"
+    }
+  
+    // Construye la cadena de clases y atributos
+    const classes = ['mat-calendar-body-cell'];
+    if (ariaDisabled) {
+      classes.push('disabled-cell'); // Agrega una clase para el estilo de deshabilitado
+    }
+  
+    // Retorna un objeto con las clases y atributos
+    return {
+      classes: classes.join(' '),
+      attributes: {
+        'aria-disabled': ariaDisabled // Agrega el atributo aria-disabled
+      }
+    };
+  };
+  
+  isDateDisabled(date: Date): boolean {
+    // Check if the date is the 15th of the month
+    if (date.getDate() === 15) {
+      // Return true if the date is the 15th of the month, false otherwise
+      return true;
+    } else {
+      // Return false if the date is not the 15th of the month
+      return false;
+    }
+  }
+  
 
 }

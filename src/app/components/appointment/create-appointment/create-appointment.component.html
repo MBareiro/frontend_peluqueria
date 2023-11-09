@@ -39,7 +39,8 @@
       <div class="row">
         <mat-form-field>
           <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" formControlName="email" required>
+          <input matInput type="email" formControlName="email">
+
           <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
             Correo electrónico es <strong>requerido</strong>
           </mat-error>
@@ -53,7 +54,7 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Peluquero</mat-label>
-          <mat-select formControlName="peluquero" (valueChange)="peluquero()">
+          <mat-select formControlName="peluquero" (selectionChange)="peluquero()">
             <mat-option *ngFor="let user of users" [value]="user.id" >
               {{ user.nombre }}
             </mat-option>
@@ -67,7 +68,7 @@
       <div class="row">
         <mat-form-field>
           <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker"  formControlName="date" (dateChange)="fechaSeleccionada($event)" [min]="minDate" >
+          <input matInput [matDatepicker]="picker" formControlName="date" matDatepickerFilter="isDateDisabled()" (dateChange)="fechaSeleccionada($event)" [min]="minDate" >
           <!--   <mat-hint>MM/DD/YYYY</mat-hint> -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

@@ -42,3 +42,19 @@ mat-card-title {
 .error{
   margin-bottom: 5px;
 }
+.example-blocked-date-class {
+  background-color: #FF5733 !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+button.example-custom-date-class {
+  background: orange !important;
+  border-radius: 100% !important;
+}
+
+.disabled-cell {
+  pointer-events: none; /* Hace que la celda no sea interactiva, como si estuviera deshabilitada */
+  
+}

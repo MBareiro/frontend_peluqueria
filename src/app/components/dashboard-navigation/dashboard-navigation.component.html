@@ -13,6 +13,9 @@
       <button mat-menu-item (click)="showComponent('listAppointment')">
         <mat-icon>list</mat-icon>Listar Turnos
       </button>
+      <button mat-menu-item (click)="showComponent('cancelAppointments')">
+        <mat-icon>list</mat-icon>Cancelar Turnos
+      </button>
     </mat-menu>
 
     <button mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="userRole === 'admin'" >
@@ -66,6 +69,7 @@
     <app-user-create *ngIf="showUserAdd"></app-user-create>
     <app-change-password *ngIf="showChangePassword"></app-change-password>
     <app-profile *ngIf="showProfile"></app-profile>
+    <app-cancel-appointments *ngIf="showCancelAppointments"></app-cancel-appointments>
    <!--  <app-footer></app-footer> -->
   </mat-sidenav-content>
 </mat-sidenav-container>

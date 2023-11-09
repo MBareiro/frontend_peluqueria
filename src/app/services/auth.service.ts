@@ -20,7 +20,8 @@ export class AuthService {
   authorized(){
     const userName = localStorage.getItem('userName');   
     const userId = localStorage.getItem('userId');   
-    if(!userName || !userId){
+    const userRole = localStorage.getItem('userRole');  
+    if(!userName || !userId || !userRole){
       this.router.navigate(['/error-page']);
     }
   }
@@ -28,5 +29,6 @@ export class AuthService {
     // Eliminar el ID del usuario del almacenamiento local al cerrar sesión
     localStorage.removeItem('userId');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userRole');
   }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppointmentService } from 'src/app/services/appointment.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-cancel-appointment',
   templateUrl: './cancel-appointment.component.html',
@@ -50,9 +49,7 @@ export class CancelAppointmentComponent implements OnInit {
             text: 'Hubo un error al cancelar el turno. Por favor, inténtalo de nuevo más tarde.',            
             showConfirmButton: true
           }); 
-        }
-
-        
+        }        
       }
     );
   }

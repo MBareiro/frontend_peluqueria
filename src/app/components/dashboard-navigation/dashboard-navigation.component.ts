@@ -23,6 +23,7 @@ export class DashboardNavigationComponent {
   showUserAdd = false;
   showListAppointment = true;
   showProfile = false;
+  showCancelAppointments = false;
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -46,6 +47,7 @@ export class DashboardNavigationComponent {
     this.showUserAdd = false;
     this.showListAppointment = false;
     this.showProfile = false;
+    this.showCancelAppointments = false;
   }
 
   showComponent(componentName: string) {
@@ -75,6 +77,9 @@ export class DashboardNavigationComponent {
         break;
       case 'profile':
         this.showProfile = true;
+        break;
+      case 'cancelAppointments':
+        this.showCancelAppointments = true;
         break;
     }
   }

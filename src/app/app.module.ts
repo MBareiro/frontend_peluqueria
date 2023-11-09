@@ -42,6 +42,7 @@ import { ForgotPasswordComponent } from './components/account/forgot-password/fo
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
+import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
     ForgotPasswordComponent,
     ResetPasswordComponent,
     CancelAppointmentComponent,
-    AppointmentCancelledComponent,    
+    AppointmentCancelledComponent,
+    CancelAppointmentsComponent,    
     
   ],
   imports: [
@@ -90,7 +92,8 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
     MatDatepickerModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }, FormValidators], 
   bootstrap: [AppComponent]

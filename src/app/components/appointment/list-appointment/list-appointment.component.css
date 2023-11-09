@@ -28,11 +28,21 @@
 }
 
 .mat-elevation-z8 {
-  background-color: #2c2e33 !important;
+  background-color: #2c2e33;
   margin: 20px auto;
   max-width: 900px; 
 }
 .mat-elevation-z8 * {
   background-color: inherit; /* Hereda el fondo del elemento padre */
+}
+
+/* styles.css o tu archivo CSS específico */
+.custom-cell {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  background-color: yellow !important; /* Fondo amarillo */
+  color: black; /* Color de letra negro */
+  font-weight: bold;
 }
 
