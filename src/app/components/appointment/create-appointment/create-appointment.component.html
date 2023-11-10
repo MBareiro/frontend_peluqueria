@@ -68,7 +68,7 @@
       <div class="row">
         <mat-form-field>
           <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" matDatepickerFilter="isDateDisabled()" (dateChange)="fechaSeleccionada($event)" [min]="minDate" >
+          <input matInput [matDatepicker]="picker" formControlName="date"  (dateChange)="fechaSeleccionada($event)" [min]="minDate" (click)="picker.open()">
           <!--   <mat-hint>MM/DD/YYYY</mat-hint> -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

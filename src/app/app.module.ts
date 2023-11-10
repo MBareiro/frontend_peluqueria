@@ -30,7 +30,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { ListAppointmentComponent } from './components/appointment/list-appointment/list-appointment.component';
 import { ErrorPageComponent } from './components/shared/error-page/error-page.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
@@ -43,7 +43,18 @@ import { ResetPasswordComponent } from './components/account/reset-password/rese
 import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
+import {  DateFnsModule, DateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { es } from 'date-fns/locale';
 
+export const DATE_FORMATS: MatDateFormats = { 
+  parse: { dateInput: 'dd-MM-yyyy'},
+  display: { 
+    dateInput: 'dd-MM-yyyy-MM',
+    monthYearLabel: 'MMM yyyy',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'yyyy',
+  }
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,9 +104,14 @@ import { CancelAppointmentsComponent } from './components/appointment/cancel-app
     MatNativeDateModule,
     MatSlideToggleModule,
     MatDividerModule,
-    MatDatepickerModule
+    DateFnsModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }, FormValidators], 
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-ES', }, 
+    FormValidators,
+    { provide: DateAdapter, useClass: DateFnsAdapter},
+    { provide: MAT_DATE_FORMATS, useValue: es}
+  ], 
   bootstrap: [AppComponent]
 })
 export class AppModule { }

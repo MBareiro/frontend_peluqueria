@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "frontend_peluqueria:build:production"
+              "buildTarget": "frontend_peluqueria:build:production"
             },
             "development": {
-              "browserTarget": "frontend_peluqueria:build:development"
+              "buildTarget": "frontend_peluqueria:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "frontend_peluqueria:build"
+            "buildTarget": "frontend_peluqueria:build"
           }
         },
         "test": {
