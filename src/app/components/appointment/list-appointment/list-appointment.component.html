@@ -3,12 +3,11 @@
   <mat-card-content>
     <mat-card-title style="font-size: 34px;">Agenda</mat-card-title><br>
     <mat-form-field>
-      <mat-label>Fecha</mat-label>
       <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)">
-      <!--  <mat-hint>MM/DD/YYYY</mat-hint> -->
-      <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
       <mat-datepicker #datepicker></mat-datepicker>
     </mat-form-field>
+    
     
   </mat-card-content>
   <mat-card-content>

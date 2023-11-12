@@ -57,21 +57,17 @@ export class ListAppointmentComponent {
   }
 
   ngAfterViewInit(): void {
-    // Configura el paginador y la ordenación en la fuente de datos
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;  
     this.paginator._intl.itemsPerPageLabel = "Registros por página";
     this.paginator._intl.getRangeLabel = this.getRangeLabel.bind(this);
-
-    // Llama a update con la fecha de hoy y el valor seleccionado por defecto (morning)
-    this.dataSource.update(this.selectedRadio, this.selectedDate);   
-    
-    // Establecer la fuente de datos en la tabla después de configurar paginador y ordenación
-    this.table.dataSource = this.dataSource;
   
-    // Llamar a connect después de establecer el paginador y la ordenación
+    this.dataSource.update(this.selectedRadio, this.selectedDate);   
+      
+    this.table.dataSource = this.dataSource;
     this.dataSource.connect();
   }
+  
 
   //Personalizar la etiqueta rango (0 of 0)
   getRangeLabel(page: number, pageSize: number, length: number) {

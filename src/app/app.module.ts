@@ -10,7 +10,6 @@ import { DashboardNavigationComponent } from './components/dashboard-navigation/
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { LoginComponent } from './components/login/login.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -30,7 +29,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
+import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ListAppointmentComponent } from './components/appointment/list-appointment/list-appointment.component';
 import { ErrorPageComponent } from './components/shared/error-page/error-page.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
@@ -43,14 +42,29 @@ import { ResetPasswordComponent } from './components/account/reset-password/rese
 import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  DateFnsModule, DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { es } from 'date-fns/locale';
+
+// Ensure that `es.localize` is defined
+const locale = {
+  ...(es || {}),
+  options: {
+    weekStartsOn: 0, // Sunday
+    firstWeekContainsDate: 1,
+  },
+  localize: {
+    month: (n: number) => (es?.localize?.month as unknown as ((n: number) => any)[])[n] || '',
+    day: (n: number) => (es?.localize?.day as unknown as ((n: number) => any)[])[n] || '', // Ensure `day` is a function
+    // Add other necessary functions with similar null checks
+  },
+};
 
 export const DATE_FORMATS: MatDateFormats = { 
   parse: { dateInput: 'dd-MM-yyyy'},
   display: { 
     dateInput: 'dd-MM-yyyy-MM',
-    monthYearLabel: 'MMM yyyy',
+    monthYearLabel: 'MM yyyy',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'yyyy',
   }
@@ -104,13 +118,13 @@ export const DATE_FORMATS: MatDateFormats = {
     MatNativeDateModule,
     MatSlideToggleModule,
     MatDividerModule,
-    DateFnsModule,
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'es-ES', }, 
+    { provide: LOCALE_ID, useValue: 'es-ES'}, 
     FormValidators,
     { provide: DateAdapter, useClass: DateFnsAdapter},
-    { provide: MAT_DATE_FORMATS, useValue: es}
+    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: locale },
   ], 
   bootstrap: [AppComponent]
 })
