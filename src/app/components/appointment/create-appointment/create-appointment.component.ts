@@ -1,5 +1,11 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  Validators,
+  FormGroup,
+  FormControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { User } from '../../../models/user.model';
 import { Horario } from '../../../models/horario.model';
@@ -11,13 +17,20 @@ import { Observable } from 'rxjs';
 import { FormValidators } from '../../shared/form-validators/form-validators';
 import Swal from 'sweetalert2';
 import { BloquedDayService } from 'src/app/services/bloqued-day.service';
-import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
+import {
+  DateFilterFn,
+  MatCalendarCellClassFunction,
+  MatDatepicker,
+} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 @Component({
   selector: 'app-create-appointment',
   templateUrl: './create-appointment.component.html',
   styleUrls: ['./create-appointment.component.css'],
 })
 export class CreateAppointmentComponent {
+  @ViewChild('picker') datepicker!: MatDatepicker<any>;
   users: User[] = [];
   horario: Horario[] = [];
   selectedDate: Date | null = null;
@@ -27,16 +40,28 @@ export class CreateAppointmentComponent {
   error!: boolean;
   formularioEnviadoExitoso = false;
   minDate: Date;
-
+  blockedDatesArray: string[] = [];
   addressForm: FormGroup = new FormGroup({
-    firstName: new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]),
+    firstName: new FormControl(null, [
+      Validators.required,
+      Validators.pattern('^[a-zA-Z ]+$'),
+    ]),
     lastName: new FormControl(null, Validators.required),
-    email: new FormControl(null, this.isUser() ? [] : [Validators.required, Validators.email]), // Condición para requerir email
-    phoneNumber: new FormControl(null, this.isUser() ? [] : Validators.required), // Condición para requerir teléfono
+    email: new FormControl(
+      null,
+      this.isUser() ? [] : [Validators.required, Validators.email]
+    ), // Condición para requerir email
+    phoneNumber: new FormControl(
+      null,
+      this.isUser() ? [] : Validators.required
+    ), // Condición para requerir teléfono
     peluquero: new FormControl(null, Validators.required),
     date: new FormControl({ value: '', disabled: true }, Validators.required),
     selectedRadio: new FormControl(null, Validators.required),
-    schedule: new FormControl({ value: '', disabled: true }, Validators.required)
+    schedule: new FormControl(
+      { value: '', disabled: true },
+      Validators.required
+    ),
   });
   userRole: string | null;
 
@@ -47,15 +72,19 @@ export class CreateAppointmentComponent {
     public formValidator: FormValidators,
     public blockedDayService: BloquedDayService
   ) {
-    this.userRole = localStorage.getItem('userRole');  
+    this.userRole = localStorage.getItem('userRole');
     console.log(this.userRole);
-    
+
     this.chargeUser();
     this.inicio = false;
     this.error = false;
-    const currentDay = new Date();  // Obtiene la fecha actual
-    this.minDate = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate()+1);
-    this.configureForm();  // Call method to configure the form
+    const currentDay = new Date(); // Obtiene la fecha actual
+    this.minDate = new Date(
+      currentDay.getFullYear(),
+      currentDay.getMonth(),
+      currentDay.getDate() + 1
+    );
+    this.configureForm(); // Call method to configure the form
   }
 
   private fb = inject(FormBuilder); // Initialize addressForm property
@@ -63,47 +92,59 @@ export class CreateAppointmentComponent {
   // Method to configure the form
   private configureForm(): void {
     this.addressForm = this.fb.group({
-      firstName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]],
+      firstName: [
+        null,
+        [Validators.required, Validators.pattern('^[a-zA-Z ]+$')],
+      ],
       lastName: [null, Validators.required],
-      email: new FormControl(null, this.isUser() ? [] : [Validators.required, Validators.email]), // Condición para requerir email
-      phoneNumber: new FormControl(null, this.isUser() ? [] : Validators.required), // Condición para requerir teléfono
+      email: new FormControl(
+        null,
+        this.isUser() ? [] : [Validators.required, Validators.email]
+      ), // Condición para requerir email
+      phoneNumber: new FormControl(
+        null,
+        this.isUser() ? [] : Validators.required
+      ), // Condición para requerir teléfono
       peluquero: [null, Validators.required],
       date: [{ value: '', disabled: true }, Validators.required],
       selectedRadio: [{ value: '', disabled: true }, Validators.required],
       schedule: [{ value: '', disabled: true }, Validators.required],
     });
   }
-  isUser(): boolean {    
+  isUser(): boolean {
     return this.userRole === 'admin' || this.userRole === 'peluquero'; // Reemplaza esto con tu lógica real
   }
   onSubmit(): void {
     if (this.addressForm.invalid) {
       console.log('Formulario inválido. Por favor, revisa los campos.');
       return;
-    }  
+    }
     const email = this.addressForm.get('email')?.value;
-    const formData = this.addressForm.value;  
+    const formData = this.addressForm.value;
     if (email) {
       // El turno tiene un correo electrónico, por lo que se debe enviar la confirmación
       this.sendConfirmationAndCreateAppointment(email, formData);
-    } else {      
+    } else {
       // El turno no tiene un correo electrónico, simplemente crea el turno
       this.createAppointment(formData);
     }
   }
-  
-  private sendConfirmationAndCreateAppointment(email: string, formData: any): void {
+
+  private sendConfirmationAndCreateAppointment(
+    email: string,
+    formData: any
+  ): void {
     // Envía una solicitud para enviar el código de confirmación
     this.appointmentService.send_confirmation_code({ email: email }).subscribe(
       (response) => {
         console.log('Código enviado con éxito:', response);
-  
+
         Swal.fire({
           icon: 'info',
           title: 'Verificación de Código',
           input: 'text',
-          color: "white",
-          text: "Por favor, verifica tu correo electrónico. Hemos enviado un código de confirmación. Ingrésalo a continuación:",
+          color: 'white',
+          text: 'Por favor, verifica tu correo electrónico. Hemos enviado un código de confirmación. Ingrésalo a continuación:',
           background: '#191c24',
           inputAttributes: {
             autocapitalize: 'off',
@@ -111,27 +152,40 @@ export class CreateAppointmentComponent {
           showCancelButton: true,
           cancelButtonText: 'Cancelar',
           confirmButtonText: 'Cargar',
-          
+
           showLoaderOnConfirm: true,
           preConfirm: (code) => {
-            return this.appointmentService.confirmAppointment({ email: email, code: code, formData: formData }).toPromise()
+            return this.appointmentService
+              .confirmAppointment({
+                email: email,
+                code: code,
+                formData: formData,
+              })
+              .toPromise()
               .then((response) => {
-                console.log(response[0].message);                
-                if (response && response[0].message === 'Código de confirmación incorrecto') {
+                console.log(response[0].message);
+                if (
+                  response &&
+                  response[0].message === 'Código de confirmación incorrecto'
+                ) {
                   // Accede al código de respuesta y al mensaje de error aquí
                   const statusCode = response[1];
                   const errorMessage = response[0].message;
-                  Swal.showValidationMessage(`Error (${statusCode}): ${errorMessage}`);
+                  Swal.showValidationMessage(
+                    `Error (${statusCode}): ${errorMessage}`
+                  );
                   return false;
                 }
                 return response;
               })
-              .catch((error) => {            
+              .catch((error) => {
                 // En caso de error, también puedes acceder al código de respuesta y al mensaje de error
-                if (error.status === 400) {                  
-                  const statusCode = error.status;                  
-                  const errorMessage = error.error.message;                  
-                  Swal.showValidationMessage(`Error (${statusCode}): ${errorMessage}`);
+                if (error.status === 400) {
+                  const statusCode = error.status;
+                  const errorMessage = error.error.message;
+                  Swal.showValidationMessage(
+                    `Error (${statusCode}): ${errorMessage}`
+                  );
                 } else {
                   Swal.showValidationMessage(`Error: ${error}`);
                 }
@@ -140,30 +194,33 @@ export class CreateAppointmentComponent {
           },
           allowOutsideClick: false,
         }).then((result) => {
-          if (result.isConfirmed) {         
+          if (result.isConfirmed) {
             this.handleSuccessfulConfirmationAndCreate(email, formData);
           }
-        });     
+        });
       },
       (error) => {
         console.error('Error al enviar el código:', error);
       }
     );
   }
-  
-  private handleSuccessfulConfirmationAndCreate(email: string, formData: any): void {
+
+  private handleSuccessfulConfirmationAndCreate(
+    email: string,
+    formData: any
+  ): void {
     // Lógica para manejar la confirmación exitosa, como enviar un correo de confirmación al cliente
-  
+
     // A continuación, se crea el turno
     this.createAppointment(formData);
   }
-  
-  private createAppointment(formData: any): void {    
+
+  private createAppointment(formData: any): void {
     // Lógica para crear el turno
     this.appointmentService.createAppointment(formData).subscribe(
       (response) => {
         console.log(response);
-        
+
         // Lógica para manejar la creación exitosa del turno, como mostrar un mensaje al usuario
         Swal.fire({
           icon: 'success',
@@ -182,7 +239,7 @@ export class CreateAppointmentComponent {
         console.error('Error al crear el turno:', error);
       }
     );
-  }  
+  }
 
   appointmentBD(): Observable<string[]> {
     const periodo = this.addressForm.get('schedule')?.value;
@@ -190,18 +247,19 @@ export class CreateAppointmentComponent {
     const peluqueroID = this.addressForm.get('peluquero')?.value;
     const peluquero = peluqueroID ? peluqueroID : '';
 
-    return this.appointmentService.getSpecificAppointments(periodo, date, peluquero)
+    return this.appointmentService
+      .getSpecificAppointments(periodo, date, peluquero)
       .pipe(
-        tap(response => console.log('Éxito:', response)),  // Loguea la respuesta
-        catchError(error => {
+        tap((response) => console.log('Éxito:', response)), // Loguea la respuesta
+        catchError((error) => {
           console.error('Error al obtener los horarios:', error);
-          return [];  // Retorna un array vacío en caso de error
+          return []; // Retorna un array vacío en caso de error
         })
       );
   }
-   
+
   filterActiveUsers(): void {
-    this.users = this.users.filter(user => user.active);
+    this.users = this.users.filter((user) => user.active);
   }
 
   async chargeUser() {
@@ -212,22 +270,24 @@ export class CreateAppointmentComponent {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  }  
+  }
 
   async chargeHorario(): Promise<void> {
     try {
       this.error = false;
       const peluqueroID = this.addressForm.get('peluquero')?.value;
       const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
-      const data: Horario[] = await this.horarioService.getHorarioUsuario(peluquero).toPromise();
+      const data: Horario[] = await this.horarioService
+        .getHorarioUsuario(peluquero)
+        .toPromise();
       this.horario = data;
       this.createRadioButtonsForDay(); // Update radio buttons when horario changes
     } catch (error) {
       console.error('Error fetching horario:', error);
     }
-  }  
+  }
 
-  fechaSeleccionada(event: any): void {    
+  fechaSeleccionada(event: any): void {
     this.turnos = [];
     this.selectedDate = event.value;
     this.createRadioButtonsForDay(); // Update radio buttons when date changes
@@ -239,17 +299,14 @@ export class CreateAppointmentComponent {
     this.error = false;
   }
 
-  onRadioChange(event: MatRadioChange) {    
-    console.log("asdasdasd")
+  onRadioChange(event: MatRadioChange) {
     this.turnos = [];
     this.addressForm.get('selectedRadio')?.reset();
     const selectedValue = event.value; // This is the selected value (morning or afternoon)
     this.selectedValue = selectedValue || ''; // If undefined, assign an empty string
     this.chargeHorario();
     this.turnos = this.createRadioButtonsForDay();
-    this.appointmentBD()
-    console.log(this.turnos);
-    
+    this.appointmentBD();
   }
 
   createRadioButtonsForDay(): any[] {
@@ -282,11 +339,11 @@ export class CreateAppointmentComponent {
           const horariosDelDia = this.generarHorasAM(period_start, period_end);
 
           // Obtener los horarios ocupados del servidor
-          this.appointmentBD().subscribe(occupiedHours => {
-            console.log("occupiedHours ",occupiedHours);
-            
+          this.appointmentBD().subscribe((occupiedHours) => {
+            console.log('occupiedHours ', occupiedHours);
+
             // Filtrar los horarios disponibles
-            const horariosDisponibles = horariosDelDia.filter(hora => {
+            const horariosDisponibles = horariosDelDia.filter((hora) => {
               return !occupiedHours.includes(hora);
             });
 
@@ -299,9 +356,19 @@ export class CreateAppointmentComponent {
             );
 
             // si el periodo es elegido "morning" y el periodo morning es activo, no hay error
-            if ((periodo === 'morning' && !this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && !this.horario[selectedDay]?.active_afternoon)) {
+            if (
+              (periodo === 'morning' &&
+                !this.horario[selectedDay]?.active_morning) ||
+              (periodo === 'afternoon' &&
+                !this.horario[selectedDay]?.active_afternoon)
+            ) {
               this.error = true;
-            } else if ((periodo === 'morning' && this.horario[selectedDay]?.active_morning) || (periodo === 'afternoon' && this.horario[selectedDay]?.active_afternoon)) {
+            } else if (
+              (periodo === 'morning' &&
+                this.horario[selectedDay]?.active_morning) ||
+              (periodo === 'afternoon' &&
+                this.horario[selectedDay]?.active_afternoon)
+            ) {
               this.error = false;
             } else {
               this.error = false;
@@ -310,11 +377,10 @@ export class CreateAppointmentComponent {
         }
       }
     }
-    console.log("radioButtons", radioButtons);
-    
+    console.log('radioButtons', radioButtons);
+
     return radioButtons;
   }
-
 
   generarHorasAM(period_start: string, period_end: string): string[] {
     const startTimeParts = period_start.split(':');
@@ -332,7 +398,7 @@ export class CreateAppointmentComponent {
           break;
         }
         const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-        const formattedMinute = minute === 0 ? '00' : `${minute}`; 
+        const formattedMinute = minute === 0 ? '00' : `${minute}`;
         const formattedTime = `${formattedHour}:${formattedMinute}`;
         horas.push(formattedTime);
       }
@@ -340,63 +406,87 @@ export class CreateAppointmentComponent {
     return horas;
   }
 
-  peluquero() {
+  async peluquero() {
     this.addressForm.get('date')?.enable();
-
     const peluqueroID = this.addressForm.get('peluquero')?.value;
-    console.log(peluqueroID);
-    
     const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
-    console.log(peluquero);
-    
-    this.blockedDayService.getBlockedDays(peluqueroID)
-      .subscribe(
-        (response) => {
-          console.log(response);
-          if (response.length > 0) {
-            // Obtén la primera y última fecha de los días bloqueados
-          }
-        },
-        (error) => {
-          console.error('Error al obtener días bloqueados:', error);
+    const data: Horario[] = await this.horarioService
+      .getHorarioUsuario(peluqueroID)
+      .toPromise();
+    this.horario = data;
+    console.log(this.horario);
+
+    // Fetch blocked dates from the service
+    this.blockedDayService.getBlockedDays(peluqueroID).subscribe(
+      (response) => {
+        console.log(response);
+        if (response.length > 0) {
+          // Extract and format the dates
+          this.blockedDatesArray = response.map((item: any) => {
+            const blockedDate = new Date(item.blocked_date);
+            return blockedDate.toISOString().split('T')[0];
+          });
+          //console.log(this.blockedDatesArray);
         }
-      );
+      },
+      (error) => {
+        console.error('Error al obtener días bloqueados:', error);
+      }
+    );
   }
 
-  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
-    // Inicializa una variable para el atributo aria-disabled
-    let ariaDisabled = '';
-  
-    // Comprueba si la fecha actual es el día 15 del mes
-    if (cellDate.getDate() === 15) {
-      ariaDisabled = 'true'; // Establece aria-disabled en "true"
-    }
-  
-    // Construye la cadena de clases y atributos
-    const classes = ['mat-calendar-body-cell'];
-    if (ariaDisabled) {
-      classes.push('disabled-cell'); // Agrega una clase para el estilo de deshabilitado
-    }
-  
-    // Retorna un objeto con las clases y atributos
-    return {
-      classes: classes.join(' '),
-      attributes: {
-        'aria-disabled': ariaDisabled // Agrega el atributo aria-disabled
-      }
-    };
-  };
-  
-  isDateDisabled(date: Date): boolean {
-    // Check if the date is the 15th of the month
-    if (date.getDate() === 15) {
-      // Return true if the date is the 15th of the month, false otherwise
-      return true;
-    } else {
-      // Return false if the date is not the 15th of the month
+  // Modify the esHabilitado function
+  esHabilitado: DateFilterFn<any> = (date: Date | null) => {
+    
+    
+    if (date === null || date === undefined) {
+      // Handle null or undefined case
       return false;
     }
-  }
   
-
+    // Check if the date is in the blockedDatesArray
+    const isBlocked = this.blockedDatesArray.includes(
+      date.toISOString().split('T')[0]
+    );
+  
+    // Get the day of the week (0 to 6, where 0 is Sunday and 6 is Saturday)
+    const dayOfWeek = date.getDay();
+  
+    // Find the corresponding entry in the horario array
+    let horarioEntry;
+    switch (dayOfWeek) {
+      case 1: // lunes
+        horarioEntry = this.horario[2];
+        break;
+      case 2: // martes
+        horarioEntry = this.horario[3];
+        break;
+      case 3: // miercoles
+        horarioEntry = this.horario[4];
+        break;
+      case 4: // jueves
+        horarioEntry = this.horario[5];
+        break;
+      case 5: // viernes
+        horarioEntry = this.horario[6];
+        break;
+      case 6: // sabado
+        horarioEntry = this.horario[7];
+        break;
+      case 0: // domingo
+        horarioEntry = this.horario[1];
+        break;
+      default:
+        break;
+    }
+  
+    // Check if the horarioEntry is defined and both active_morning and active_afternoon are true
+    const isDayBlocked =
+      horarioEntry?.active_morning &&
+      horarioEntry?.active_afternoon &&
+      !isBlocked;
+  
+    return !!isDayBlocked; // Use double negation to ensure a boolean value
+  };
+  
 }

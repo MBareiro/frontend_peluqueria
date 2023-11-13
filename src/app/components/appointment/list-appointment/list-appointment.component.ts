@@ -6,9 +6,13 @@ import { ListAppointmentDataSource, ListAppointmentItem } from './list-appointme
 import { AppointmentService } from '../../../services/appointment.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormControl } from '@angular/forms';
-import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { DateFilterFn, MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { formatDate } from '@angular/common';
 import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator";
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
+
 @Component({
   selector: 'app-list-appointment',
   templateUrl: './list-appointment.component.html',
@@ -25,6 +29,12 @@ export class ListAppointmentComponent {
   date = new FormControl(new Date());
   //serializedDate = new FormControl(new Date().toISOString());
   
+  dateFilter = (date: Date) => {
+    // Lógica para deshabilitar ciertos días, por ejemplo, deshabilitar los sábados y domingos
+    const day = date.getDay();
+    return day !== 0 && day !== 6; // Devuelve true para habilitar, false para deshabilitar
+  };
+
   constructor(private appointmentService: AppointmentService) {
     this.dataSource = new ListAppointmentDataSource(this.appointmentService, this.selectedRadio, this.selectedDate);
   }
@@ -38,6 +48,18 @@ export class ListAppointmentComponent {
     this.dataSource.update(this.selectedRadio, this.selectedDate);  // Update the data source
  
   }
+
+  esHabilitado: DateFilterFn<any> = (date: Date | null) => {
+    if (date === null) {
+      // Handle null case
+      return false;
+    }
+  
+    // Check the date using your logic here
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  };
+  
   
   onDateChange(event: MatDatepickerInputEvent<Date>) {
     const selectedDate: Date | null = event.value;

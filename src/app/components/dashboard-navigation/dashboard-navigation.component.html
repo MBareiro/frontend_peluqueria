@@ -13,9 +13,7 @@
       <button mat-menu-item (click)="showComponent('listAppointment')">
         <mat-icon>list</mat-icon>Listar Turnos
       </button>
-      <button mat-menu-item (click)="showComponent('cancelAppointments')">
-        <mat-icon>list</mat-icon>Cancelar Turnos
-      </button>
+      
     </mat-menu>
 
     <button mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="userRole === 'admin'" >
@@ -33,6 +31,10 @@
     <button mat-menu-item class="menu-button" (click)="showComponent('schedule')">
       <mat-icon>schedule</mat-icon>
       <span>Cronograma</span>
+    </button>
+
+    <button mat-menu-item (click)="showComponent('cancelAppointments')">
+      <mat-icon>calendar_month</mat-icon>Calendario
     </button>
 
     <button mat-menu-item class="menu-button" (click)="showComponent('password')">
@@ -63,8 +65,8 @@
 
     <!-- Add Content Here -->
     <app-schedule *ngIf="showSchudule"></app-schedule>
-    <app-create-appointment *ngIf="showCreateAppointment"></app-create-appointment><!-- 
-    <app-list-appointment *ngIf="showListAppointment"></app-list-appointment> -->
+    <app-create-appointment *ngIf="showCreateAppointment"></app-create-appointment>
+    <app-list-appointment *ngIf="showListAppointment"></app-list-appointment> 
     <app-user-list *ngIf="showUserList"></app-user-list>
     <app-user-create *ngIf="showUserAdd"></app-user-create>
     <app-change-password *ngIf="showChangePassword"></app-change-password>

@@ -43,32 +43,10 @@ import { CancelAppointmentComponent } from './components/appointment/cancel-appo
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {  DateFnsModule, DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { es } from 'date-fns/locale';
 
 // Ensure that `es.localize` is defined
-const locale = {
-  ...(es || {}),
-  options: {
-    weekStartsOn: 0, // Sunday
-    firstWeekContainsDate: 1,
-  },
-  localize: {
-    month: (n: number) => (es?.localize?.month as unknown as ((n: number) => any)[])[n] || '',
-    day: (n: number) => (es?.localize?.day as unknown as ((n: number) => any)[])[n] || '', // Ensure `day` is a function
-    // Add other necessary functions with similar null checks
-  },
-};
 
-export const DATE_FORMATS: MatDateFormats = { 
-  parse: { dateInput: 'dd-MM-yyyy'},
-  display: { 
-    dateInput: 'dd-MM-yyyy-MM',
-    monthYearLabel: 'MM yyyy',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'yyyy',
-  }
-}
 @NgModule({
   declarations: [
     AppComponent,
@@ -122,9 +100,6 @@ export const DATE_FORMATS: MatDateFormats = {
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES'}, 
     FormValidators,
-    { provide: DateAdapter, useClass: DateFnsAdapter},
-    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: locale },
   ], 
   bootstrap: [AppComponent]
 })

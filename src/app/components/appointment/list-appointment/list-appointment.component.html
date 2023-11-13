@@ -1,11 +1,13 @@
 <mat-card class="mat-elevation-z8">
   
   <mat-card-content>
-    <mat-card-title style="font-size: 34px;">Agenda</mat-card-title><br>
+    <mat-card-title>Agenda</mat-card-title><br>
     <mat-form-field>
-      <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)">
-      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-      <mat-datepicker #datepicker></mat-datepicker>
+      <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)" [matDatepickerFilter]="esHabilitado">
+
+      <mat-datepicker-toggle matSuffix [for]="datepicker" ></mat-datepicker-toggle>
+      <mat-datepicker #datepicker ></mat-datepicker>
+
     </mat-form-field>
     
     

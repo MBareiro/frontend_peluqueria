@@ -1,6 +1,6 @@
 /* Establece el ancho máximo de la tarjeta */
 .shipping-card {
-    max-width: 400px; /* Ajusta este valor según tu preferencia para el ancho máximo */
+    max-width: 600px; /* Ajusta este valor según tu preferencia para el ancho máximo */
     margin: 20px auto;
     background-color: #191c24 !important;
   }
@@ -44,7 +44,11 @@
   }
 
  
+  .demo-inline-calendar-card {
+    width: 300px;
+  }
   
   
-  
- 
+  .mr-2 {
+    margin-right: 16px; /* Adjust the value as needed */
+  }
