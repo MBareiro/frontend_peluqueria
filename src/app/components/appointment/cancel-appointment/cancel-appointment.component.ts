@@ -24,12 +24,11 @@ export class CancelAppointmentComponent implements OnInit {
     // Llama a un servicio para cancelar el turno
     this.appointmentService.cancelAppointment(this.appointmentId).subscribe(
       (data) => {
-        console.log(data);
         this.router.navigate(['/appointment-cancelled']);
       },
       (error) => {
         if (error.status === 400) {                  
-          const statusCode = error.status;                  
+          //const statusCode = error.status;                  
           const errorMessage = error.error.message;   
           Swal.fire({
             icon: 'error',

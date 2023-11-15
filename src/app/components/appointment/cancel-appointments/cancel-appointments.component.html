@@ -3,7 +3,9 @@
     <mat-card-title>Calendario</mat-card-title>
     <mat-calendar [dateFilter]="esHabilitado" [(selected)]="selected"></mat-calendar>
   </mat-card-content>
+  
   <mat-card-content>
+    <mat-divider></mat-divider><br>
     <mat-card-title>Bloquear fechas</mat-card-title>
     <form [formGroup]="range" novalidate (ngSubmit)="onSubmit()">
       <mat-form-field>

@@ -89,7 +89,10 @@
         </mat-error>
       </div>
 
-      <mat-radio-group formControlName="selectedRadio" >       
+      <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required') ">
+        Elija una opcion 
+      </mat-error>    
+      <mat-radio-group formControlName="selectedRadio" >           
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}

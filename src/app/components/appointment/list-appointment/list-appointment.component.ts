@@ -40,7 +40,7 @@ export class ListAppointmentComponent {
   }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number'];/* 
+  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'actions'];/* 
   displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'peluquero']; */
 
   onRadioChange(event: MatRadioChange) {
@@ -104,5 +104,18 @@ export class ListAppointmentComponent {
     return `${startIndex + 1} - ${endIndex} de ${length}`;
   }
   
-  
+  eliminarTurno(id : number){
+    this.appointmentService.userCancelAppointment(id).subscribe(
+      (response) => {
+        console.log('Turno eliminado exitosamente', response);
+        // Llama a connect para actualizar la fuente de datos con la nueva selección
+      this.dataSource.connect();
+        // Actualiza la lista de turnos o realiza alguna acción adicional si es necesario
+      },
+      (error) => {
+        console.error('Error al eliminar turno', error);
+        // Maneja el error de acuerdo a tus necesidades
+      }
+    );
+  }
 }

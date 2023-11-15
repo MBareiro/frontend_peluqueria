@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class BloquedDayService {
-  private apiUrl = environment.URL;
+  private apiUrl = environment.apiUrl;
   constructor(private http: HttpClient){}
 
   createBlockedDayRange(start: string, end: string, user_id: number): Observable<any> {

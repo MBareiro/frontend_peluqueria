@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,6 +12,7 @@ import Swal from 'sweetalert2';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   hide3 = true;
+
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', Validators.required],
@@ -23,45 +25,41 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
-  
-    if (email !== "" && password !== "") {
-      this.login(email, password)
-        .then((response: any) => {
-          const userId = response.usuario.id;
-          const userName = response.usuario.nombre;
-          const userRole = response.usuario.role;
-  
-          // Guardar la información del usuario en localStorage
-          localStorage.setItem('userId', userId);
-          localStorage.setItem('userName', userName);
-          localStorage.setItem('userRole', userRole);
-  
-          this.router.navigate(['/dashboard']);
-        })
-        .catch((error) => {
-          Swal.fire({
-            icon: 'error',
-            color: 'white',
-            text: error.error.message,
-            background: '#191c24',
-            timer: 1500,
-          });
-        });
+
+    if (email !== '' && password !== '') {
+      this.login(email, password);
     }
   }
-  
-  async login(email: string, password: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.authService.login(email, password)
-        .subscribe(
-          (response: any) => {
-            resolve(response);
-          },
-          (error) => {
-            reject(error);
-          }
-        );
-    });
+
+  login(email: string, password: string): void {
+    this.authService.login(email, password).subscribe(
+      (response: any) => {        
+        if (response.is_authenticated) {
+          // Almacenar la información del usuario en el almacenamiento local
+          localStorage.setItem('userId', response.usuario.id);
+          localStorage.setItem('userName', response.usuario.nombre);
+          localStorage.setItem('userRole', response.usuario.role);
+
+          // Redirigir a la página principal o a la página deseada después del inicio de sesión
+          // Puedes personalizar esto según tu aplicación
+          this.router.navigate(['/dashboard']);
+        } else {
+          // Manejar el caso en el que las credenciales son incorrectas
+          console.error('Credenciales incorrectas');
+        }
+      },
+      (error) => {
+        const errorMessage = error['error'];        
+        // Manejar errores de la solicitud HTTP
+        Swal.fire({
+          icon: 'error',
+          text: errorMessage['message'],
+          background: '#191c24',
+          timer: 1500,
+          color: 'white',
+        });
+        console.error('Error en la solicitud:', error);
+      }
+    );
   }
-  
 }
