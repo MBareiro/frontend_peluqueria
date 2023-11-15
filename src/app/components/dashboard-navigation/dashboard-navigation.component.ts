@@ -36,6 +36,8 @@ export class DashboardNavigationComponent {
     this.userName = localStorage.getItem('userName');
     this.userRole = localStorage.getItem('userRole');    
     authService.authorized();
+    console.log(this.userRole);
+    
   }
 
   private resetViews() {
