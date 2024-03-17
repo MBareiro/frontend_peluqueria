@@ -7,10 +7,10 @@
       <mat-icon>person</mat-icon>Turnos
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="showComponent('createAppointment')">
+      <button mat-menu-item routerLink="/dashboard/create-appointment">
         <mat-icon>person</mat-icon>Crear Turno
       </button>
-      <button mat-menu-item (click)="showComponent('listAppointment')">
+      <button mat-menu-item routerLink="/dashboard/list-appointment">
         <mat-icon>list</mat-icon>Listar Turnos
       </button>
       
@@ -20,29 +20,29 @@
       <mat-icon>group</mat-icon>Usuarios
     </button>
     <mat-menu #menu2="matMenu" >
-      <button mat-menu-item (click)="showComponent('userList')">
+      <button mat-menu-item routerLink="/dashboard/list-users">
         <mat-icon>manage_accounts</mat-icon>Administrar Cuentas <!-- EN ESTA PARTE SOLO DEBEN ACCEDER LOS ADMIN -->
       </button>
-      <button mat-menu-item (click)="showComponent('userAdd')">
+      <button mat-menu-item routerLink="/dashboard/create-user">
         <mat-icon>person_add</mat-icon>Crear Usuario
       </button>
     </mat-menu>
 
-    <button mat-menu-item class="menu-button" (click)="showComponent('schedule')">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/schedule">
       <mat-icon>schedule</mat-icon>
       <span>Cronograma</span>
     </button>
 
-    <button mat-menu-item (click)="showComponent('cancelAppointments')">
+    <button mat-menu-item routerLink="/dashboard/calendar">
       <mat-icon>calendar_month</mat-icon>Calendario
     </button>
 
-    <button mat-menu-item class="menu-button" (click)="showComponent('password')">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/change-password">
       <mat-icon>lock</mat-icon>
       <span>Seguridad</span>
     </button>
 
-    <button mat-menu-item class="menu-button" (click)="showComponent('profile')">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/profile">
       <mat-icon>account_circle</mat-icon>
       <span>Perfil</span>
     </button>
@@ -62,16 +62,8 @@
       </button>
       <span>Bienvenido {{ userName }}</span>
     </mat-toolbar>
-
+    <router-outlet></router-outlet>
     <!-- Add Content Here -->
-    <app-schedule *ngIf="showSchudule"></app-schedule>
-    <app-create-appointment *ngIf="showCreateAppointment"></app-create-appointment>
-    <app-list-appointment *ngIf="showListAppointment"></app-list-appointment> 
-    <app-user-list *ngIf="showUserList"></app-user-list>
-    <app-user-create *ngIf="showUserAdd"></app-user-create>
-    <app-change-password *ngIf="showChangePassword"></app-change-password>
-    <app-profile *ngIf="showProfile"></app-profile>
-    <app-cancel-appointments *ngIf="showCancelAppointments"></app-cancel-appointments>
-   <!--  <app-footer></app-footer> -->
+    
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -4,11 +4,10 @@
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-      
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="firstName" (keydown)="formValidator.onKeyDown($event)">
+          <input matInput formControlName="firstName" (keydown)="formValidator.onKeyDown($event)" />
           <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
             Nombre es <strong>requerido</strong>
           </mat-error>
@@ -18,44 +17,46 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Apellido</mat-label>
-          <input matInput formControlName="lastName" (keydown)="formValidator.onKeyDown($event)">
+          <input matInput formControlName="lastName" (keydown)="formValidator.onKeyDown($event)" />
           <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
             Apellido es <strong>requerido</strong>
-          </mat-error>
+          </mat-error>          
         </mat-form-field>
+        
       </div>
-
 
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Teléfono</mat-label>
-          <input matInput type="number" formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)">
+          <input matInput type="number" formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)" />
           <mat-error *ngIf="addressForm.controls['phoneNumber'].hasError('required')">
             Teléfono es <strong>requerido</strong>
           </mat-error>
+          <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
         </mat-form-field>
       </div>
 
       <div class="row">
         <mat-form-field>
           <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" formControlName="email">
-
+          <input matInput type="email" formControlName="email" />
           <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
             Correo electrónico es <strong>requerido</strong>
           </mat-error>
           <mat-error *ngIf="addressForm.controls['email'].hasError('email')">
             Correo electrónico es <strong>inválido</strong>
           </mat-error>
+          <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
         </mat-form-field>
       </div>
 
-
       <div class="row">
         <mat-form-field class="full-width">
-          <mat-label>Peluquero</mat-label>
+          <mat-label>{{
+            loadingUsers ? "Cargando peluqueros..." : "Peluqueros"
+            }}</mat-label>
           <mat-select formControlName="peluquero" (selectionChange)="peluquero()">
-            <mat-option *ngFor="let user of users" [value]="user.id" >
+            <mat-option *ngFor="let user of users" [value]="user.id">
               {{ user.nombre }}
             </mat-option>
           </mat-select>
@@ -67,11 +68,16 @@
 
       <div class="row">
         <mat-form-field>
-          <mat-label>Fecha</mat-label>
-          <input matInput [matDatepickerFilter]="esHabilitado" [matDatepicker]="picker" formControlName="date"  (dateChange)="fechaSeleccionada($event)" [min]="minDate" (click)="picker.open()">
-            <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-label>{{
+            loadingCalendar ? "Cargando calendario..." : "Fecha"
+            }}</mat-label>
+          <input readonly matInput [matDatepickerFilter]="esHabilitado" [matDatepicker]="picker" formControlName="date"
+            (dateChange)="fechaSeleccionada($event)" [min]="minDate" (click)="picker.open()" />
+          <!-- Botón de cambio de fecha -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <!-- Calendario -->
           <mat-datepicker #picker></mat-datepicker>
+          <!-- Error del mat-form-field -->
           <mat-error *ngIf="addressForm.controls['date'].hasError('required')">
             Fecha es <strong>requerido</strong>
           </mat-error>
@@ -79,7 +85,7 @@
       </div>
 
       <div class="row">
-        <mat-label>Disponibilidad</mat-label>
+        <!-- <mat-label>Disponibilidad</mat-label> -->
         <mat-radio-group formControlName="schedule" (change)="onRadioChange($event)">
           <mat-radio-button value="morning">Mañana</mat-radio-button>
           <mat-radio-button value="afternoon">Tarde</mat-radio-button>
@@ -89,24 +95,24 @@
         </mat-error>
       </div>
 
-      <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required') ">
-        Elija una opcion 
-      </mat-error>    
-      <mat-radio-group formControlName="selectedRadio" >           
+      <!-- <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
+        Elija una opcion
+      </mat-error> -->
+      <div *ngIf="loadingSchedule">Cargando horario...</div>
+      <mat-radio-group formControlName="selectedRadio">
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}
-        </mat-radio-button>
+        </mat-radio-button>        
       </mat-radio-group>
+
       <div class="error" *ngIf="error">
         <mat-error>No hay turnos disponibles</mat-error>
       </div>
-      
+
       <mat-card-actions>
         <button mat-raised-button color="accent" type="submit">Guardar</button>
       </mat-card-actions>
     </form>
-
   </mat-card-content>
-
 </mat-card>

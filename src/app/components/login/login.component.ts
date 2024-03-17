@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
 
   login(email: string, password: string): void {
     this.authService.login(email, password).subscribe(
-      (response: any) => {        
+      (response: any) => {    
         if (response.is_authenticated) {
           // Almacenar la información del usuario en el almacenamiento local
           localStorage.setItem('userId', response.usuario.id);
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
 
           // Redirigir a la página principal o a la página deseada después del inicio de sesión
           // Puedes personalizar esto según tu aplicación
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard/list-appointment']);
         } else {
           // Manejar el caso en el que las credenciales son incorrectas
           console.error('Credenciales incorrectas');

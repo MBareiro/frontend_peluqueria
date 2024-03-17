@@ -38,7 +38,10 @@ export class CreateAppointmentComponent {
   minDate: Date;
   blockedDatesArray: string[] = [];
   userRole: string | null;
-
+  loadingUsers = true;
+  loadingCalendar = false;
+  loadingSchedule = false;
+  
   addressForm: FormGroup = new FormGroup({
     firstName: new FormControl(null, [
       Validators.required,
@@ -62,6 +65,11 @@ export class CreateAppointmentComponent {
     ),
   });
   
+  ngOnInit() {
+    this.chargeUser();
+  }
+  
+  
   constructor(
     public userService: UserService,
     public horarioService: ScheduleService,
@@ -70,9 +78,6 @@ export class CreateAppointmentComponent {
     public blockedDayService: BloquedDayService
   ) {
     this.userRole = localStorage.getItem('userRole');
-    console.log(this.userRole);
-
-    this.chargeUser();
     this.inicio = false;
     this.error = false;
     const currentDay = new Date(); // Obtiene la fecha actual
@@ -109,7 +114,7 @@ export class CreateAppointmentComponent {
     });
   }
 
-  isUser(): boolean {
+  isUser(): boolean {    
     return this.userRole === 'admin' || this.userRole === 'peluquero'; // Reemplaza esto con tu lógica real
   }
 
@@ -142,12 +147,8 @@ export class CreateAppointmentComponent {
       .checkIfAppointmentTaken(email, date, peluqueroID)
       .subscribe(
         (response) => {
-          //turnoTomado = response; // Actualiza la bandera con la respuesta del servicio
-          console.log(response.appointment_taken
-            );
-          
+          //turnoTomado = response; // Actualiza la bandera con la respuesta del servicio                   
           if (response.appointment_taken) {
-            console.log("if");   
             Swal.fire({
               icon: 'warning',
               color: 'white',
@@ -158,9 +159,7 @@ export class CreateAppointmentComponent {
               showConfirmButton: false,
             });
             return;
-          } else {
-            console.log("else");
-            
+          } else {            
             // Continuar con la lógica de creación del turno
             if (email) {
               // El turno tiene un correo electrónico, por lo que se debe enviar la confirmación
@@ -185,8 +184,7 @@ export class CreateAppointmentComponent {
     // Envía una solicitud para enviar el código de confirmación
     this.appointmentService.send_confirmation_code({ email: email }).subscribe(
       (response) => {
-        console.log('Código enviado con éxito:', response);
-
+        //console.log('Código enviado con éxito:', response);
         Swal.fire({
           icon: 'info',
           title: 'Verificación de Código',
@@ -211,7 +209,6 @@ export class CreateAppointmentComponent {
               })
               .toPromise()
               .then((response) => {
-                console.log(response[0].message);
                 if (
                   response &&
                   response[0].message === 'Código de confirmación incorrecto'
@@ -267,7 +264,6 @@ export class CreateAppointmentComponent {
     // Lógica para crear el turno
     this.appointmentService.createAppointment(formData).subscribe(
       (response) => {
-        console.log(response);
 
         // Lógica para manejar la creación exitosa del turno, como mostrar un mensaje al usuario
         Swal.fire({
@@ -295,7 +291,7 @@ export class CreateAppointmentComponent {
     );
   }
 
-  appointmentBD(): Observable<string[]> {
+  appointmentBD(): Observable<string[]> {    
     const periodo = this.addressForm.get('schedule')?.value;
     const date = this.addressForm.get('date')?.value;
     const peluqueroID = this.addressForm.get('peluquero')?.value;
@@ -318,16 +314,20 @@ export class CreateAppointmentComponent {
 
   async chargeUser() {
     try {
+      this.loadingUsers = true; // Muestra el indicador de carga
       const data = await this.userService.getUsers().toPromise();
       this.users = data!;
       this.filterActiveUsers();
     } catch (error) {
       console.error('Error fetching users:', error);
+    } finally {
+      this.loadingUsers = false; // Oculta el indicador de carga independientemente del resultado
     }
   }
-
+  
   async chargeHorario(): Promise<void> {
     try {
+     
       this.error = false;
       const peluqueroID = this.addressForm.get('peluquero')?.value;
       const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
@@ -338,7 +338,7 @@ export class CreateAppointmentComponent {
       this.createRadioButtonsForDay(); // Update radio buttons when horario changes
     } catch (error) {
       console.error('Error fetching horario:', error);
-    }
+    } 
   }
 
   fechaSeleccionada(event: any): void {
@@ -356,24 +356,26 @@ export class CreateAppointmentComponent {
     this.error = false;
   }
 
-  onRadioChange(event: MatRadioChange) {
+  onRadioChange(event: MatRadioChange) {    
+    this.loadingSchedule = true;
     this.turnos = [];
     this.addressForm.get('selectedRadio')?.reset();
     const selectedValue = event.value; // This is the selected value (morning or afternoon)
     this.selectedValue = selectedValue || ''; // If undefined, assign an empty string
     this.chargeHorario();
     this.turnos = this.createRadioButtonsForDay();
-    this.appointmentBD();
+    this.appointmentBD();   
+      
   }
 
-  createRadioButtonsForDay(): any[] {
+  createRadioButtonsForDay(): any[] {    
     this.error = false;
     let radioButtons: any[] = [];
     const periodo = this.addressForm.get('schedule')?.value;
-
+    
     if (this.horario && this.selectedDate) {
-      const selectedDay = this.selectedDate.getDay();
-
+      const selectedDay = this.selectedDate.getDay() + 1;
+      
       if (this.horario[selectedDay]) {
         let period_start: string | undefined;
         let period_end: string | undefined;
@@ -397,13 +399,12 @@ export class CreateAppointmentComponent {
 
           // Obtener los horarios ocupados del servidor
           this.appointmentBD().subscribe((occupiedHours) => {
-            console.log('occupiedHours ', occupiedHours);
 
             // Filtrar los horarios disponibles
             const horariosDisponibles = horariosDelDia.filter((hora) => {
               return !occupiedHours.includes(hora);
             });
-
+            
             radioButtons.push(
               ...horariosDisponibles.map((hora, index) => ({
                 id: `radio_${index}`,
@@ -430,12 +431,11 @@ export class CreateAppointmentComponent {
             } else {
               this.error = false;
             }
+            this.loadingSchedule = false; 
           });
         }
       }
     }
-    console.log('radioButtons', radioButtons);
-
     return radioButtons;
   }
 
@@ -464,33 +464,40 @@ export class CreateAppointmentComponent {
   }
 
   async peluquero() {
-    this.addressForm.get('date')?.enable();
-    const peluqueroID = this.addressForm.get('peluquero')?.value;
-    const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
-    const data: Horario[] = await this.horarioService
-      .getHorarioUsuario(peluqueroID)
-      .toPromise();
-    this.horario = data;
-    console.log(this.horario);
-
-    // Fetch blocked dates from the service
-    this.blockedDayService.getBlockedDays(peluqueroID).subscribe(
-      (response) => {
-        console.log(response);
-        if (response.length > 0) {
-          // Extract and format the dates
-          this.blockedDatesArray = response.map((item: any) => {
-            const blockedDate = new Date(item.blocked_date);
-            return blockedDate.toISOString().split('T')[0];
-          });
-          //console.log(this.blockedDatesArray);
-        }
-      },
-      (error) => {
-        console.error('Error al obtener días bloqueados:', error);
-      }
-    );
+    try {
+      this.loadingCalendar = true;
+  
+      const peluqueroID = this.addressForm.get('peluquero')?.value;
+      const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
+  
+      // Mostrar mensaje de carga
+      this.loadingCalendar = true;
+  
+      // Obtener horario del usuario de manera asíncrona
+      const data: Horario[] = await this.horarioService.getHorarioUsuario(peluqueroID).toPromise();
+      this.horario = data;
+  
+      // Obtener fechas bloqueadas de manera asíncrona
+      const response = await this.blockedDayService.getBlockedDays(peluqueroID).toPromise();
+      if (response.length > 0) {
+        // Extract and format the dates
+        this.blockedDatesArray = response.map((item: any) => {
+          const blockedDate = new Date(item.blocked_date);
+          return blockedDate.toISOString().split('T')[0];
+        });
+      }  
+      // Ocultar mensaje de carga después de completar la carga
+      this.loadingCalendar = false;
+    } catch (error) {
+      console.error('Error en el método peluquero:', error);
+      // Manejar el error según tus necesidades
+    } finally {
+      this.loadingCalendar = false; // Oculta el indicador de carga independientemente del resultado
+      
+      this.addressForm.get('date')?.enable();
+    }
   }
+  
 
   // Modify the esHabilitado function
   esHabilitado: DateFilterFn<any> = (date: Date | null) => {

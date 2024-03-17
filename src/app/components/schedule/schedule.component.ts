@@ -10,13 +10,13 @@ import Swal from 'sweetalert2';
 })
 export class ScheduleComponent {
   dias = [
+    { key: 1, valor: 'Domingo' },
     { key: 2, valor: 'Lunes' },
     { key: 3, valor: 'Martes' },
     { key: 4, valor: 'Miércoles' },
     { key: 5, valor: 'Jueves' },
     { key: 6, valor: 'Viernes' },
     { key: 7, valor: 'Sábado' },
-    { key: 1, valor: 'Domingo' },
   ];
 
   horasAM = [
@@ -126,7 +126,6 @@ export class ScheduleComponent {
   guardarCambios(): void {
     // Obtén los horarios para enviar al servidor
     const horariosToSend = this.horarios;
-    console.log(horariosToSend)
 
     // Llama al método del servicio para guardar los horarios
     this.scheduleService.guardarHorarios(horariosToSend).subscribe(

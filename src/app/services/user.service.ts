@@ -40,7 +40,6 @@ export class UserService {
 
       if (!isNaN(userIdNumber)) {
         // userIdNumber ahora es un número válido
-        console.log('User ID:', userIdNumber);
         return userIdNumber;
       } else {
         console.error('No se pudo convertir a número:', userId);

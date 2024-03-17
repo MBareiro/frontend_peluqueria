@@ -27,7 +27,11 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
+    // Limpiar los datos almacenados en localStorage
+    localStorage.clear();
+    
     // Realizar una solicitud POST al backend para cerrar la sesión
     return this.http.post(`${this.baseUrl}/logout`, {});
   }
+  
 }

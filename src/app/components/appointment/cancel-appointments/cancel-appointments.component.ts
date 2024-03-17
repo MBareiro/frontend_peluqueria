@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { MatDateRangePicker, DateFilterFn } from '@angular/material/datepicker';
+import { Horario } from 'src/app/models/horario.model';
 import { AppointmentService } from 'src/app/services/appointment.service';
 import { UserService } from 'src/app/services/user.service';
 import { BloquedDayService } from 'src/app/services/bloqued-day.service';
-import { DateFilterFn, MatDateRangePicker } from '@angular/material/datepicker';
-import { Horario } from 'src/app/models/horario.model';
 import { ScheduleService } from 'src/app/services/schedule.service';
 
 @Component({
@@ -17,13 +17,11 @@ export class CancelAppointmentsComponent implements OnInit {
   horario: Horario[] = [];
   blockedDatesArray: string[] = [];
   showCalendar: boolean = true;
-
-
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
-  userId: number = 0; // Declaración de userId con un valor por defecto
+  userId: number = 0;
   minDate!: Date;
   selected: Date | null | undefined;
 
@@ -36,17 +34,14 @@ export class CancelAppointmentsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.initData();
-    // Fetch blocked dates from the service
     this.blockedDayService.getBlockedDays(this.userId).subscribe(
       (response) => {
         console.log(response);
         if (response.length > 0) {
-          // Extract and format the dates
           this.blockedDatesArray = response.map((item: any) => {
             const blockedDate = new Date(item.blocked_date);
             return blockedDate.toISOString().split('T')[0];
-          });          
-          // Llamar a initializeDateFilter después de obtener las fechas bloqueadas
+          });
           this.initializeDateFilter();
         }
       },
@@ -71,18 +66,29 @@ export class CancelAppointmentsComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching horario:', error);
     }
-    // Resto del código...
-    // Fetch blocked dates from the service
+
     this.blockedDayService.getBlockedDays(this.userId).subscribe(
       (response) => {
-        console.log(response);
+        //console.log(response);
         if (response.length > 0) {
-          // Extract and format the dates
           this.blockedDatesArray = response.map((item: any) => {
             const blockedDate = new Date(item.blocked_date);
             return blockedDate.toISOString().split('T')[0];
           });
-          console.log(this.blockedDatesArray);
+          const startDate = this.range?.get('start')?.value;
+          const endDate = this.range?.get('end')?.value;
+          if (startDate && endDate) {
+            const missingDates = this.getDatesInRange(
+              new Date(startDate),
+              new Date(endDate)
+            ).filter((date) => !this.blockedDatesArray.includes(date));
+            console.log("missingDates ", missingDates);
+            console.log("this.blockedDatesArray ", this.blockedDatesArray)
+            
+            this.blockedDatesArray =
+              this.blockedDatesArray.concat(missingDates);
+            console.log(this.blockedDatesArray);
+          }
         }
       },
       (error) => {
@@ -91,13 +97,22 @@ export class CancelAppointmentsComponent implements OnInit {
     );
   }
 
+  getDatesInRange = (start: Date, end: Date) => {
+    const dates = [];
+    let currentDate = new Date(start);
+    while (currentDate <= end) {
+      dates.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
+  };
+
   initializeDateFilter(): void {
     this.esHabilitado = (date: Date | null) => {
       try {
         if (date === null || date === undefined || !this.horario) {
           return false;
         }
-        // Check if the date is in the blockedDatesArray
         const isBlocked = this.blockedDatesArray.includes(
           date.toISOString().split('T')[0]
         );
@@ -128,30 +143,25 @@ export class CancelAppointmentsComponent implements OnInit {
           default:
             break;
         }
-        // Check if the horarioEntry is defined and both active_morning and active_afternoon are true
         const isDayBlocked =
           horarioEntry?.active_morning &&
           horarioEntry?.active_afternoon &&
           !isBlocked;
-        return !!isDayBlocked; // Use double negation to ensure a boolean value
+          
+        return !!isDayBlocked;
       } catch (error) {
         console.error('Error fetching horario:', error);
         return false;
       }
     };
   }
-
-  openDatepicker(): void {
-    if (this.picker) {
-      this.picker.open();
-    }
-  }
-
+ 
   deleteBlockedDay(): void {
     this.blockedDayService.deleteBlockedDay(this.userId).subscribe(
       (response) => {
         console.log(response);
         this.clearDateRange();
+        this.esHabilitado = () => true;
       },
       (error) => {
         console.error('Error al cancelar turnos:', error);
@@ -188,17 +198,32 @@ export class CancelAppointmentsComponent implements OnInit {
               )
               .subscribe(
                 (blockingResponse) => {
-                  console.log(blockingResponse);     
+                  blockingResponse = [];
                   this.blockedDayService.getBlockedDays(this.userId).subscribe(
                     (response) => {
-                      console.log(response);
                       if (response.length > 0) {
-                        // Extract and format the dates
                         this.blockedDatesArray = response.map((item: any) => {
                           const blockedDate = new Date(item.blocked_date);
                           return blockedDate.toISOString().split('T')[0];
                         });
-                        console.log(this.blockedDatesArray);
+                        const startDate = this.range?.get('start')?.value;
+                        const endDate = this.range?.get('end')?.value;
+                        console.log("startDateString ", startDateString);
+                        console.log("endDateString ", endDateString);
+                        
+                        
+                        if (startDateString && endDateString) {
+                          const missingDates = this.getDatesInRange(
+                            new Date(startDateString),
+                            new Date(endDateString)
+                          ).filter(
+                            (date) => !this.blockedDatesArray.includes(date)
+                          );
+                          console.log("missingDates ", missingDates);
+                          console.log("this.blockedDatesArray ", this.blockedDatesArray)
+                          this.blockedDatesArray =
+                            this.blockedDatesArray.concat(missingDates);
+                        }
                         this.initializeDateFilter();
                       }
                     },
@@ -206,9 +231,6 @@ export class CancelAppointmentsComponent implements OnInit {
                       console.error('Error al obtener días bloqueados:', error);
                     }
                   );
-                  
-
-
                 },
                 (blockingError) => {
                   console.error('Error al bloquear los días:', blockingError);
@@ -223,7 +245,6 @@ export class CancelAppointmentsComponent implements OnInit {
       console.error('Selecciona un rango de fechas válido.');
     }
     this.showCalendar = false;
-
     setTimeout(() => {
       this.showCalendar = true;
     });
@@ -234,8 +255,7 @@ export class CancelAppointmentsComponent implements OnInit {
       if (date === null || date === undefined || !this.horario) {
         return false;
       }
-      
-      // Check if the date is in the blockedDatesArray
+
       const isBlocked = this.blockedDatesArray.includes(
         date.toISOString().split('T')[0]
       );
@@ -267,7 +287,7 @@ export class CancelAppointmentsComponent implements OnInit {
           break;
         default:
           break;
-      }
+      } 
 
       const isDayBlocked =
         horarioEntry?.active_morning &&

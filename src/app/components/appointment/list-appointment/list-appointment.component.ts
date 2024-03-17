@@ -6,11 +6,8 @@ import { ListAppointmentDataSource, ListAppointmentItem } from './list-appointme
 import { AppointmentService } from '../../../services/appointment.service';
 import { MatRadioChange } from '@angular/material/radio';
 import { FormControl } from '@angular/forms';
-import { DateFilterFn, MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { formatDate } from '@angular/common';
-import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator";
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 
 
 @Component({
@@ -47,19 +44,7 @@ export class ListAppointmentComponent {
     this.selectedRadio = event.value || 'morning';  // Update selectedRadio
     this.dataSource.update(this.selectedRadio, this.selectedDate);  // Update the data source
  
-  }
-
-  esHabilitado: DateFilterFn<any> = (date: Date | null) => {
-    if (date === null) {
-      // Handle null case
-      return false;
-    }
-  
-    // Check the date using your logic here
-    const day = date.getDay();
-    return day !== 0 && day !== 6;
-  };
-  
+  }  
   
   onDateChange(event: MatDatepickerInputEvent<Date>) {
     const selectedDate: Date | null = event.value;
