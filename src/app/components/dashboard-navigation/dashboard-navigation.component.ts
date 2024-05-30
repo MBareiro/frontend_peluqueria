@@ -88,4 +88,5 @@ export class DashboardNavigationComponent {
     this.authService.logout();
     this.router.navigate(['/']);  // Redirigir a la página de inicio de sesión
   }
+ 
 }

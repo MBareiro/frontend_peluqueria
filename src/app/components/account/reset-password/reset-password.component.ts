@@ -33,7 +33,7 @@ export class ResetPasswordComponent {
   }
 
   changePassword(): void {    
-    if (this.token) {
+   /*  if (this.token) {
       const user = {
         token: this.token,
         new_password: this.passwordForm.value.newPassword,
@@ -57,7 +57,7 @@ export class ResetPasswordComponent {
             } 
           }
         );
-    } 
+    }  */
   }  
 
   onSubmit() {

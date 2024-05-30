@@ -21,7 +21,7 @@ export class ListAppointmentComponent {
   @ViewChild(MatTable) table!: MatTable<ListAppointmentItem>;
   @ViewChild('datepicker') datepicker!: MatDatepicker<any>;
   dataSource: ListAppointmentDataSource;
-  selectedRadio = 'morning';  // Default selection
+  time = 'morning';  // Default selection
   selectedDate: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');  // Inicializa con la fecha de hoy en formato 'yyyy-MM-dd'
   date = new FormControl(new Date());
   //serializedDate = new FormControl(new Date().toISOString());
@@ -33,16 +33,16 @@ export class ListAppointmentComponent {
   };
 
   constructor(private appointmentService: AppointmentService) {
-    this.dataSource = new ListAppointmentDataSource(this.appointmentService, this.selectedRadio, this.selectedDate);
+    this.dataSource = new ListAppointmentDataSource(this.appointmentService, this.time, this.selectedDate);
   }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'actions'];/* 
-  displayedColumns = ['selectedRadio','first_name', 'last_name', 'email', 'phone_number', 'peluquero']; */
+  displayedColumns = ['time','first_name', 'last_name', 'email', 'phone_number'];/* 
+  displayedColumns = ['time','first_name', 'last_name', 'email', 'phone_number', 'peluquero']; */
 
   onRadioChange(event: MatRadioChange) {
-    this.selectedRadio = event.value || 'morning';  // Update selectedRadio
-    this.dataSource.update(this.selectedRadio, this.selectedDate);  // Update the data source
+    this.time = event.value || 'morning';  // Update time
+    this.dataSource.update(this.time, this.selectedDate);  // Update the data source
  
   }  
   
@@ -53,7 +53,7 @@ export class ListAppointmentComponent {
       // Convertir la fecha al formato 'yyyy-MM-dd'
       const dateString: string = formatDate(selectedDate, 'yyyy-MM-dd', 'en-US');
       this.selectedDate = dateString
-      this.dataSource.update(this.selectedRadio, this.selectedDate);
+      this.dataSource.update(this.time, this.selectedDate);
   
       // Limpiar la tabla estableciendo la fuente de datos como un arreglo vacío
       /* this.table.dataSource = []; */
@@ -69,7 +69,7 @@ export class ListAppointmentComponent {
     this.paginator._intl.itemsPerPageLabel = "Registros por página";
     this.paginator._intl.getRangeLabel = this.getRangeLabel.bind(this);
   
-    this.dataSource.update(this.selectedRadio, this.selectedDate);   
+    this.dataSource.update(this.time, this.selectedDate);   
       
     this.table.dataSource = this.dataSource;
     this.dataSource.connect();

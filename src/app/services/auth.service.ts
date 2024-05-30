@@ -2,19 +2,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = `${environment.apiUrl}/usuarios`;
-
+/*   private baseUrl = `${environment.apiUrl}/usuarios`;
+ */  private baseUrl = `${environment.apiUrl}/users`;
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(username: string, password: string): Observable<any> {
+  /* login(username: string, password: string): Observable<any> {
     const body = { email: username, password: password };
     return this.http.post(`${this.baseUrl}/login`, body);
+  } */
+
+  login(formValue: any) {
+    return firstValueFrom(
+      this.http.post<any>(`${this.baseUrl}/login`, formValue)
+    );
   }
 
   authorized() {

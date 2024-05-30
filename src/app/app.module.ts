@@ -29,7 +29,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserCreateComponent } from './components/user/user-create/user-create.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MatDateFormats, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ListAppointmentComponent } from './components/appointment/list-appointment/list-appointment.component';
 import { ErrorPageComponent } from './components/shared/error-page/error-page.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
@@ -43,7 +43,6 @@ import { CancelAppointmentComponent } from './components/appointment/cancel-appo
 import { AppointmentCancelledComponent } from './components/appointment/appointment-cancelled/appointment-cancelled.component';
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { es } from 'date-fns/locale';
 
 // Ensure that `es.localize` is defined
 

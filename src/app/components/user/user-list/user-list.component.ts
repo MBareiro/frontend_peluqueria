@@ -16,55 +16,54 @@ export class UserListComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.chargeUser()
-  } 
- 
-  chargeUser(): void {
-    this.userService.getUsers().subscribe(
-      (data) => {
-        this.users = data;
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-      }
-    );
-  } 
-
-  updateUser(user: User): void {
-    this.selectedUser = { ...user };  // Copy the selected user
-    this.chargeUser()
+    this.chargeUser();
   }
 
-  saveChanges(): void {
+  async chargeUser() {
+    const getUsers: any = await this.userService.getUsers(); 
+    console.log(getUsers);
+    
+    if (!getUsers.error){
+      this.users = getUsers;
+    } else {
+      console.error('Error fetching users:', getUsers.error);
+    }   
+  }
+
+  updateUser(user: User): void {
+    this.selectedUser = { ...user }; // Copy the selected user
+    this.chargeUser();
+  }
+
+  async saveChanges(){
     if (this.selectedUser) {
-      this.userService.updateUser(this.selectedUser).subscribe(
-        () => {
-          console.log('User updated successfully.');
-          this.selectedUser = null;
-          Swal.fire({
-            icon: 'success',
-            color: 'white',
-            text: 'Turno Creado!',
-            background: '#191c24',
-            timer: 1500,
-          })
-          this.chargeUser()
-        },
-        (error) => {
-          console.error('Error updating user:', error);
-        }
-      );
+      const updateUser = await this.userService.updateUser(this.selectedUser);
+
+      if (!updateUser.error) {
+        console.log('User updated successfully.');
+        this.selectedUser = null;
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Exito!',
+          background: '#191c24',
+          timer: 1500,
+        });
+        this.chargeUser();
+      } else {
+        console.log('saveChanges: ', updateUser.error);
+      }
     }
   }
 
   cancelUpdate(): void {
     this.selectedUser = null;
   }
-  
+
   toggleActive(user: User): void {
     if (user) {
       user.active = !user.active;
-        // Invertir el estado
+      // Invertir el estado
     }
   }
 }

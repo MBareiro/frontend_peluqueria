@@ -29,7 +29,7 @@ export class ForgotPasswordComponent {
   async onSubmit() {
     const emailValue = this.email.value; // Obtener el valor del campo de correo electrónico
 
-    if (emailValue !== null) {
+    /* if (emailValue !== null) {
       console.log(emailValue);
       this.userService.requestPasswordReset(emailValue).subscribe(
         response => {
@@ -40,7 +40,7 @@ export class ForgotPasswordComponent {
           console.log(error)
         }
       );
-    } 
+    }  */
   }
 }
 

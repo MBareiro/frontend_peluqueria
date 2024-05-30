@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
@@ -8,30 +8,29 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  private apiUrl = `${environment.apiUrl}/users/usuarios`;
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl);
+  getUsers(): Promise<User[]> {
+    return firstValueFrom(this.http.get<User[]>(this.apiUrl ));
   }
 
-  getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  getUserById(id: number): Promise<User> {
+    return firstValueFrom(this.http.get<User>(`${this.apiUrl}/${id}`));
   }
 
-  addUser(user: User): Observable<any> {
-    return this.http.post(this.apiUrl, user);
+  addUser(user: User) {
+    return firstValueFrom(this.http.post(this.apiUrl, user));
   }
 
-  updateUser(user: User): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${user.id}`, user);
+  updateUser(user: User): Promise<any> {
+    return firstValueFrom(this.http.put(this.apiUrl  + user.id, user));
   }
 
-  deleteUser(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteUser(id: number): Promise<any> {
+    return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
-
   verifyIdUser(): number | null {
     const userId: string | null = localStorage.getItem('userId');
 
@@ -51,38 +50,24 @@ export class UserService {
     }
   }
 
-  changePassword(
-    userId: number,
-    oldPassword: string,
-    newPassword: string,
-    confirmPassword: string
-  ): Observable<any> {
+  changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string): Promise<any> {
     const body = {
       old_password: oldPassword,
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    return this.http.post(`${this.apiUrl}/change-password/${userId}`, body);
+    return firstValueFrom(this.http.post(`${this.apiUrl}/change-password/${userId}`, body));
   }
 
-  // Es utilizada por reset-password.ts
-  resetPassword(
-    token: string,
-    newPassword: string,
-    confirmPassword: string
-  ): Observable<any> {
+  resetPassword(token: string, newPassword: string, confirmPassword: string): Promise<any> {
     const body = {
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    return this.http.post(`${environment.apiUrl}/reset-password/${token}`, body);
+    return firstValueFrom(this.http.post(`${environment.apiUrl}/reset-password/${token}`, body));
   }
 
-  // Es utilizada por forgot-password.ts
-  requestPasswordReset(email: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(
-      `${environment.apiUrl}/forgot-password`,
-      { email }
-    );
+  requestPasswordReset(email: string): Promise<{ message: string }> {
+    return firstValueFrom(this.http.post<{ message: string }>(`${environment.apiUrl}/forgot-password`, { email }));
   }
 }

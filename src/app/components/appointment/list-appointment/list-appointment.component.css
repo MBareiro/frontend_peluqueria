@@ -13,11 +13,6 @@
   margin: 20px auto;
 }
 
-.table-container {
-  max-height: 300px; /* Establece la altura máxima que deseas */
-  overflow-y: auto; /* Hace que la tabla sea desplazable si es necesario */
-}
-
 /* Opcional: Estilo para los botones de eliminar */
 .mat-card-actions button {
   padding: 5px 10px;

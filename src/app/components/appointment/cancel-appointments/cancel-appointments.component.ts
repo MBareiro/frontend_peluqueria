@@ -32,82 +32,54 @@ export class CancelAppointmentsComponent implements OnInit {
     public horarioService: ScheduleService
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.initData();
-    this.blockedDayService.getBlockedDays(this.userId).subscribe(
-      (response) => {
-        console.log(response);
-        if (response.length > 0) {
-          this.blockedDatesArray = response.map((item: any) => {
-            const blockedDate = new Date(item.blocked_date);
-            return blockedDate.toISOString().split('T')[0];
-          });
-          this.initializeDateFilter();
-        }
-      },
-      (error) => {
-        console.error('Error al obtener días bloqueados:', error);
-      }
-    );
+  async ngOnInit() {
+    this.userId = this.userService.verifyIdUser() || 0;
+    await Promise.all([this.getHorarioPeluquero(), this.getDiasBloqueados()]);
+    this.initializeDateFilter();
   }
 
-  async initData(): Promise<void> {
-    const userId = this.userService.verifyIdUser();
-    if (userId !== null) {
-      this.userId = userId;
-    }
+  async getHorarioPeluquero() {
     try {
       const peluqueroID = this.userId;
       const peluquero = peluqueroID !== null ? peluqueroID.toString() : '';
-      this.horario = await this.horarioService
-        .getHorarioUsuario(peluquero)
-        .toPromise();
+      this.horario = await this.horarioService.getHorarioUsuario(peluquero);
       this.initializeDateFilter();
     } catch (error) {
       console.error('Error fetching horario:', error);
     }
-
-    this.blockedDayService.getBlockedDays(this.userId).subscribe(
-      (response) => {
-        //console.log(response);
-        if (response.length > 0) {
-          this.blockedDatesArray = response.map((item: any) => {
-            const blockedDate = new Date(item.blocked_date);
-            return blockedDate.toISOString().split('T')[0];
-          });
-          const startDate = this.range?.get('start')?.value;
-          const endDate = this.range?.get('end')?.value;
-          if (startDate && endDate) {
-            const missingDates = this.getDatesInRange(
-              new Date(startDate),
-              new Date(endDate)
-            ).filter((date) => !this.blockedDatesArray.includes(date));
-            console.log("missingDates ", missingDates);
-            console.log("this.blockedDatesArray ", this.blockedDatesArray)
-            
-            this.blockedDatesArray =
-              this.blockedDatesArray.concat(missingDates);
-            console.log(this.blockedDatesArray);
-          }
-        }
-      },
-      (error) => {
-        console.error('Error al obtener días bloqueados:', error);
-      }
-    );
   }
 
-  getDatesInRange = (start: Date, end: Date) => {
-    const dates = [];
-    let currentDate = new Date(start);
-    while (currentDate <= end) {
-      dates.push(currentDate.toISOString().split('T')[0]);
-      currentDate.setDate(currentDate.getDate() + 1);
+  async getDiasBloqueados() {
+    try {
+      const blockedDays = await this.blockedDayService.getBlockedDays(
+        this.userId
+      );
+      if (blockedDays.length > 0) {
+        this.blockedDatesArray = blockedDays.map((item: any) => {
+          const blockedDate = new Date(item.blocked_date);
+          return blockedDate.toISOString().split('T')[0];
+        });
+        const startDate = this.range?.get('start')?.value;
+        const endDate = this.range?.get('end')?.value;
+        if (startDate && endDate) {
+          const missingDates = this.getDatesInRange(
+            new Date(startDate),
+            new Date(endDate)
+          ).filter((date) => !this.blockedDatesArray.includes(date));
+          this.blockedDatesArray = this.blockedDatesArray.concat(missingDates);
+        }
+      }
+      this.initializeDateFilter();
+    } catch (error) {
+      if ((error as any).status === 404) {
+        console.log('No se encontraron fechas bloqueadas para el peluquero');
+      } else {
+        console.error('Error al obtener fechas bloqueadas:', error);
+      }
     }
-    return dates;
-  };
-
-  initializeDateFilter(): void {
+  }
+  
+  initializeDateFilter() {
     this.esHabilitado = (date: Date | null) => {
       try {
         if (date === null || date === undefined || !this.horario) {
@@ -147,7 +119,7 @@ export class CancelAppointmentsComponent implements OnInit {
           horarioEntry?.active_morning &&
           horarioEntry?.active_afternoon &&
           !isBlocked;
-          
+
         return !!isDayBlocked;
       } catch (error) {
         console.error('Error fetching horario:', error);
@@ -155,18 +127,19 @@ export class CancelAppointmentsComponent implements OnInit {
       }
     };
   }
- 
-  deleteBlockedDay(): void {
-    this.blockedDayService.deleteBlockedDay(this.userId).subscribe(
-      (response) => {
-        console.log(response);
-        this.clearDateRange();
-        this.esHabilitado = () => true;
-      },
-      (error) => {
-        console.error('Error al cancelar turnos:', error);
-      }
-    );
+
+  async deleteBlockedDay() {
+    try {
+      const deleteBlockedDay = await this.blockedDayService.deleteBlockedDay(
+        this.userId
+      );
+      /* this.horario = [];
+      this.getDiasBloqueados();
+      this.esHabilitado = () => true; */
+      this.initializeDateFilter();
+    } catch (error) {
+      console.log('failed to delete: ' + error);
+    }
   }
 
   clearDateRange(): void {
@@ -174,80 +147,64 @@ export class CancelAppointmentsComponent implements OnInit {
     this.range.get('end')?.setValue(null);
   }
 
-  onSubmit(): void {
+  async onSubmit() {
     const startDate = this.range?.get('start')?.value;
     const endDate = this.range?.get('end')?.value;
-    if (startDate && endDate) {
-      const startDateString = startDate.toISOString();
-      const endDateString = endDate.toISOString();
 
-      this.appointmentService
-        .cancelAppointmentsInDateRange(
+    if (startDate && endDate) {
+      const startDateString = startDate.toISOString().split('T')[0];
+      const endDateString = endDate.toISOString().split('T')[0];
+
+      // Generar todas las fechas dentro del rango
+      const datesInRange = this.getDatesInRange(
+        new Date(startDateString),
+        new Date(endDateString)
+      );
+
+      // Verificar si alguna fecha del rango está en blockedDatesArray
+      const isDateBlocked = datesInRange.some((date) =>
+        this.blockedDatesArray.includes(date)
+      );
+
+      if (isDateBlocked) {
+        console.log('Hay fechas bloqueadas dentro del rango seleccionado.');
+        // Se borran los dias bloqueados
+        await this.deleteBlockedDay();
+      }
+
+      // Se cancelan los turnos de los dias
+      const cancelarTurnos =
+        await this.appointmentService.cancelAppointmentsInDateRange(
           startDateString,
           endDateString,
           this.userId
-        )
-        .subscribe(
-          (response) => {
-            this.deleteBlockedDay();
-            this.blockedDayService
-              .createBlockedDayRange(
-                startDateString,
-                endDateString,
-                this.userId
-              )
-              .subscribe(
-                (blockingResponse) => {
-                  blockingResponse = [];
-                  this.blockedDayService.getBlockedDays(this.userId).subscribe(
-                    (response) => {
-                      if (response.length > 0) {
-                        this.blockedDatesArray = response.map((item: any) => {
-                          const blockedDate = new Date(item.blocked_date);
-                          return blockedDate.toISOString().split('T')[0];
-                        });
-                        const startDate = this.range?.get('start')?.value;
-                        const endDate = this.range?.get('end')?.value;
-                        console.log("startDateString ", startDateString);
-                        console.log("endDateString ", endDateString);
-                        
-                        
-                        if (startDateString && endDateString) {
-                          const missingDates = this.getDatesInRange(
-                            new Date(startDateString),
-                            new Date(endDateString)
-                          ).filter(
-                            (date) => !this.blockedDatesArray.includes(date)
-                          );
-                          console.log("missingDates ", missingDates);
-                          console.log("this.blockedDatesArray ", this.blockedDatesArray)
-                          this.blockedDatesArray =
-                            this.blockedDatesArray.concat(missingDates);
-                        }
-                        this.initializeDateFilter();
-                      }
-                    },
-                    (error) => {
-                      console.error('Error al obtener días bloqueados:', error);
-                    }
-                  );
-                },
-                (blockingError) => {
-                  console.error('Error al bloquear los días:', blockingError);
-                }
-              );
-          },
-          (error) => {
-            console.error('Error al cancelar turnos:', error);
-          }
         );
+
+      // Bloquear dias seleccionados
+      const diasBloqueados = await this.blockedDayService.createBlockedDayRange(
+        startDateString,
+        endDateString,
+        this.userId
+      );
+
+      // Actualizar los días bloqueados
+      await this.getDiasBloqueados();
+      this.clearDateRange();
     } else {
       console.error('Selecciona un rango de fechas válido.');
     }
     this.showCalendar = false;
-    setTimeout(() => {
-      this.showCalendar = true;
-    });
+    this.showCalendar = true;
+  }
+
+  getDatesInRange(start: Date, end: Date): string[] {
+    const dates: string[] = [];
+    let currentDate = new Date(start);
+    while (currentDate <= end) {
+      dates.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
   }
 
   esHabilitado: DateFilterFn<any> = (date: Date | null) => {
@@ -287,7 +244,7 @@ export class CancelAppointmentsComponent implements OnInit {
           break;
         default:
           break;
-      } 
+      }
 
       const isDayBlocked =
         horarioEntry?.active_morning &&
@@ -296,7 +253,7 @@ export class CancelAppointmentsComponent implements OnInit {
 
       return !!isDayBlocked;
     } catch (error) {
-      console.error('Error fetching horario:', error);
+      console.error('esHabilitado:', error);
       return false;
     }
   };
@@ -304,16 +261,5 @@ export class CancelAppointmentsComponent implements OnInit {
   isBlocked(date: Date): boolean {
     const dateString = date.toISOString().split('T')[0];
     return this.blockedDatesArray.includes(dateString);
-  }
-
-  chargeHorario(): Promise<Horario[] | undefined> {
-    try {
-      const peluqueroID = this.userId;
-      const peluquero = peluqueroID !== null ? peluqueroID.toString() : '';
-      return this.horarioService.getHorarioUsuario(peluquero).toPromise();
-    } catch (error) {
-      console.error('Error fetching horario:', error);
-      return Promise.resolve(undefined);
-    }
   }
 }

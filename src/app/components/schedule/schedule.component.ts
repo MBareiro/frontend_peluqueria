@@ -54,7 +54,7 @@ export class ScheduleComponent {
 
     // Obtener el ID de usuario de alguna manera (puedes usar localStorage, etc.)
     const userId = localStorage.getItem('userId');
-
+/* 
     if (userId) {
       this.scheduleService.getHorarioUsuario(userId).subscribe(
         (response) => {
@@ -75,7 +75,7 @@ export class ScheduleComponent {
       console.error('No se encontró un ID de usuario.');
       // Inicializa con valores predeterminados si no hay un ID de usuario
       this.inicializarHorarios();
-    }
+    } */
   }
   toggleCheckbox(diaKey: number, property: string) {
     if (this.horarios[diaKey]) {

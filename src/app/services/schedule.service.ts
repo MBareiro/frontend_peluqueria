@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScheduleService {
-  private apiUrl = `${environment.apiUrl}`;
+  private apiUrl = `${environment.apiUrl}/schedule`;
 
   constructor(private http: HttpClient) {}
 
@@ -16,8 +16,9 @@ export class ScheduleService {
     return this.http.post(url, horarios);
   }
 
-  getHorarioUsuario(userId: string): Observable<any> {
-    const url = `${this.apiUrl}/obtener_horario_usuario/${userId}`;
-    return this.http.get(url);
-  }
+  getHorarioUsuario(userId: string) {
+    return firstValueFrom(
+      this.http.get<any[]>(`${this.apiUrl}/obtener_horario_usuario/${userId}`)
+    );
+  }  
 }

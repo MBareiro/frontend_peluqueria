@@ -22,44 +22,28 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onSubmit() {
-    const email = this.loginForm.get('email')?.value;
-    const password = this.loginForm.get('password')?.value;
-
-    if (email !== '' && password !== '') {
-      this.login(email, password);
+  async onSubmit() {    
+    const response: any = await this.authService.login(this.loginForm.value);    
+    if(!response.error) {
+      // Almacenar la información del usuario en el almacenamiento local
+      localStorage.setItem('userId', response.userId);
+      localStorage.setItem('userName', response.userName);
+      localStorage.setItem('userRole', response.userRole);
+      localStorage.setItem('token', response.token);
+      this.router.navigate(['/dashboard/list-appointment']);
+    } else {      
+      const errorMessage = response.error;        
+      // Manejar errores de la solicitud HTTP
+      Swal.fire({
+        icon: 'error',
+        text: errorMessage['message'],
+        background: '#191c24',
+        timer: 1500,
+        color: 'white',
+      });
+      console.error('Error en la solicitud:', errorMessage);
     }
-  }
 
-  login(email: string, password: string): void {
-    this.authService.login(email, password).subscribe(
-      (response: any) => {    
-        if (response.is_authenticated) {
-          // Almacenar la información del usuario en el almacenamiento local
-          localStorage.setItem('userId', response.usuario.id);
-          localStorage.setItem('userName', response.usuario.nombre);
-          localStorage.setItem('userRole', response.usuario.role);
+  } 
 
-          // Redirigir a la página principal o a la página deseada después del inicio de sesión
-          // Puedes personalizar esto según tu aplicación
-          this.router.navigate(['/dashboard/list-appointment']);
-        } else {
-          // Manejar el caso en el que las credenciales son incorrectas
-          console.error('Credenciales incorrectas');
-        }
-      },
-      (error) => {
-        const errorMessage = error['error'];        
-        // Manejar errores de la solicitud HTTP
-        Swal.fire({
-          icon: 'error',
-          text: errorMessage['message'],
-          background: '#191c24',
-          timer: 1500,
-          color: 'white',
-        });
-        console.error('Error en la solicitud:', error);
-      }
-    );
-  }
 }

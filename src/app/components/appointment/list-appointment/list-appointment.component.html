@@ -28,10 +28,10 @@
           <td mat-cell *matCellDef="let row">{{row.id}}</td>
         </ng-container>
  
-        <!-- selectedRadio Column -->
-        <ng-container matColumnDef="selectedRadio">
+        <!-- time Column -->
+        <ng-container matColumnDef="time">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
-          <td mat-cell *matCellDef="let row" ><div class="custom-cell">{{ row.selectedRadio }}</div></td>
+          <td mat-cell *matCellDef="let row" ><div class="custom-cell">{{ row.time }}</div></td>
 
         </ng-container>
 
@@ -75,14 +75,14 @@
         </ng-container>
 
         <!-- schedule Column -->
-        <ng-container matColumnDef="actions">
+        <!-- <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Acciones</th>
           <td mat-cell *matCellDef="let row">  
             <button mat-mini-fab matTooltip="Warn" color="warn" aria-label="Example mini fab with a heart icon"  (click)="eliminarTurno(row.id)" >
               <mat-icon>delete</mat-icon>
             </button>
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

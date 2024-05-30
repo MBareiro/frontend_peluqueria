@@ -33,14 +33,14 @@ export class ProfileComponent implements OnInit {
 
     if (userId !== null) {
       // Llamada a getUserById dentro de esta condición
-      this.userService.getUserById(userId).subscribe(
+     /*  this.userService.getUserById(userId).subscribe(
         (userData) => {
           this.addressForm.patchValue(userData); // Pobla el formulario con los datos del usuario
         },
         (error) => {
           console.error('Error al obtener datos del usuario:', error);
         }
-      );
+      ); */
     } else {
       console.error('No se pudo obtener el User ID desde localStorage.');
     }
@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
     this.formularioEnviadoExitoso = true;
     const formData = this.addressForm.value;
     if (this.addressForm.valid) {
-      this.userService.updateUser(formData).subscribe(
+     /*  this.userService.updateUser(formData).subscribe(
         (Response) => {
           console.log('User updated successfully.', Response);
           Swal.fire({
@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
         (error) => {
           console.error('Error updating user:', error);
         }
-      );
+      ); */
     } else {
       console.log('Formulario inválido. Por favor, revisa los campos.');
     }

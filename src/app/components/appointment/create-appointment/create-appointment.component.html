@@ -73,11 +73,8 @@
             }}</mat-label>
           <input readonly matInput [matDatepickerFilter]="esHabilitado" [matDatepicker]="picker" formControlName="date"
             (dateChange)="fechaSeleccionada($event)" [min]="minDate" (click)="picker.open()" />
-          <!-- Botón de cambio de fecha -->
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <!-- Calendario -->
           <mat-datepicker #picker></mat-datepicker>
-          <!-- Error del mat-form-field -->
           <mat-error *ngIf="addressForm.controls['date'].hasError('required')">
             Fecha es <strong>requerido</strong>
           </mat-error>
@@ -95,11 +92,11 @@
         </mat-error>
       </div>
 
-      <!-- <mat-error *ngIf="addressForm.controls['selectedRadio'].hasError('required')">
+      <!-- <mat-error *ngIf="addressForm.controls['time'].hasError('required')">
         Elija una opcion
       </mat-error> -->
       <div *ngIf="loadingSchedule">Cargando horario...</div>
-      <mat-radio-group formControlName="selectedRadio">
+      <mat-radio-group formControlName="time">
         <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
           class="vertical-radio-button">
           {{ schedule.label }}
