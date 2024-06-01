@@ -47,15 +47,15 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
       if (userId !== null) {
         // Si userId no es null, lo convertimos a número
         const userIdNumber = +userId;
-        const obs = this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).pipe(
-          map(data => this.getPagedData(this.getSortedData([...data])))
-        );
-  
-        obs.subscribe(data => { // Log para verificar los datos
-          this.data = data;
-          this.paginator!.length = data.length;  // Asegura que el paginador tenga la longitud correcta
-          this.dataSubject.next(data);  // Notifica a los observadores de cambios en los datos
+        this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).then(data => {
+          const sortedData = this.getSortedData([...data]);
+          const pagedData = this.getPagedData(sortedData);
+        
+          this.data = pagedData;
+          this.paginator!.length = pagedData.length;  // Asegura que el paginador tenga la longitud correcta
+          this.dataSubject.next(pagedData);  // Notifica a los observadores de cambios en los datos
         });
+        
       
         return merge(this.dataSubject.asObservable(), this.paginator.page, this.sort.sortChange)
           .pipe(map(() => {

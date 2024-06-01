@@ -7,7 +7,7 @@ export const loginGuard = () => {
     if (localStorage.getItem('token')) {
         return true;
     } else {
-        router.navigate(['/login']);
+        router.navigate(['/']);
         return false;
     }
 }

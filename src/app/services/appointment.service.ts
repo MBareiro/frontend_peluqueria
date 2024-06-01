@@ -29,8 +29,8 @@ export class AppointmentService {
   getAfternoonAppointments(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/get-afternoon-appointments`);
   }
-  getSelectedAppointments(selectedTime: string, peluqueroID: number, selectedDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`);
+  getSelectedAppointments(selectedTime: string, peluqueroID: number, selectedDate: string) {
+    return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`));
   }
   getSpecificAppointments(selectedTime: string, selectedDate: string, peluqueroID: number) {
     return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`));
@@ -52,16 +52,14 @@ export class AppointmentService {
     return this.http.delete(`${this.apiUrl}/user-cancel-appointment/${appointmentId}`);
   }
   // Método para cancelar turnos dentro de un rango de fechas y para un peluquero específico
-  cancelAppointmentsInDateRange(fromDate: string, toDate: string, peluqueroId: number){
+  cancelAppointments(dates: string[], peluqueroId: number) {
     const url = `${this.apiUrl}/cancel-appointments`;
-    const body = { from_date: fromDate, to_date: toDate, peluquero_id: peluqueroId };
-    const options = { body };  /* 
-    return this.http.request('delete', url, options); */
+    const body = { dates, peluquero_id: peluqueroId };
 
     return firstValueFrom(
-      this.http.request<any[]>('delete', url, options)
+      this.http.request<any[]>('delete', url, { body })
     );
-  } 
+  }
   cancelAllAppointments(peluqueroId: number): Observable<any> {
     const url = `${this.apiUrl}/cancel-all-appointments`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

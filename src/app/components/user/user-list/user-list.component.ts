@@ -20,14 +20,14 @@ export class UserListComponent implements OnInit {
   }
 
   async chargeUser() {
-    const getUsers: any = await this.userService.getUsers(); 
+    const getUsers: any = await this.userService.getUsers();
     console.log(getUsers);
-    
-    if (!getUsers.error){
+
+    if (!getUsers.error) {
       this.users = getUsers;
     } else {
       console.error('Error fetching users:', getUsers.error);
-    }   
+    }
   }
 
   updateUser(user: User): void {
@@ -35,12 +35,10 @@ export class UserListComponent implements OnInit {
     this.chargeUser();
   }
 
-  async saveChanges(){
+  async saveChanges() {
     if (this.selectedUser) {
-      const updateUser = await this.userService.updateUser(this.selectedUser);
-
-      if (!updateUser.error) {
-        console.log('User updated successfully.');
+      try {
+        await this.userService.updateUser(this.selectedUser);
         this.selectedUser = null;
         Swal.fire({
           icon: 'success',
@@ -50,8 +48,8 @@ export class UserListComponent implements OnInit {
           timer: 1500,
         });
         this.chargeUser();
-      } else {
-        console.log('saveChanges: ', updateUser.error);
+      } catch (error) {
+        console.error('Error al actualizar datos del usuario:', error);
       }
     }
   }

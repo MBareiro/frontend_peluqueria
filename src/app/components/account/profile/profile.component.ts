@@ -22,49 +22,54 @@ export class ProfileComponent implements OnInit {
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]], 
+      telefono: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(20),
+        ],
+      ],
       email: ['', [Validators.required, Validators.email]],
       active: ['', [Validators.required]],
     });
   }
 
-  ngOnInit(): void {
-    const userId: number | null = this.userService.verifyIdUser(); // Llamada a verifyIdUser()
+  async ngOnInit() {
+    try {
+      const userId: number | null = this.userService.verifyIdUser(); // Llamada a verifyIdUser()
 
-    if (userId !== null) {
-      // Llamada a getUserById dentro de esta condición
-     /*  this.userService.getUserById(userId).subscribe(
-        (userData) => {
-          this.addressForm.patchValue(userData); // Pobla el formulario con los datos del usuario
-        },
-        (error) => {
-          console.error('Error al obtener datos del usuario:', error);
-        }
-      ); */
-    } else {
-      console.error('No se pudo obtener el User ID desde localStorage.');
+      if (userId !== null) {
+        // Llamada a getUserById dentro de esta condición
+        const response: any = await this.userService.getUserById(userId);
+        console.log(response);
+
+        this.addressForm.patchValue(response); // Pobla el formulario con los datos del usuario
+      } else {
+        console.error('No se pudo obtener el User ID desde localStorage.');
+      }
+    } catch (error) {
+      console.error('Error al obtener datos del usuario:', error);
     }
-  }    
+  }
 
-  onSubmit() {
+  async onSubmit() {
     this.formularioEnviadoExitoso = true;
     const formData = this.addressForm.value;
     if (this.addressForm.valid) {
-     /*  this.userService.updateUser(formData).subscribe(
-        (Response) => {
-          console.log('User updated successfully.', Response);
-          Swal.fire({
-            icon: 'success',
-            color: 'white',
-            text: 'Perfil actualizado',
-            background: '#191c24',
-            timer: 1500,
-          })
-        },
-        (error) => {
-          console.error('Error updating user:', error);
-        }
-      ); */
+      try {
+        await this.userService.updateUser(formData);
+        console.log('User updated successfully.', Response);
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Perfil actualizado',
+          background: '#191c24',
+          timer: 1500,
+        });
+      } catch (error) {
+        console.error('Error al actualizar datos del usuario:', error);
+      }
     } else {
       console.log('Formulario inválido. Por favor, revisa los campos.');
     }

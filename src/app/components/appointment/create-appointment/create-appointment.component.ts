@@ -118,7 +118,7 @@ export class CreateAppointmentComponent {
     }
 
     this.appointmentService
-      .checkIfAppointmentTaken(email, date, peluqueroID)
+      .checkIfAppointmentTaken(email, date.toISOString(), peluqueroID)
       .subscribe(
         (response) => {
           console.log(response);

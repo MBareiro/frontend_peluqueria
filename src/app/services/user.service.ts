@@ -24,11 +24,11 @@ export class UserService {
     return firstValueFrom(this.http.post(this.apiUrl, user));
   }
 
-  updateUser(user: User): Promise<any> {
-    return firstValueFrom(this.http.put(this.apiUrl  + user.id, user));
+  updateUser(user: User) {
+    return firstValueFrom(this.http.put(`${this.apiUrl}/${user.id}`, user));
   }
 
-  deleteUser(id: number): Promise<any> {
+  deleteUser(id: number) {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
   verifyIdUser(): number | null {
@@ -50,7 +50,7 @@ export class UserService {
     }
   }
 
-  changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string): Promise<any> {
+  changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string) {
     const body = {
       old_password: oldPassword,
       new_password: newPassword,
@@ -59,7 +59,7 @@ export class UserService {
     return firstValueFrom(this.http.post(`${this.apiUrl}/change-password/${userId}`, body));
   }
 
-  resetPassword(token: string, newPassword: string, confirmPassword: string): Promise<any> {
+  resetPassword(token: string, newPassword: string, confirmPassword: string) {
     const body = {
       new_password: newPassword,
       confirm_password: confirmPassword,

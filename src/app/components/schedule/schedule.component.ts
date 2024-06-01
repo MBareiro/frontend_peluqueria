@@ -47,35 +47,38 @@ export class ScheduleComponent {
 
   horarios: { [key: number]: any } = {};
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private scheduleService: ScheduleService) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.horarios = {}; // Inicializamos horarios aquí
 
     // Obtener el ID de usuario de alguna manera (puedes usar localStorage, etc.)
     const userId = localStorage.getItem('userId');
-/* 
+
     if (userId) {
-      this.scheduleService.getHorarioUsuario(userId).subscribe(
-        (response) => {
-          if (response && Object.keys(response).length > 0) {
-            this.horarios = response;
-          } else {
-            // Si no hay horario para el usuario, inicializa con valores predeterminados
-            this.inicializarHorarios();
-          }
-        },
-        (error) => {
-          console.error('Error al obtener el horario del usuario', error);
-          // Inicializa con valores predeterminados si hay un error
+      const response: any = await this.scheduleService.getHorarioUsuario(
+        userId
+      );
+      if (!response.error) {
+        if (response && Object.keys(response).length > 0) {
+          this.horarios = response;
+        } else {
+          // Si no hay horario para el usuario, inicializa con valores predeterminados
           this.inicializarHorarios();
         }
-      );
+      } else {
+        console.error(
+          'Error al obtener el horario del usuario',
+          response.error
+        );
+        // Inicializa con valores predeterminados si hay un error
+        this.inicializarHorarios();
+      }
     } else {
       console.error('No se encontró un ID de usuario.');
       // Inicializa con valores predeterminados si no hay un ID de usuario
       this.inicializarHorarios();
-    } */
+    }
   }
   toggleCheckbox(diaKey: number, property: string) {
     if (this.horarios[diaKey]) {
@@ -88,7 +91,7 @@ export class ScheduleComponent {
   onSelectMorningStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_start = selectedHora;
-  } 
+  }
   onSelectMorningEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].morning_end = selectedHora;
@@ -97,7 +100,7 @@ export class ScheduleComponent {
   onSelectAfternoonStart(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_start = selectedHora;
-  } 
+  }
   onSelectAfternoonEnd(event: Event, dia: number) {
     const selectedHora = (event.target as HTMLSelectElement).value;
     this.horarios[dia].afternoon_end = selectedHora;
@@ -123,27 +126,27 @@ export class ScheduleComponent {
     });
   }
 
-  guardarCambios(): void {
+  async guardarCambios(): Promise<void> {
     // Obtén los horarios para enviar al servidor
     const horariosToSend = this.horarios;
 
     // Llama al método del servicio para guardar los horarios
-    this.scheduleService.guardarHorarios(horariosToSend).subscribe(
-      (response) => {
-        console.log('Horarios guardados exitosamente', response);
-        // Puedes realizar acciones adicionales aquí después de guardar los horarios
-        Swal.fire({
-          icon: 'success',
-          color: 'white',
-          text: 'Exito!',
-          background: '#191c24',
-          timer: 1500,
-        })
-      },
-      (error) => {
-        console.error('Error al guardar los horarios', error);
-        // Maneja el error de manera adecuada
-      }
+    const response: any = await this.scheduleService.guardarHorarios(
+      horariosToSend
     );
+    if (!response.error) {
+      console.log('Horarios guardados exitosamente', response);
+      // Puedes realizar acciones adicionales aquí después de guardar los horarios
+      Swal.fire({
+        icon: 'success',
+        color: 'white',
+        text: 'Exito!',
+        background: '#191c24',
+        timer: 1500,
+      });
+    } else {
+      console.error('Error al guardar los horarios', response.error);
+      // Maneja el error de manera adecuada
+    }
   }
 }

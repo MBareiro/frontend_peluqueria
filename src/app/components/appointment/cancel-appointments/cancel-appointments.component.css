@@ -1,54 +1,52 @@
 /* Establece el ancho máximo de la tarjeta */
 .shipping-card {
-    max-width: 600px; /* Ajusta este valor según tu preferencia para el ancho máximo */
-    margin: 20px auto;
-    background-color: #191c24 !important;
-  }
-  
-  /* Estilo para los botones radio */
-  .mat-radio-button {
-    display: block;
-    margin: 10px 0; /* Ajusta el margen según tu preferencia */
-  }
-  
-  /* Estilo para las filas */
-  .row {
-    display: flex;
-    flex-direction: column; /* Cambia la dirección a columna para que los elementos se apilen verticalmente */
-    margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
-  }
-  
-  /* Estilo para las columnas */
-  .col {
-    flex: 1;
-    margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
-  }
-  
-  /* Elimina el margen inferior del último elemento de la columna */
-  .col:last-child {
-    margin-bottom: 0;
-  }
-  
-  /* Estilo para los botones radio en posición vertical */
-  .vertical-radio-button {
-    display: block;
-  }
-  
-  /* Estilo para el título de la tarjeta */
-  mat-card-title {
-    margin-bottom: 15px;
-  }
-  
-  .error{
-    margin-bottom: 5px;
-  }
+  max-width: 600px; /* Ajusta este valor según tu preferencia para el ancho máximo */
+  margin: 20px auto;
+  background-color: #191c24 !important;
+}
 
- 
-  .demo-inline-calendar-card {
-    width: 300px;
-  }
-  
-  
-  .mr-2 {
-    margin-right: 16px; /* Adjust the value as needed */
-  }
+/* Estilo para los botones radio */
+.mat-radio-button {
+  display: block;
+  margin: 10px 0; /* Ajusta el margen según tu preferencia */
+}
+
+/* Estilo para las filas */
+.row {
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a columna para que los elementos se apilen verticalmente */
+  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
+}
+
+/* Estilo para las columnas */
+.col {
+  flex: 1;
+  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
+}
+
+/* Elimina el margen inferior del último elemento de la columna */
+.col:last-child {
+  margin-bottom: 0;
+}
+
+/* Estilo para los botones radio en posición vertical */
+.vertical-radio-button {
+  display: block;
+}
+
+/* Estilo para el título de la tarjeta */
+mat-card-title {
+  margin-bottom: 15px;
+}
+
+.error {
+  margin-bottom: 5px;
+}
+
+.demo-inline-calendar-card {
+  width: 300px;
+}
+
+.mr-2 {
+  margin-right: 16px; /* Adjust the value as needed */
+}
