@@ -1,7 +1,7 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -46,60 +46,53 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Ensure that `es.localize` is defined
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    FooterComponent,
-    CarouselComponent,
-    HeaderComponent,
-    LoginComponent,
-    DashboardNavigationComponent,
-    CreateAppointmentComponent,
-    ScheduleComponent,
-    UserListComponent,
-    UserCreateComponent,
-    ListAppointmentComponent,
-    ErrorPageComponent,
-    ChangePasswordComponent,
-    ProfileComponent,
-    ForgotPasswordComponent,
-    ResetPasswordComponent,
-    CancelAppointmentComponent,
-    AppointmentCancelledComponent,
-    CancelAppointmentsComponent,    
-    
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    MatInputModule,
-    MatSelectModule,
-    MatRadioModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSlideToggleModule,
-    MatDividerModule,
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es-ES'}, 
-    FormValidators,
-  ], 
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        FooterComponent,
+        CarouselComponent,
+        HeaderComponent,
+        LoginComponent,
+        DashboardNavigationComponent,
+        CreateAppointmentComponent,
+        ScheduleComponent,
+        UserListComponent,
+        UserCreateComponent,
+        ListAppointmentComponent,
+        ErrorPageComponent,
+        ChangePasswordComponent,
+        ProfileComponent,
+        ForgotPasswordComponent,
+        ResetPasswordComponent,
+        CancelAppointmentComponent,
+        AppointmentCancelledComponent,
+        CancelAppointmentsComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        MatGridListModule,
+        MatCardModule,
+        MatMenuModule,
+        MatInputModule,
+        MatSelectModule,
+        MatRadioModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSlideToggleModule,
+        MatDividerModule], providers: [
+        { provide: LOCALE_ID, useValue: 'es-ES' },
+        FormValidators,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }

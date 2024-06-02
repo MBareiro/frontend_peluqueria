@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class AppointmentService {
   private apiUrl = `${environment.apiUrl}/appointments`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   //---------------------POST-------------------------
   confirmAppointment(data: any): Observable<any> {
@@ -30,7 +31,7 @@ export class AppointmentService {
     return this.http.get<any[]>(`${this.apiUrl}/get-afternoon-appointments`);
   }
   getSelectedAppointments(selectedTime: string, peluqueroID: number, selectedDate: string) {
-    return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`));
+    return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`,  this.authService.createHeaders()));
   }
   getSpecificAppointments(selectedTime: string, selectedDate: string, peluqueroID: number) {
     return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`));

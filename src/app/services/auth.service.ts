@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -30,6 +30,14 @@ export class AuthService {
     if (!userName || !userId || !userRole) {
       this.router.navigate(['/error-page']);
     }
+  }
+
+  createHeaders() {
+    return {
+      headers: new HttpHeaders({
+        'Authorization': localStorage.getItem('token_songs') || ''
+      }),
+    };
   }
 
   logout(): Observable<any> {

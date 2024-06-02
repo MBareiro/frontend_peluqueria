@@ -1,4 +1,4 @@
-@import '~@angular/material/prebuilt-themes/purple-green.css';
+@import '@angular/material/prebuilt-themes/purple-green.css';
 /* Estilos para el tema oscuro */
 body {
     background-color: rgb(0, 0, 0) !important; /* Fondo oscuro */

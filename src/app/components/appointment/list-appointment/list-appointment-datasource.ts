@@ -47,7 +47,7 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
       if (userId !== null) {
         // Si userId no es null, lo convertimos a número
         const userIdNumber = +userId;
-        this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).then(data => {
+        this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).then((data: any) => {
           const sortedData = this.getSortedData([...data]);
           const pagedData = this.getPagedData(sortedData);
         
