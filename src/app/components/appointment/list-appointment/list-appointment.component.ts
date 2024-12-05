@@ -37,8 +37,7 @@ export class ListAppointmentComponent {
   }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['time','first_name', 'last_name', 'email', 'phone_number'];/* 
-  displayedColumns = ['time','first_name', 'last_name', 'email', 'phone_number', 'peluquero']; */
+  displayedColumns = ['time','first_name', 'email', 'phone_number', 'actions'];
 
   onRadioChange(event: MatRadioChange) {
     this.time = event.value || 'morning';  // Update time
@@ -51,7 +50,7 @@ export class ListAppointmentComponent {
   
     if (selectedDate) {
       // Convertir la fecha al formato 'yyyy-MM-dd'
-      const dateString: string = formatDate(selectedDate, 'yyyy-MM-dd', 'en-US');
+      const dateString  = formatDate(selectedDate, 'yyyy-MM-dd', 'en-US');
       this.selectedDate = dateString
       this.dataSource.update(this.time, this.selectedDate);
   
@@ -90,10 +89,40 @@ export class ListAppointmentComponent {
   }
   
   eliminarTurno(id : number){
-    this.appointmentService.userCancelAppointment(id).subscribe(
+    this.appointmentService.cancelAppointment(id, "cancelled").subscribe(
       (response) => {
         console.log('Turno eliminado exitosamente', response);
         // Llama a connect para actualizar la fuente de datos con la nueva selección
+      this.dataSource.connect();
+        // Actualiza la lista de turnos o realiza alguna acción adicional si es necesario
+      },
+      (error) => {
+        console.error('Error al eliminar turno', error);
+        // Maneja el error de acuerdo a tus necesidades
+      }
+    );
+  }
+
+  clientAbsense(id : number){
+    this.appointmentService.cancelAppointment(id, "absent").subscribe(
+      (response) => {
+/*         console.log('Turno eliminado exitosamente', response);
+ */        // Llama a connect para actualizar la fuente de datos con la nueva selección
+      this.dataSource.connect();
+        // Actualiza la lista de turnos o realiza alguna acción adicional si es necesario
+      },
+      (error) => {
+        console.error('Error al eliminar turno', error);
+        // Maneja el error de acuerdo a tus necesidades
+      }
+    );
+  }
+
+  cancelAppointment(id : number){
+    this.appointmentService.cancelAppointment(id, "cancelled").subscribe(
+      (response) => {
+/*         console.log('Turno cancelado exitosamente', response);
+ */        // Llama a connect para actualizar la fuente de datos con la nueva selección
       this.dataSource.connect();
         // Actualiza la lista de turnos o realiza alguna acción adicional si es necesario
       },

@@ -67,11 +67,11 @@ export class CreateAppointmentComponent {
   }
   createAddressForm() {
     this.addressForm = new FormGroup({
-      firstName: new FormControl(null, [
+      first_name: new FormControl(null, [
         Validators.required,
         Validators.pattern('^[a-zA-Z ]+$'),
       ]),
-      lastName: new FormControl(null, Validators.required),
+      last_name: new FormControl(null, Validators.required),
       email: new FormControl(
         null,
         this.isUser() ? [] : [Validators.required, Validators.email]
@@ -80,7 +80,7 @@ export class CreateAppointmentComponent {
         null,
         this.isUser() ? [] : Validators.required
       ),
-      peluquero: new FormControl(null, Validators.required),
+      hairdresserId: new FormControl(null, Validators.required),
       date: new FormControl({ value: '', disabled: true }, Validators.required),
       time: new FormControl(null),
       schedule: new FormControl(
@@ -94,63 +94,73 @@ export class CreateAppointmentComponent {
     return this.userRole === 'admin' || this.userRole === 'peluquero'; // Reemplaza esto con tu lógica real
   }
 
-  onSubmit(): void {
+  async onSubmit() {
     const email = this.addressForm.get('email')?.value;
     const formData = this.addressForm.value;
-    const peluqueroID = this.addressForm.get('peluquero')?.value;
+    const peluqueroID = this.addressForm.get('hairdresserId')?.value;
     const date = this.addressForm.get('date')?.value;
     const time = this.addressForm.get('time')?.value;
+  
     if (this.addressForm.invalid) {
       console.log('Formulario inválido. Por favor, revisa los campos.');
       return;
     }
+  
     if (!time) {
       Swal.fire({
         icon: 'info',
         color: 'white',
         title: 'Debe seleccionar un horario',
-        text: '',
         background: '#191c24',
         timer: 6500,
         showConfirmButton: false,
       });
       return;
     }
-
-    this.appointmentService
-      .checkIfAppointmentTaken(email, date.toISOString(), peluqueroID)
-      .subscribe(
-        (response) => {
-          console.log(response);
-
-          if (response.appointment_taken) {
-            Swal.fire({
-              icon: 'warning',
-              color: 'white',
-              title: 'Advertencia',
-              text: 'Usted ya tiene un turno reservado para este día',
-              background: '#191c24',
-              timer: 6500,
-              showConfirmButton: false,
-            });
-            return;
-          } else {
-            // Continuar con la lógica de creación del turno
-            if (email) {
-              // El turno tiene un correo electrónico, por lo que se debe enviar la confirmación
-              this.sendConfirmationAndCreateAppointment(email, formData);
-            } else {
-              // El turno no tiene un correo electrónico, simplemente crea el turno
-              this.createAppointment(formData);
-            }
-          }
-        },
-        (error) => {
-          // Lógica para manejar errores en la creación del turno
-          console.error('Error al crear el turno:', error);
+  
+    try {
+      if (email) {
+        const response: any = await this.appointmentService.checkIfAppointmentTaken(
+          email,
+          date.toISOString(),
+          peluqueroID
+        );  
+        if (response.appointment_taken) {
+          Swal.fire({
+            icon: 'warning',
+            color: 'white',
+            title: 'Advertencia',
+            text: 'Usted ya tiene un turno reservado para este día',
+            background: '#191c24',
+            timer: 6500,
+            showConfirmButton: false,
+          });
+          return;
         }
-      );
+      }
+  
+      if (email) {
+        // El turno tiene un correo electrónico, se debe enviar la confirmación
+        await this.sendConfirmationAndCreateAppointment(email, formData);
+      } else {
+        // El turno no tiene un correo electrónico, simplemente crea el turno
+        await this.createAppointment(formData);
+      }
+    } catch (error) {
+      console.error('Error al procesar la solicitud de cita:', error);
+      Swal.fire({
+        icon: 'error',
+        color: 'white',
+        title: 'Error',
+        text: 'Ha ocurrido un error al procesar su solicitud. Por favor, intente nuevamente más tarde.',
+        background: '#191c24',
+        timer: 6500,
+        showConfirmButton: false,
+      });
+    }
   }
+  
+
   private async sendConfirmationAndCreateAppointment(
     email: string,
     formData: any
@@ -206,7 +216,7 @@ export class CreateAppointmentComponent {
         title: 'Error al enviar el código de confirmación',
         text: 'Ha ocurrido un error al intentar enviar el código de confirmación. Por favor, verifique que su correo electrónico sea válido.',
         background: '#191c24',
-        color: 'white'
+        color: 'white',
       });
     }
   }
@@ -244,8 +254,10 @@ export class CreateAppointmentComponent {
   async appointmentBD() {
     const periodo = this.addressForm.get('schedule')?.value;
     const date = this.addressForm.get('date')?.value;
-    const peluqueroID = this.addressForm.get('peluquero')?.value;
+    const peluqueroID = this.addressForm.get('hairdresserId')?.value;
     const peluquero = peluqueroID ? peluqueroID : '';
+    console.log();
+
     return await this.appointmentService.getSpecificAppointments(
       periodo,
       date.toISOString(),
@@ -273,8 +285,10 @@ export class CreateAppointmentComponent {
   async chargeHorario(): Promise<void> {
     try {
       this.error = false;
-      const peluqueroID = this.addressForm.get('peluquero')?.value;
+      const peluqueroID = this.addressForm.get('hairdresserId')?.value;
       const peluquero = peluqueroID ? peluqueroID : ''; // Convert to string if valid
+      console.log(peluquero);
+
       const data: Horario[] = await this.horarioService.getHorarioUsuario(
         peluquero
       );
@@ -408,16 +422,16 @@ export class CreateAppointmentComponent {
     try {
       this.loadingCalendar = true;
 
-      const peluqueroID = this.addressForm.get('peluquero')?.value;
+      const peluqueroID = this.addressForm.get('hairdresserId')?.value;
 
       // Mostrar mensaje de carga
       this.loadingCalendar = true;
 
       // Obtener horario del usuario de manera asíncrona
-      this.chargeHorario()
+      this.chargeHorario();
 
       // Obtener fechas bloqueadas de manera asíncrona
-      this.getBlockedDates(peluqueroID)
+      this.getBlockedDates(peluqueroID);
 
       // Ocultar mensaje de carga después de completar la carga
       this.loadingCalendar = false;
@@ -432,7 +446,7 @@ export class CreateAppointmentComponent {
   }
 
   async getBlockedDates(peluqueroID: number) {
-    try {      
+    try {
       // Obtener fechas bloqueadas de manera asíncrona
       const response = await this.blockedDayService.getBlockedDays(peluqueroID);
       if (response.length > 0) {
@@ -450,8 +464,6 @@ export class CreateAppointmentComponent {
       }
     }
   }
-  
-  
 
   esHabilitado: DateFilterFn<any> = (date: Date | null) => {
     if (date === null || date === undefined) {

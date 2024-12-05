@@ -11,8 +11,8 @@ export class ScheduleService {
 
   constructor(private http: HttpClient) {}
 
-  guardarHorarios(horarios: any){
-    const url = `${this.apiUrl}/guardar_horarios`;
+  guardarHorarios(horarios: any, user_id: string){
+    const url = `${this.apiUrl}/guardar_horarios/${user_id}`;
     return firstValueFrom(this.http.post(url, horarios));
   }
 

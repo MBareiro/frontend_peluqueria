@@ -1,0 +1,89 @@
+/* Estilos generales para el card de clientes */
+.client-card {
+  margin: 20px auto;
+  max-width: 900px;
+  background-color: #2c2e33;
+  color: white;
+}
+
+.client-card * {
+  background-color: inherit; /* Hereda el fondo del elemento padre */
+}
+
+/* Estilos para la cabecera del card */
+.client-card-header {
+  display: flex;
+  flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.client-card-title {
+  font-size: 1.5em;
+  margin: 0;
+  flex: 1; /* Permitir que el título use espacio flexible */
+}
+
+.client-search-field {
+  max-width: 300px;
+  width: 100%;
+  margin-top: 16px; /* Espacio superior para dispositivos móviles */
+}
+
+.client-table-container {
+  overflow-x: auto;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+/* Estilos para las acciones del card */
+.mat-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+/* Estilos para las filas bloqueadas */
+.blocked-row {
+  background-color: #b80214 !important; /* Color de fondo rojo para fila bloqueada */
+  color: white;
+}
+
+/* Estilos adicionales para los botones */
+.mat-card-actions button {
+  padding: 5px 10px;
+}
+
+/* Centrar contenido de celdas */
+.custom-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: yellow !important; /* Fondo amarillo */
+  color: black;
+  font-weight: bold;
+}
+
+/* Asegurar que el mat-card-header esté correctamente alineado */
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .client-card-header {
+    flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+    align-items: flex-start;
+  }
+
+  .client-search-field {
+    margin-top: 8px; /* Reducir el espacio superior en pantallas pequeñas */
+    margin-left: 0; /* Asegurar que no haya margen izquierdo */
+  }
+}

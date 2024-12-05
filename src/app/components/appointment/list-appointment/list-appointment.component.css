@@ -44,3 +44,7 @@
 mat-card-title {
   font-size: 34px;
 }
+
+.table-container{
+  overflow: auto;
+}

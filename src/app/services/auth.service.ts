@@ -31,15 +31,7 @@ export class AuthService {
       this.router.navigate(['/error-page']);
     }
   }
-
-  createHeaders() {
-    return {
-      headers: new HttpHeaders({
-        'Authorization': localStorage.getItem('token_songs') || ''
-      }),
-    };
-  }
-
+  
   logout(): Observable<any> {
     // Limpiar los datos almacenados en localStorage
     localStorage.clear();

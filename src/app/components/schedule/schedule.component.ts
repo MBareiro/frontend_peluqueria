@@ -53,15 +53,17 @@ export class ScheduleComponent {
     this.horarios = {}; // Inicializamos horarios aquí
 
     // Obtener el ID de usuario de alguna manera (puedes usar localStorage, etc.)
-    const userId = localStorage.getItem('userId');
+    const user_id = localStorage.getItem('userId');
+    console.log(user_id);
 
-    if (userId) {
+    if (user_id) {
       const response: any = await this.scheduleService.getHorarioUsuario(
-        userId
+        user_id
       );
       if (!response.error) {
         if (response && Object.keys(response).length > 0) {
           this.horarios = response;
+          console.log(this.horarios);
         } else {
           // Si no hay horario para el usuario, inicializa con valores predeterminados
           this.inicializarHorarios();
@@ -121,7 +123,7 @@ export class ScheduleComponent {
         morning_end: '12:00',
         afternoon_start: '16:00',
         afternoon_end: '20:00',
-        userId: localStorage.getItem('userId'),
+        user_id: localStorage.getItem('userId'),
       };
     });
   }
@@ -129,24 +131,27 @@ export class ScheduleComponent {
   async guardarCambios(): Promise<void> {
     // Obtén los horarios para enviar al servidor
     const horariosToSend = this.horarios;
-
-    // Llama al método del servicio para guardar los horarios
-    const response: any = await this.scheduleService.guardarHorarios(
-      horariosToSend
-    );
-    if (!response.error) {
-      console.log('Horarios guardados exitosamente', response);
-      // Puedes realizar acciones adicionales aquí después de guardar los horarios
-      Swal.fire({
-        icon: 'success',
-        color: 'white',
-        text: 'Exito!',
-        background: '#191c24',
-        timer: 1500,
-      });
-    } else {
-      console.error('Error al guardar los horarios', response.error);
-      // Maneja el error de manera adecuada
+    const user_id = localStorage.getItem('userId');
+    if (user_id) {
+      // Llama al método del servicio para guardar los horarios
+      const response: any = await this.scheduleService.guardarHorarios(
+        horariosToSend,
+        user_id
+      );
+      if (!response.error) {
+        console.log('Horarios guardados exitosamente', response);
+        // Puedes realizar acciones adicionales aquí después de guardar los horarios
+        Swal.fire({
+          icon: 'success',
+          color: 'white',
+          text: 'Exito!',
+          background: '#191c24',
+          timer: 1500,
+        });
+      } else {
+        console.error('Error al guardar los horarios', response.error);
+        // Maneja el error de manera adecuada
+      }
     }
   }
 }

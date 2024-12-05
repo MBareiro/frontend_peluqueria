@@ -7,8 +7,8 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Nombre</mat-label>
-          <input matInput formControlName="firstName" (keydown)="formValidator.onKeyDown($event)" />
-          <mat-error *ngIf="addressForm.controls['firstName'].hasError('required')">
+          <input matInput formControlName="first_name" (keydown)="formValidator.onKeyDown($event)" />
+          <mat-error *ngIf="addressForm.controls['first_name'].hasError('required')">
             Nombre es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>
@@ -17,8 +17,8 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Apellido</mat-label>
-          <input matInput formControlName="lastName" (keydown)="formValidator.onKeyDown($event)" />
-          <mat-error *ngIf="addressForm.controls['lastName'].hasError('required')">
+          <input matInput formControlName="last_name" (keydown)="formValidator.onKeyDown($event)" />
+          <mat-error *ngIf="addressForm.controls['last_name'].hasError('required')">
             Apellido es <strong>requerido</strong>
           </mat-error>          
         </mat-form-field>
@@ -55,12 +55,12 @@
           <mat-label>{{
             loadingUsers ? "Cargando peluqueros..." : "Peluqueros"
             }}</mat-label>
-          <mat-select formControlName="peluquero" (selectionChange)="peluquero()">
+          <mat-select formControlName="hairdresserId" (selectionChange)="peluquero()">
             <mat-option *ngFor="let user of users" [value]="user.id">
-              {{ user.nombre }}
+              {{ user.first_name }} {{ user.last_name }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="addressForm.controls['peluquero'].hasError('required')">
+          <mat-error *ngIf="addressForm.controls['hairdresserId'].hasError('required')">
             Peluquero es <strong>requerido</strong>
           </mat-error>
         </mat-form-field>

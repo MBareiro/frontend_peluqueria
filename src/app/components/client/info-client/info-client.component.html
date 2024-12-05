@@ -1,0 +1,45 @@
+<mat-card class="card-container">
+  <mat-card-content>
+    <div class="card-header">
+      <mat-card-title class="card-title">Historial de Turnos</mat-card-title>
+      <div class="header-buttons">
+        <button mat-button class="back-button" (click)="goBack()">Volver</button>
+        <button mat-button class="block-button" [ngClass]="{'blocked': blocked}" color="{{ blocked ? 'success' : 'warn' }}" (click)="blockClient()">
+          {{ blocked ? 'Desbloquear Cliente' : 'Bloquear Cliente' }}
+        </button>
+      </div>
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="appointments" class="full-width-table" matSort aria-label="Elements">
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+          <td mat-cell *matCellDef="let appointment">{{appointment.date}}</td>
+        </ng-container>
+
+        <!-- Time Column -->
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+          <td mat-cell *matCellDef="let appointment">{{appointment.time}}</td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+          <td mat-cell *matCellDef="let appointment" [ngClass]="{'status-absence': appointment.status === 'Ausente'}">
+            {{appointment.status}}
+          </td>
+        </ng-container>
+
+        <!-- Hairdresser Column -->
+        <ng-container matColumnDef="hairdresser">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Peluquero</th>
+          <td mat-cell *matCellDef="let appointment">{{appointment.hairdresser_first_name}} {{appointment.hairdresser_last_name}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

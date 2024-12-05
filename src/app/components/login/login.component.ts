@@ -32,11 +32,12 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', response.token);
       this.router.navigate(['/dashboard/list-appointment']);
     } else {      
-      const errorMessage = response.error;        
+      const errorMessage = response.error;  
+      console.log(errorMessage)      
       // Manejar errores de la solicitud HTTP
       Swal.fire({
         icon: 'error',
-        text: errorMessage['message'],
+        text: errorMessage,
         background: '#191c24',
         timer: 1500,
         color: 'white',

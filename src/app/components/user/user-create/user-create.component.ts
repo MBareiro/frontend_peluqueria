@@ -36,11 +36,11 @@ export class UserCreateComponent {
   
     const newUser: User = {
       id: 0,
-      nombre: formData.firstName || '',
-      apellido: formData.lastName || '',
-      direccion: formData.direccion || '',
+      first_name: formData.firstName || '',
+      last_name: formData.lastName || '',
+      address: formData.direccion || '',
       email: formData.email || '',
-      telefono: formData.telefono || '',
+      phone: formData.telefono || '',
       role: formData.role || '',
       active: true,
       password: '',

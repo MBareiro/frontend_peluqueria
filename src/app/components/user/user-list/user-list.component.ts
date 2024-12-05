@@ -35,6 +35,39 @@ export class UserListComponent implements OnInit {
     this.chargeUser();
   }
 
+  async deleteUser(id_user: number): Promise<void> {
+    try {  
+      Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Se eliminaran permanentemente todos los datos del usuario ¡No podrás revertir esto!",
+        icon: "warning",
+        background: '#191c24',
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        color: 'white',
+        confirmButtonText: "Eliminar"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await this.userService.deleteUser(id_user);
+          console.log(response);
+          Swal.fire({
+            title: "¡Eliminado!",
+            text: "El usuario ha sido eliminado.",
+            icon: "success",
+            color: 'white',
+            background: '#191c24',
+          });
+          this.selectedUser = null;
+          this.chargeUser();
+        }
+      });   
+   
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+    }
+  }
+
   async saveChanges() {
     if (this.selectedUser) {
       try {

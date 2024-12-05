@@ -17,6 +17,8 @@ import { ChangePasswordComponent } from './components/account/change-password/ch
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 import { ProfileComponent } from './components/account/profile/profile.component';
 import { loginGuard } from './guards/login.guard';
+import { ListClientsComponent } from './components/client/list-clients/list-clients.component';
+import { InfoClientComponent } from './components/client/info-client/info-client.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +32,8 @@ const routes: Routes = [
       { path: 'list-appointment', component: ListAppointmentComponent },
       { path: 'list-users', component: UserListComponent },
       { path: 'create-user', component: UserCreateComponent },
+      { path: 'list-clients', component: ListClientsComponent },
+      { path: 'info-client/:id', component: InfoClientComponent },
       { path: 'schedule', component: ScheduleComponent },
 
       { path: 'calendar', component: CancelAppointmentsComponent },      

@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class BloquedDayService {
-  private apiUrl = environment.apiUrl + "bloqued-days";
+  private apiUrl = environment.apiUrl + "/blocked-days";
   constructor(private http: HttpClient) {}
 
   // Método actualizado para aceptar un array de fechas

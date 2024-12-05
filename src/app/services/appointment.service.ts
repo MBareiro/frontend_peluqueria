@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +9,7 @@ import { AuthService } from './auth.service';
 export class AppointmentService {
   private apiUrl = `${environment.apiUrl}/appointments`;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
   //---------------------POST-------------------------
   confirmAppointment(data: any): Observable<any> {
@@ -31,7 +30,7 @@ export class AppointmentService {
     return this.http.get<any[]>(`${this.apiUrl}/get-afternoon-appointments`);
   }
   getSelectedAppointments(selectedTime: string, peluqueroID: number, selectedDate: string) {
-    return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`,  this.authService.createHeaders()));
+    return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-selected-appointments/${selectedTime}/${peluqueroID}/${selectedDate}`));
   }
   getSpecificAppointments(selectedTime: string, selectedDate: string, peluqueroID: number) {
     return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`));
@@ -44,18 +43,14 @@ export class AppointmentService {
   }
 
 //---------------------DELETE-------------------------
-  // Método para cancelar un turno
-  cancelAppointment(appointmentId: number): Observable<any> {    
-    return this.http.delete(`${this.apiUrl}/cancel-appointment/${appointmentId}`);
-  }
-
+  
   userCancelAppointment(appointmentId: number): Observable<any> {    
     return this.http.delete(`${this.apiUrl}/user-cancel-appointment/${appointmentId}`);
   }
   // Método para cancelar turnos dentro de un rango de fechas y para un peluquero específico
   cancelAppointments(dates: string[], peluqueroId: number) {
     const url = `${this.apiUrl}/cancel-appointments`;
-    const body = { dates, peluquero_id: peluqueroId };
+    const body = { dates, hairdresserId: peluqueroId };
 
     return firstValueFrom(
       this.http.request<any[]>('delete', url, { body })
@@ -64,7 +59,13 @@ export class AppointmentService {
   cancelAllAppointments(peluqueroId: number): Observable<any> {
     const url = `${this.apiUrl}/cancel-all-appointments`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const body = { peluquero_id: peluqueroId };
+    const body = { hairdresserId: peluqueroId };
     return this.http.delete(url, { headers, body });
+  }
+
+  cancelAppointment(appointmentId: number, newState: string) {
+    const endpoint = `${this.apiUrl}/cancel`;
+    const body = { appointmentId, newState };
+    return this.http.post(endpoint, body);
   }
 }

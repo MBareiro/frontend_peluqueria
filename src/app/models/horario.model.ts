@@ -7,9 +7,9 @@ export interface Horario {
   afternoon_start: string;
   morning_end: string;
   morning_start: string;
-  dia: number;
+  day: number;
   id: number;
-  userId: number;
+  user_id: number;
   // ... otras propiedades
 }
   

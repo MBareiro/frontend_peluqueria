@@ -28,20 +28,18 @@ export class ForgotPasswordComponent {
   }
   async onSubmit() {
     const emailValue = this.email.value; // Obtener el valor del campo de correo electrónico
-
-    /* if (emailValue !== null) {
-      console.log(emailValue);
-      this.userService.requestPasswordReset(emailValue).subscribe(
-        response => {
-          console.log(response)
-          this.responseMessage = response.message;
-        },
-        error => {
-          console.log(error)
-        }
-      );
-    }  */
+  
+    if (emailValue !== null) {
+      try {
+        const response = await this.userService.requestPasswordReset(emailValue); // Esperar la respuesta de la Promesa
+        console.log(response);
+        this.responseMessage = response.message;
+      } catch (error) {
+        console.error(error); // Manejo de errores
+      }
+    }
   }
+  
 }
 
 

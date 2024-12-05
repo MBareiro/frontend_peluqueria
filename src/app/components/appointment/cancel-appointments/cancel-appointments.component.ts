@@ -40,8 +40,8 @@ export class CancelAppointmentsComponent implements OnInit {
 
   async getHorarioPeluquero() {
     try {
-      const peluqueroID = this.user_id;
-      const peluquero = peluqueroID !== null ? peluqueroID.toString() : '';
+      const hairdresserId = this.user_id;
+      const peluquero = hairdresserId !== null ? hairdresserId.toString() : '';
       this.horario = await this.horarioService.getHorarioUsuario(peluquero);
       this.initializeDateFilter();
     } catch (error) {
@@ -54,16 +54,11 @@ export class CancelAppointmentsComponent implements OnInit {
       const blockedDays = await this.blockedDayService.getBlockedDays(
         this.user_id
       );
-      console.log('Blocked days fetched:', blockedDays);
-
       this.blockedDatesArray = blockedDays.map((item: any) => {
         const blockedDate = new Date(item.blocked_date);
-        console.log('Processing blocked_date:', item.blocked_date);
-        console.log('Blocked date object:', blockedDate);
         return blockedDate.toISOString().split('T')[0];
       });
 
-      console.log('Processed blockedDatesArray:', this.blockedDatesArray);
       this.initializeDateFilter();
     } catch (error) {
       if ((error as any).status === 404) {
@@ -111,8 +106,8 @@ export class CancelAppointmentsComponent implements OnInit {
             break;
         }
         const isDayBlocked =
-          horarioEntry?.active_morning &&
-          horarioEntry?.active_afternoon &&
+         (horarioEntry?.active_morning ||
+          horarioEntry?.active_afternoon) &&
           !isBlocked;
         return !!isDayBlocked;
       } catch (error) {
@@ -124,13 +119,8 @@ export class CancelAppointmentsComponent implements OnInit {
 
   async deleteBlockedDays(dates: string[]) {
     try {
-      console.log('Deleting blocked days:', dates);
       await this.blockedDayService.deleteBlockedDays(this.user_id, dates);
       this.removeDatesFromArray(dates);
-      console.log(
-        'Updated blockedDatesArray after deletion:',
-        this.blockedDatesArray
-      );
       this.initializeDateFilter();
     } catch (error) {
       console.error('Failed to delete:', error);
@@ -209,13 +199,8 @@ export class CancelAppointmentsComponent implements OnInit {
   
 
   removeDatesFromArray(dates: string[]) {
-    console.log('Removing dates from array:', dates);
     this.blockedDatesArray = this.blockedDatesArray.filter(
       (date) => !dates.includes(date)
-    );
-    console.log(
-      'Updated blockedDatesArray after removal:',
-      this.blockedDatesArray
     );
   }
 

@@ -19,10 +19,10 @@ export class ProfileComponent implements OnInit {
   ) {
     this.addressForm = this.formBuilder.group({
       id: [''],
-      nombre: ['', [Validators.required]],
-      apellido: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      telefono: [
+      first_name: ['', [Validators.required]],
+      last_name: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      phone: [
         '',
         [
           Validators.required,

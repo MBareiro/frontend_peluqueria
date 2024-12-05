@@ -1,4 +1,4 @@
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs'; // Asegúrate de importar Observable
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
@@ -13,8 +13,8 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Promise<User[]> {
-    return firstValueFrom(this.http.get<User[]>(this.apiUrl ));
+  getUsers() { // Cambia a Observable
+    return firstValueFrom(this.http.get<User[]>(this.apiUrl));
   }
 
   getUserById(id: number): Promise<User> {
@@ -32,6 +32,7 @@ export class UserService {
   deleteUser(id: number) {
     return firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
+  
   verifyIdUser(): number | null {
     const userId: string | null = localStorage.getItem('userId');
 
@@ -39,7 +40,6 @@ export class UserService {
       const userIdNumber: number = parseInt(userId, 10); // Convertir a número
 
       if (!isNaN(userIdNumber)) {
-        // userIdNumber ahora es un número válido
         return userIdNumber;
       } else {
         console.error('No se pudo convertir a número:', userId);
@@ -60,15 +60,15 @@ export class UserService {
     return firstValueFrom(this.http.post(`${this.apiUrl}/change-password/${userId}`, body));
   }
 
-  resetPassword(token: string, newPassword: string, confirmPassword: string) {
+  resetPassword(token: string, newPassword: string, confirmPassword: string): Promise<{ message: string }> {
     const body = {
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    return firstValueFrom(this.http.post(`${environment.apiUrl}/reset-password/${token}`, body));
+    return firstValueFrom(this.http.post<{ message: string }>(`${environment.apiUrl}/password/reset-password/${token}`, body));
   }
 
   requestPasswordReset(email: string): Promise<{ message: string }> {
-    return firstValueFrom(this.http.post<{ message: string }>(`${environment.apiUrl}/forgot-password`, { email }));
+    return firstValueFrom(this.http.post<{ message: string }>(`${environment.apiUrl}/password/forgot-password`, { email }));
   }
 }

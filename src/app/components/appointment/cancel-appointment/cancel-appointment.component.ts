@@ -22,7 +22,7 @@ export class CancelAppointmentComponent implements OnInit {
 
   cancelAppointment() {
     // Llama a un servicio para cancelar el turno
-    this.appointmentService.cancelAppointment(this.appointmentId).subscribe(
+    this.appointmentService.cancelAppointment(this.appointmentId, "cancelled").subscribe(
       (data) => {
         this.router.navigate(['/appointment-cancelled']);
       },
