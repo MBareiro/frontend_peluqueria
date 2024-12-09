@@ -8,6 +8,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { FormControl } from '@angular/forms';
 import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { formatDate } from '@angular/common';
+import { ClientService } from 'src/app/services/client.service';
 
 
 @Component({
@@ -32,7 +33,7 @@ export class ListAppointmentComponent {
     return day !== 0 && day !== 6; // Devuelve true para habilitar, false para deshabilitar
   };
 
-  constructor(private appointmentService: AppointmentService) {
+  constructor(private appointmentService: AppointmentService, private clientService: ClientService) {
     this.dataSource = new ListAppointmentDataSource(this.appointmentService, this.time, this.selectedDate);
   }
 
@@ -117,7 +118,6 @@ export class ListAppointmentComponent {
       }
     );
   }
-
   cancelAppointment(id : number){
     this.appointmentService.cancelAppointment(id, "cancelled").subscribe(
       (response) => {
@@ -132,4 +132,30 @@ export class ListAppointmentComponent {
       }
     );
   }
+
+  blockClient(clientId: string | null, email: string | null, phone_number: string | null, appointment_id: number): void {
+    console.log(clientId, email, phone_number);
+    
+    if (!clientId && !email && !phone_number) {
+      console.error('You must provide at least one identifier: clientId, email, or phone_number.');
+      return;
+    }
+  
+    const queryParams: any = {};
+    if (clientId) queryParams.clientId = clientId;
+    if (email) queryParams.email = email;
+    if (phone_number) queryParams.phone_number = phone_number;
+  
+    this.clientService.toggleClientBlockedStatus(clientId, email, phone_number).subscribe({
+      next: response => {
+        console.log('Client status updated successfully:', response);
+        // Opcional: puedes actualizar el estado del cliente en la interfaz según lo que devuelva la API
+      },
+      error: error => {
+        console.error('Error toggling client blocked status:', error);
+      }
+    });
+    this.cancelAppointment(appointment_id)
+  }
+  
 }

@@ -25,8 +25,8 @@ export class MapComponent implements AfterViewInit {
 
     // Añadir marcador
     L.marker([-26.805222, -55.023778])
-      .addTo(this.map)
-      .bindPopup('¡Aquí está!')
+      .addTo(this.map)/* 
+      .bindPopup('¡Aquí está!') */
       .openPopup();
   }
 }

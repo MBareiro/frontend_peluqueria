@@ -57,7 +57,7 @@ export class InfoClientComponent implements OnInit {
   }
 
   blockClient(): void {
-    this.clientService.toggleClientBlockedStatus(this.clientId).subscribe(response => {
+    this.clientService.toggleClientBlockedStatus(this.clientId, null, null).subscribe(response => {
       this.blocked = !this.blocked; // Toggle the blocked state
     }, error => {
       console.error('Error blocking client:', error);

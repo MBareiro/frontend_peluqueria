@@ -39,7 +39,17 @@ export class ClientService {
     return this.http.get(`${environment.apiUrl}/appointments/client-appointments/${clientId}`);
   }
 
-  toggleClientBlockedStatus(clientId: string): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${clientId}/block`, {});
+  toggleClientBlockedStatus(clientId: string | null, email: string | null, phone_number: string | null): Observable<any> {
+    if (!clientId && !email && !phone_number) {
+      throw new Error('You must provide at least one identifier: clientId, email, or phone_number.');
+    }
+  
+    const queryParams: any = {};
+    if (clientId) queryParams.clientId = clientId;
+    if (email) queryParams.email = email;
+    if (phone_number) queryParams.phone_number = phone_number;
+  
+    return this.http.put<any>(`${this.apiUrl}/clients/block`, {}, { params: queryParams });
   }
+  
 }

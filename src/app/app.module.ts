@@ -29,7 +29,6 @@ import { CreateAppointmentComponent } from './components/appointment/create-appo
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { ListClientsComponent } from './components/client/list-clients/list-clients.component';
 import { MapComponent } from './components/map/map.component';
-
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -42,7 +41,7 @@ import { ErrorPageComponent } from './components/shared/error-page/error-page.co
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ProfileComponent } from './components/account/profile/profile.component';
 import { InfoClientComponent } from './components/client/info-client/info-client.component';
-import {MatStepperModule} from '@angular/material/stepper';
+import { MatStepperModule } from '@angular/material/stepper';
 import { FormValidators } from './components/shared/form-validators/form-validators';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
@@ -53,8 +52,6 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-
-// Ensure that `es.localize` is defined
 
 @NgModule({
   declarations: [
@@ -80,7 +77,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     CancelAppointmentsComponent,
     ListClientsComponent,
     InfoClientComponent,
-    MapComponent
+    MapComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -107,7 +104,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     MatNativeDateModule,
     MatSlideToggleModule,
     MatDividerModule,
-    MatStepperModule
+    MatStepperModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-ES' },

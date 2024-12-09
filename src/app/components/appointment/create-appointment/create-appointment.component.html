@@ -1,115 +1,143 @@
 <mat-card class="shipping-card">
   <mat-card-header>
-    <mat-card-title>Crear Turno</mat-card-title>
+    <mat-card-title class="title">Crear Turno</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-      <div class="row">
-        <mat-form-field class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="first_name" (keydown)="formValidator.onKeyDown($event)" />
-          <mat-error *ngIf="addressForm.controls['first_name'].hasError('required')">
-            Nombre es <strong>requerido</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <!-- Paso 1: Datos Personales -->
+      <mat-step [stepControl]="personalDataForm" label="Datos Personales">
+        <form [formGroup]="personalDataForm">
+          <div class="form-section">
+            <mat-form-field class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="first_name" />
+              <mat-error *ngIf="personalDataForm.controls['first_name'].hasError('required')">
+                Nombre es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
 
-      <div class="row">
-        <mat-form-field class="full-width">
-          <mat-label>Apellido</mat-label>
-          <input matInput formControlName="last_name" (keydown)="formValidator.onKeyDown($event)" />
-          <mat-error *ngIf="addressForm.controls['last_name'].hasError('required')">
-            Apellido es <strong>requerido</strong>
-          </mat-error>          
-        </mat-form-field>
-        
-      </div>
+            <mat-form-field class="full-width">
+              <mat-label>Apellido</mat-label>
+              <input matInput formControlName="last_name" />
+              <mat-error *ngIf="personalDataForm.controls['last_name'].hasError('required')">
+                Apellido es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
 
-      <div class="row">
-        <mat-form-field class="full-width">
-          <mat-label>Teléfono</mat-label>
-          <input matInput type="number" formControlName="phoneNumber" (keydown)="formValidator.onlyNumbers($event)" />
-          <mat-error *ngIf="addressForm.controls['phoneNumber'].hasError('required')">
-            Teléfono es <strong>requerido</strong>
-          </mat-error>
-          <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
-        </mat-form-field>
-      </div>
+            <mat-form-field class="full-width">
+              <mat-label>Teléfono</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="phoneNumber"
+                (keydown)="formValidator.onlyNumbers($event)"
+              />
+              <mat-error *ngIf="personalDataForm.controls['phoneNumber'].hasError('required')">
+                Teléfono es <strong>requerido</strong>
+              </mat-error>
+<!--               <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
+ -->            </mat-form-field>
 
-      <div class="row">
-        <mat-form-field>
-          <mat-label>Correo electrónico</mat-label>
-          <input matInput type="email" formControlName="email" />
-          <mat-error *ngIf="addressForm.controls['email'].hasError('required')">
-            Correo electrónico es <strong>requerido</strong>
-          </mat-error>
-          <mat-error *ngIf="addressForm.controls['email'].hasError('email')">
-            Correo electrónico es <strong>inválido</strong>
-          </mat-error>
-          <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
-        </mat-form-field>
-      </div>
+            <mat-form-field class="full-width">
+              <mat-label>Correo electrónico</mat-label>
+              <input matInput type="email" formControlName="email" />
+              <mat-error *ngIf="personalDataForm.controls['email'].hasError('required')">
+                Correo electrónico es <strong>requerido</strong>
+              </mat-error>
+              <mat-error *ngIf="personalDataForm.controls['email'].hasError('email')">
+                Correo electrónico es <strong>inválido</strong>
+              </mat-error>
+              <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="button-group">
+            <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+          </div>
+        </form>
+      </mat-step>
 
-      <div class="row">
-        <mat-form-field class="full-width">
-          <mat-label>{{
-            loadingUsers ? "Cargando peluqueros..." : "Peluqueros"
-            }}</mat-label>
-          <mat-select formControlName="hairdresserId" (selectionChange)="peluquero()">
-            <mat-option *ngFor="let user of users" [value]="user.id">
-              {{ user.first_name }} {{ user.last_name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="addressForm.controls['hairdresserId'].hasError('required')">
-            Peluquero es <strong>requerido</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
+      <!-- Paso 2: Estilista y Fecha -->
+      <mat-step [stepControl]="styleDresserAndDateForm" label="Estilista y Fecha">
+        <form [formGroup]="styleDresserAndDateForm">
+          <div class="form-section">
+            <mat-form-field class="full-width">
+              <mat-label>{{
+                loadingUsers ? "Cargando peluqueros..." : "Peluqueros"
+              }}</mat-label>
+              <mat-select formControlName="hairdresserId" (selectionChange)="peluquero()">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                  {{ user.first_name }} {{ user.last_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="styleDresserAndDateForm.controls['hairdresserId'].hasError('required')">
+                Peluquero es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
 
-      <div class="row">
-        <mat-form-field>
-          <mat-label>{{
-            loadingCalendar ? "Cargando calendario..." : "Fecha"
-            }}</mat-label>
-          <input readonly matInput [matDatepickerFilter]="esHabilitado" [matDatepicker]="picker" formControlName="date"
-            (dateChange)="fechaSeleccionada($event)" [min]="minDate" (click)="picker.open()" />
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="addressForm.controls['date'].hasError('required')">
-            Fecha es <strong>requerido</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
+            <mat-form-field class="full-width">
+              <mat-label>{{
+                loadingCalendar ? "Cargando calendario..." : "Fecha"
+              }}</mat-label>
+              <input
+                readonly
+                matInput
+                [matDatepickerFilter]="esHabilitado"
+                [matDatepicker]="picker"
+                formControlName="date"
+                (dateChange)="fechaSeleccionada($event)"
+                [min]="minDate"
+                (click)="picker.open()"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="styleDresserAndDateForm.controls['date'].hasError('required')">
+                Fecha es <strong>requerido</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="button-group">
+            <button mat-raised-button matStepperPrevious>Atrás</button>
+            <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+          </div>
+        </form>
+      </mat-step>
 
-      <div class="row">
-        <!-- <mat-label>Disponibilidad</mat-label> -->
-        <mat-radio-group formControlName="schedule" (change)="onRadioChange($event)">
-          <mat-radio-button value="morning">Mañana</mat-radio-button>
-          <mat-radio-button value="afternoon">Tarde</mat-radio-button>
-        </mat-radio-group>
-        <mat-error *ngIf="addressForm.controls['schedule'].hasError('required')">
-          Elija una opcion <strong>requerido</strong>
-        </mat-error>
-      </div>
+      <!-- Paso 3: Disponibilidad -->
+      <mat-step [stepControl]="disponibilityForm" label="Disponibilidad">
+        <form [formGroup]="disponibilityForm">
+          <div class="form-section">
+            <mat-radio-group formControlName="schedule" (change)="onRadioChange($event)">
+              <mat-radio-button value="morning">Mañana</mat-radio-button>
+              <mat-radio-button value="afternoon">Tarde</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="disponibilityForm.controls['schedule'].hasError('required')">
+              Elija una opción <strong>requerido</strong>
+            </mat-error>
 
-      <!-- <mat-error *ngIf="addressForm.controls['time'].hasError('required')">
-        Elija una opcion
-      </mat-error> -->
-      <div *ngIf="loadingSchedule">Cargando horario...</div>
-      <mat-radio-group formControlName="time">
-        <mat-radio-button *ngFor="let schedule of turnos" [id]="schedule.id" [value]="schedule.value"
-          class="vertical-radio-button">
-          {{ schedule.label }}
-        </mat-radio-button>        
-      </mat-radio-group>
+            <div *ngIf="loadingSchedule" class="loading-indicator">
+              Cargando horario...
+            </div>
 
-      <div class="error" *ngIf="error">
-        <mat-error>No hay turnos disponibles</mat-error>
-      </div>
-
-      <mat-card-actions>
-        <button mat-raised-button color="accent" type="submit">Guardar</button>
-      </mat-card-actions>
-    </form>
+            <mat-radio-group formControlName="time">
+              <mat-radio-button
+                *ngFor="let schedule of turnos"
+                [id]="schedule.id"
+                [value]="schedule.value"
+                class="vertical-radio-button"
+              >
+                {{ schedule.label }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="error" *ngIf="error">
+            <mat-error>No hay turnos disponibles</mat-error>
+          </div>
+          <div class="button-group">
+            <button mat-raised-button matStepperPrevious>Atrás</button>
+            <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Enviar</button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-vertical-stepper>
   </mat-card-content>
 </mat-card>

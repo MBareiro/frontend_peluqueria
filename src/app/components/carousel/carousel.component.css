@@ -1,0 +1,35 @@
+#carouselExampleAutoplaying {
+    position: relative; /* Permite posicionar los pseudo-elementos correctamente */
+    overflow: hidden; /* Asegura que los pseudo-elementos no se desborden */
+    z-index: 0; /* Mantiene el contenido del carrusel sobre los pseudo-elementos */
+  }
+  
+  #carouselExampleAutoplaying::before,
+  #carouselExampleAutoplaying::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Altura del sombreado */
+    pointer-events: none; /* Evita interferir con los controles del carrusel */
+    z-index: 1; /* Coloca los pseudo-elementos sobre las imágenes pero bajo los controles */
+  }
+  
+  #carouselExampleAutoplaying::before {
+    top: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)); /* Sombreado superior */
+  }
+  
+  #carouselExampleAutoplaying::after {
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)); /* Sombreado inferior */
+  }
+  
+  /* Opcional: Ajustes responsivos */
+  @media (max-width: 768px) {
+    #carouselExampleAutoplaying::before,
+    #carouselExampleAutoplaying::after {
+      height: 30px; /* Reduce el tamaño del sombreado en pantallas más pequeñas */
+    }
+  }
+  

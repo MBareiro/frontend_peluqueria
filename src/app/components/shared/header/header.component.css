@@ -1,4 +1,5 @@
 header.masthead {
+  position: relative; /* Asegura que los pseudo-elementos se posicionen correctamente */
   text-align: center;
   color: #fff;
   background-image: url(../../../../assets/img/fondo.jpg);
@@ -8,7 +9,30 @@ header.masthead {
   background-size: cover;
   padding-top: 8.5rem;
   padding-bottom: 6rem;
+  z-index: 0; /* Mantiene los elementos dentro del header en el nivel correcto */
 }
+
+header.masthead::before,
+header.masthead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 50px; /* Altura del sombreado */
+  pointer-events: none; /* Evita interferir con elementos interactivos */
+  z-index: -1; /* Envía los pseudo-elementos detrás del contenido del header */
+}
+
+header.masthead::before {
+  top: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)); /* Sombreado superior */
+}
+
+header.masthead::after {
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)); /* Sombreado inferior */
+}
+
 
 header.masthead .masthead-subheading {
   font-size: 1.5rem;
@@ -31,22 +55,16 @@ header.masthead .masthead-heading {
     padding-top: 17rem;
     padding-bottom: 12.5rem;
   }
-
   header.masthead .masthead-subheading {
     font-size: 2.25rem;
     font-style: italic;
     line-height: 2.25rem;
     margin-bottom: 2rem;
   }
-
   header.masthead .masthead-heading {
     font-size: 4.5rem;
     font-weight: 700;
     line-height: 4.5rem;
     margin-bottom: 4rem;
   }
-}
-
-button {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
 }
