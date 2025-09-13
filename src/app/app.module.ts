@@ -1,6 +1,7 @@
 import { AdminListComponent } from './components/admin/admin-list.component';
 
 import { APP_INITIALIZER, InjectionToken } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { TenantConfigService } from './services/tenant-config.service';
 // Token de inyección para tenantId
 export const TENANT_ID = new InjectionToken<string | null>('TENANT_ID');
@@ -137,7 +138,7 @@ export function initTenant(cfg: TenantConfigService, doc: Document) {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 
     // 👇 APP_INITIALIZER: carga tenant-config ANTES de renderizar la app
-    { provide: APP_INITIALIZER, useFactory: initTenant, deps: [TenantConfigService, Document], multi: true },
+  { provide: APP_INITIALIZER, useFactory: initTenant, deps: [TenantConfigService, DOCUMENT], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: TenantInterceptor, multi: true },
 
     // Proveer tenantId globalmente
