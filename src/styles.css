@@ -1,11 +1,44 @@
 @import '@angular/material/prebuilt-themes/purple-green.css';
-/* Estilos para el tema oscuro */
-body {
-    background-color: rgb(0, 0, 0) !important; /* Fondo oscuro */
-    color: white !important;
+
+/* === Variables de marca (valores por defecto) === */
+:root {
+  --brand-primary: #0A84FF;
+  --brand-secondary: #111827;
+  --brand-text-on-primary: #ffffff;
+  --brand-text-on-secondary: #ffffff;
 }
-  
-mat-card-title {
-    font-size: 25px !important;
+/* Estas variables se sobreescriben dinámicamente desde la config del tenant en app.module.ts (APP_INITIALIZER) */
+
+/* Tema base oscuro que ya usabas */
+body {
+  background-color: #000 !important;
+  color: white !important;
 }
 
+/* Enlaces y acentos */
+a { color: var(--brand-primary); }
+
+/* Bordes/acentos en header, etc. */
+.app-toolbar, header.app-toolbar, mat-toolbar.app-toolbar {
+  border-bottom: 3px solid var(--brand-primary);
+}
+
+/* Botón “primario” material (override simple) */
+.mat-mdc-raised-button.mat-primary,
+.mdc-button--raised.mat-primary,
+.mdc-button.mat-primary {
+  background-color: var(--brand-primary) !important;
+  color: var(--brand-text-on-primary) !important;
+}
+
+/* Chips/Badges o elementos propios */
+.badge, .pill {
+  background: var(--brand-secondary);
+  color: var(--brand-text-on-secondary);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* Titulares en cards */
+mat-card-title { font-size: 25px !important; }

@@ -1,3 +1,4 @@
+import { AdminListComponent } from './components/admin/admin-list.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from '../app/components/home/home.component';
@@ -21,6 +22,7 @@ import { ListClientsComponent } from './components/client/list-clients/list-clie
 import { InfoClientComponent } from './components/client/info-client/info-client.component';
 
 const routes: Routes = [
+  { path: 'admin', component: AdminListComponent },
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   {

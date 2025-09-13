@@ -1,3 +1,10 @@
+import { AdminListComponent } from './components/admin/admin-list.component';
+
+import { APP_INITIALIZER, InjectionToken } from '@angular/core';
+import { TenantConfigService } from './services/tenant-config.service';
+// Token de inyección para tenantId
+export const TENANT_ID = new InjectionToken<string | null>('TENANT_ID');
+
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Importa FormsModule
@@ -52,6 +59,22 @@ import { AppointmentCancelledComponent } from './components/appointment/appointm
 import { CancelAppointmentsComponent } from './components/appointment/cancel-appointments/cancel-appointments.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { TenantInterceptor } from './interceptors/tenant.interceptor';
+
+export function initTenant(cfg: TenantConfigService, doc: Document) {
+  return async () => {
+    await cfg.load();
+    // CSS vars para theme
+    doc.documentElement.style.setProperty('--brand-primary', cfg.config.primary_color || '#0A84FF');
+    doc.documentElement.style.setProperty('--brand-secondary', cfg.config.secondary_color || '#111827');
+    // Favicon dinámico (si lo tenés)
+    const link = doc.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
+    if (link && cfg.config.favicon_url) link.href = cfg.config.favicon_url;
+    // Título de la pestaña
+    doc.title = cfg.config.name || 'Reservá tu turno';
+  };
+}
+
 
 @NgModule({
   declarations: [
@@ -78,6 +101,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ListClientsComponent,
     InfoClientComponent,
     MapComponent,
+    AdminListComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -111,6 +135,13 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     FormValidators,
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+
+    // 👇 APP_INITIALIZER: carga tenant-config ANTES de renderizar la app
+    { provide: APP_INITIALIZER, useFactory: initTenant, deps: [TenantConfigService, Document], multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TenantInterceptor, multi: true },
+
+    // Proveer tenantId globalmente
+    { provide: TENANT_ID, useValue: (window as any).tenantId },
   ],
 })
-export class AppModule {}
+export class AppModule { }
