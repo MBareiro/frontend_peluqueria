@@ -1,13 +1,6 @@
 @import '@angular/material/prebuilt-themes/purple-green.css';
 
-/* === Variables de marca (valores por defecto) === */
-:root {
-  --brand-primary: #0A84FF;
-  --brand-secondary: #111827;
-  --brand-text-on-primary: #ffffff;
-  --brand-text-on-secondary: #ffffff;
-}
-/* Estas variables se sobreescriben dinámicamente desde la config del tenant en app.module.ts (APP_INITIALIZER) */
+
 
 /* Tema base oscuro que ya usabas */
 body {
