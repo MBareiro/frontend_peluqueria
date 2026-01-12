@@ -1,0 +1,9 @@
+node_modules
+.angular
+.vscode
+*.log
+*.tmp
+.env
+.env.local
+src/**/*.spec.ts
+e2e
