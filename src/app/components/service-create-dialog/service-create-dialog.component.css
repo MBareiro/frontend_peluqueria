@@ -1,0 +1,8 @@
+.service-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.full { grid-column: 1 / -1; }
+.half { grid-column: auto; }
+.error { color: #b00020; margin-top: 4px; }
+@media (max-width: 640px) {
+  .service-form { grid-template-columns: 1fr; }
+  .half { grid-column: 1 / -1; }
+}

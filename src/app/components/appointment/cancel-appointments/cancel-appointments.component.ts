@@ -6,6 +6,7 @@ import { AppointmentService } from 'src/app/services/appointment.service';
 import { UserService } from 'src/app/services/user.service';
 import { BloquedDayService } from 'src/app/services/bloqued-day.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cancel-appointments',
@@ -30,6 +31,7 @@ export class CancelAppointmentsComponent implements OnInit {
     private appointmentService: AppointmentService,
     private blockedDayService: BloquedDayService,
     public horarioService: ScheduleService
+    , private snackBar: MatSnackBar
   ) {}
 
   async ngOnInit() {
@@ -45,7 +47,7 @@ export class CancelAppointmentsComponent implements OnInit {
       this.horario = await this.horarioService.getHorarioUsuario(peluquero);
       this.initializeDateFilter();
     } catch (error) {
-      console.error('Error fetching horario:', error);
+      this.snackBar.open('Error al obtener horario', 'Cerrar', { duration: 3000 });
     }
   }
 
@@ -54,17 +56,15 @@ export class CancelAppointmentsComponent implements OnInit {
       const blockedDays = await this.blockedDayService.getBlockedDays(
         this.user_id
       );
-      this.blockedDatesArray = blockedDays.map((item: any) => {
-        const blockedDate = new Date(item.blocked_date);
-        return blockedDate.toISOString().split('T')[0];
-      });
+      // server already returns dates as YYYY-MM-DD, no need to convert to Date then toISOString
+      this.blockedDatesArray = blockedDays.map((item: any) => item.blocked_date);
 
       this.initializeDateFilter();
     } catch (error) {
       if ((error as any).status === 404) {
-        console.log('No se encontraron fechas bloqueadas para el peluquero');
+        this.blockedDatesArray = [];
       } else {
-        console.error('Error al obtener fechas bloqueadas:', error);
+        this.snackBar.open('Error al obtener fechas bloqueadas', 'Cerrar', { duration: 3000 });
       }
     }
   }
@@ -75,9 +75,7 @@ export class CancelAppointmentsComponent implements OnInit {
         if (date === null || date === undefined || !this.horario) {
           return false;
         }
-        const isBlocked = this.blockedDatesArray.includes(
-          date.toISOString().split('T')[0]
-        );
+        const isBlocked = this.blockedDatesArray.includes(this.formatDateLocal(date));
         const dayOfWeek = date.getDay();
         let horarioEntry;
         switch (dayOfWeek) {
@@ -133,27 +131,25 @@ export class CancelAppointmentsComponent implements OnInit {
   }
 
   async onSubmit() {
-    const startDate = this.range?.get('start')?.value;
+  const startDate = this.range?.get('start')?.value;
     const endDate = this.range?.get('end')?.value;
-  
+
     if (startDate && endDate) {
-      const startDateString = startDate.toISOString().split('T')[0];
-      const endDateString = endDate.toISOString().split('T')[0];
-  
-      // Generar todas las fechas dentro del rango
+      // use local date formatting to avoid timezone shifts
+      const startDateString = this.formatDateLocal(startDate);
+      const endDateString = this.formatDateLocal(endDate);
+
+      // Generar todas las fechas dentro del rango (use local date arithmetic)
       const datesInRange = this.getDatesInRange(
-        new Date(startDateString),
-        new Date(endDateString)
+        startDate,
+        endDate
       );
   
       // Fechas bloqueadas dentro del rango seleccionado
-      const blockedDatesInRange = datesInRange.filter((date) =>
-        this.blockedDatesArray.includes(date)
-      );
-      const unblockedDatesInRange = datesInRange.filter(
-        (date) => !this.blockedDatesArray.includes(date)
-      );
-  
+      const blockedDatesInRange = datesInRange.filter((date) => this.blockedDatesArray.includes(date));
+      const unblockedDatesInRange = datesInRange.filter((date) => !this.blockedDatesArray.includes(date));
+      this.snackBar.open(`Fechas a procesar: ${datesInRange.length}`, 'OK', { duration: 2500 });
+
       if (
         blockedDatesInRange.length > 0 &&
         blockedDatesInRange.length < datesInRange.length
@@ -161,37 +157,25 @@ export class CancelAppointmentsComponent implements OnInit {
         // Caso 1: Si hay alguna fecha bloqueada pero no todas
         // Bloquear todas las fechas en el rango que no están bloqueadas
         if (unblockedDatesInRange.length > 0) {
-          await this.blockedDayService.createBlockedDays(
-            unblockedDatesInRange,
-            this.user_id
-          );
-          await this.appointmentService.cancelAppointments(
-            unblockedDatesInRange,
-            this.user_id
-          );
+          await this.blockedDayService.createBlockedDays(unblockedDatesInRange, this.user_id);
+          await this.appointmentService.cancelAppointments(unblockedDatesInRange, this.user_id);
         }
       } else if (blockedDatesInRange.length === datesInRange.length) {
         // Caso 2: Si todas las fechas en el rango están bloqueadas
         // Desbloquear todas las fechas en el rango
-        await this.deleteBlockedDays(blockedDatesInRange);
+  await this.deleteBlockedDays(blockedDatesInRange);
       } else {
         // Caso 3: Si ninguna fecha está bloqueada
         // Bloquear todas las fechas en el rango
-        await this.blockedDayService.createBlockedDays(
-          datesInRange,
-          this.user_id
-        );
-        await this.appointmentService.cancelAppointments(
-          datesInRange,
-          this.user_id
-        );
+        await this.blockedDayService.createBlockedDays(datesInRange, this.user_id);
+        await this.appointmentService.cancelAppointments(datesInRange, this.user_id);
       }
   
       // Actualizar los días bloqueados
       await this.getDiasBloqueados();
       this.clearDateRange();
     } else {
-      console.error('Selecciona un rango de fechas válido.');
+      this.snackBar.open('Selecciona un rango de fechas válido.', 'Cerrar', { duration: 3000 });
     }
     this.showCalendar = false;
     this.showCalendar = true;
@@ -206,12 +190,23 @@ export class CancelAppointmentsComponent implements OnInit {
 
   getDatesInRange(start: Date, end: Date): string[] {
     const dates: string[] = [];
-    let currentDate = new Date(start);
-    while (currentDate <= end) {
-      dates.push(currentDate.toISOString().split('T')[0]);
+    // Normalize to local midnight to avoid timezone conversion issues
+    let currentDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+    while (currentDate <= endDate) {
+      dates.push(this.formatDateLocal(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
     return dates;
+  }
+
+  // Format a Date to local YYYY-MM-DD (avoids UTC timezone shifts from toISOString)
+  formatDateLocal(date: Date | null | undefined): string {
+    if (!date) return '';
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   toggleCalendarVisibility() {
@@ -227,9 +222,7 @@ export class CancelAppointmentsComponent implements OnInit {
         return false;
       }
 
-      const isBlocked = this.blockedDatesArray.includes(
-        date.toISOString().split('T')[0]
-      );
+      const isBlocked = this.blockedDatesArray.includes(this.formatDateLocal(date));
 
       const dayOfWeek = date.getDay();
 

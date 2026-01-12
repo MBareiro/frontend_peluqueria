@@ -3,50 +3,91 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Menu</mat-toolbar>
 
+    <button mat-menu-item routerLink="/dashboard/appointments/calendar">
+      <mat-icon>calendar_month</mat-icon>
+      <span>Calendario</span>
+    </button>
+
     <button mat-menu-item [matMenuTriggerFor]="menu">
-      <mat-icon>calendar_month</mat-icon>Turnos
+      <mat-icon>calendar_month</mat-icon>
+      <span>{{ (businessConfig$ | async)?.appointment_label || 'Turnos' }}s</span>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item routerLink="/dashboard/create-appointment">
-        <mat-icon>event_available</mat-icon>Crear Turno
+      <button mat-menu-item routerLink="/dashboard/appointments/create">
+        <mat-icon>event_available</mat-icon>
+        <span>Crear {{ (businessConfig$ | async)?.appointment_label || 'Turno' }}</span>
       </button>
-      <button mat-menu-item routerLink="/dashboard/list-appointment">
-        <mat-icon>list</mat-icon>Listar Turnos
-      </button>      
-    </mat-menu>    
+      <button mat-menu-item routerLink="/dashboard/appointments/list">
+        <mat-icon>list</mat-icon>
+        <span>Listar {{ (businessConfig$ | async)?.appointment_label || 'Turnos' }}s</span>
+      </button>
+    </mat-menu>
 
-    <button mat-menu-item class="menu-button" routerLink="/dashboard/list-clients">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/clients/list">
       <mat-icon>person</mat-icon>
       <span>Clientes</span>
     </button>
 
-    <button mat-menu-item class="menu-button" routerLink="/dashboard/schedule">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/admin/schedule">
       <mat-icon>schedule</mat-icon>
       <span>Cronograma</span>
     </button>
 
-    <button mat-menu-item routerLink="/dashboard/calendar">
-      <mat-icon>calendar_month</mat-icon>Calendario
+    <button mat-menu-item [matMenuTriggerFor]="servicesMenu">
+      <mat-icon>build</mat-icon>
+      <span>{{ (businessConfig$ | async)?.service_label_plural || 'Servicios' }}</span>
     </button>
-
-    <button mat-menu-item [matMenuTriggerFor]="menu2" *ngIf="userRole === 'admin'" >
-      <mat-icon>engineering</mat-icon>Usuarios
-    </button>
-    <mat-menu #menu2="matMenu" >
-      <button mat-menu-item routerLink="/dashboard/list-users">
-        <mat-icon>manage_accounts</mat-icon>Administrar Cuentas <!-- EN ESTA PARTE SOLO DEBEN ACCEDER LOS ADMIN -->
+    <mat-menu #servicesMenu="matMenu">
+      <button mat-menu-item routerLink="/dashboard/admin/services" *ngIf="isOwner">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Administrar {{ (businessConfig$ | async)?.service_label_plural || 'Servicios' }}</span>
       </button>
-      <button mat-menu-item routerLink="/dashboard/create-user">
-        <mat-icon>person_add</mat-icon>Crear Usuario
+      <button mat-menu-item routerLink="/dashboard/admin/my-services">
+        <mat-icon>build_circle</mat-icon>
+        <span>Mis {{ (businessConfig$ | async)?.service_label_plural || 'Servicios' }}</span>
       </button>
     </mat-menu>
 
-    <button mat-menu-item class="menu-button" routerLink="/dashboard/change-password">
+    <button mat-menu-item [matMenuTriggerFor]="adminMenu" *ngIf="isOwner">
+      <mat-icon>settings</mat-icon>
+      <span>Configuración</span>
+    </button>
+    <mat-menu #adminMenu="matMenu">
+      <button mat-menu-item routerLink="/dashboard/admin/business-config">
+        <mat-icon>business</mat-icon>
+        <span>Datos del Negocio</span>
+      </button>
+      <button mat-menu-item routerLink="/dashboard/admin/home-customization">
+        <mat-icon>palette</mat-icon>
+        <span>Personalizar Home</span>
+      </button>
+      <button mat-menu-item routerLink="/dashboard/admin/map-config">
+        <mat-icon>map</mat-icon>
+        <span>Ubicación</span>
+      </button>
+    </mat-menu>
+
+    <button mat-menu-item [matMenuTriggerFor]="menu2">
+      <mat-icon>people</mat-icon>
+      <span>Usuarios</span>
+    </button>
+    <mat-menu #menu2="matMenu">
+      <button mat-menu-item routerLink="/dashboard/admin/list-users">
+        <mat-icon>manage_accounts</mat-icon>
+        <span>Administrar Cuentas</span>
+      </button>
+      <button mat-menu-item routerLink="/dashboard/admin/create-user">
+        <mat-icon>person_add</mat-icon>
+        <span>Crear Usuario</span>
+      </button>
+    </mat-menu>
+
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/account/change-password">
       <mat-icon>lock</mat-icon>
       <span>Seguridad</span>
     </button>
 
-    <button mat-menu-item class="menu-button" routerLink="/dashboard/profile">
+    <button mat-menu-item class="menu-button" routerLink="/dashboard/account/profile">
       <mat-icon>account_circle</mat-icon>
       <span>Perfil</span>
     </button>
@@ -55,6 +96,8 @@
       <mat-icon>logout</mat-icon>
       <span>Salir</span>
     </button>
+
+    
 
   </mat-sidenav>
 

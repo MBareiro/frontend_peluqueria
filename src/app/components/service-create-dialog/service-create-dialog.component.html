@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar servicio' : 'Nuevo servicio' }}</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" class="service-form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Descripción</mat-label>
+      <input matInput formControlName="description" placeholder="Corte de pelo clásico" />
+      <mat-error *ngIf="form.controls.description.hasError('required')">
+        La descripción es obligatoria
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Duración (min)</mat-label>
+      <input matInput type="number" formControlName="duration" min="1" step="5" placeholder="30" />
+      <mat-error *ngIf="form.controls.duration.hasError('required')">
+        La duración es obligatoria
+      </mat-error>
+      <mat-error *ngIf="form.controls.duration.hasError('min')">
+        Debe ser al menos 1 minuto
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Costo (ARS)</mat-label>
+      <input matInput type="number" formControlName="cost" min="0" step="50" placeholder="8000" />
+      <mat-error *ngIf="form.controls.cost.hasError('required')">
+        El costo es obligatorio
+      </mat-error>
+      <mat-error *ngIf="form.controls.cost.hasError('min')">
+        No puede ser negativo
+      </mat-error>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="active" class="full">Activo</mat-slide-toggle>
+
+    <div class="error" *ngIf="!isOwner" style="color:crimson; margin-top:8px;">Only owner can update global services</div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="saving">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid || saving || !isOwner">
+    {{ saving ? 'Guardando…' : (isEdit ? 'Guardar cambios' : 'Guardar') }}
+  </button>
+</div>

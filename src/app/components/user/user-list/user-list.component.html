@@ -8,11 +8,11 @@
       <mat-card-title>Usuarios</mat-card-title>
     </mat-card-header>
     <mat-list>
-      <mat-list-item *ngFor="let user of users">
+      <mat-list-item *ngFor="let user of users; trackBy: trackByUserId">
         {{ user.first_name }} {{ user.last_name }}
+        <span *ngIf="user.id === currentUserId" style="font-size:0.9em; margin-left:8px; color:#888;">(Yo)</span>
         <button mat-mini-fab color="accent" (click)="updateUser(user)" class="btn-actualizar"><i class="fa fa-search" aria-hidden="true"></i></button>
-        <!-- <button mat-mini-fab color="warn" (click)="deleteUser(user.id)" aria-label="Eliminar usuario"
-          class="btn-eliminar"><i class="fa-solid fa-trash"></i></button> -->
+        <!-- We intentionally avoid showing a direct delete action in the list. Deletion is handled in the details view. -->
       </mat-list-item>
     </mat-list>
   </mat-card-content>
@@ -62,9 +62,10 @@
       <div class="row">
         <mat-form-field class="full-width">
           <mat-label>Rol</mat-label>
-          <mat-select [(ngModel)]="selectedUser.role">
-            <mat-option value="admin">Admin</mat-option>
-            <mat-option value="peluquero">Peluquero</mat-option>
+          <mat-select [(ngModel)]="selectedUser.role_id" [disabled]="selectedUser && selectedUser.id === currentUserId">
+            <mat-option *ngFor="let role of roles" [value]="role.id">
+              {{ role.name }}
+            </mat-option>
           </mat-select>         
         </mat-form-field>
       </div>
@@ -75,7 +76,7 @@
 
       <mat-action-list>
         <button mat-raised-button color="accent" (click)="saveChanges()" class="mr-2">Guardar</button>
-        <button mat-raised-button color="warn" (click)="deleteUser(selectedUser.id)" class="mr-2">Eliminar</button>
+  <button mat-raised-button color="warn" (click)="deleteUser(selectedUser.id)" class="mr-2" [disabled]="selectedUser && selectedUser.id === currentUserId" matTooltip="No puedes eliminar tu propio usuario desde aquí">Eliminar</button>
         <button mat-raised-button (click)="cancelUpdate()">Volver</button>
       </mat-action-list>
       

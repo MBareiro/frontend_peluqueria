@@ -1,0 +1,217 @@
+.tenant-selector-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.tenant-selector-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  padding: 40px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #718096;
+  font-size: 16px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-container p {
+  margin-top: 20px;
+  color: #718096;
+}
+
+.production-warning {
+  text-align: center;
+  padding: 30px;
+  background: #fff3cd;
+  border-radius: 8px;
+  border: 1px solid #ffc107;
+}
+
+.production-warning mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ff9800;
+  margin-bottom: 16px;
+}
+
+.production-warning code {
+  background: #ffe082;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.tenant-list {
+  margin: 20px 0;
+}
+
+.tenant-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.tenant-card:hover {
+  border-color: #667eea;
+  background: #f7fafc;
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.tenant-icon {
+  font-size: 48px;
+  margin-right: 20px;
+  min-width: 60px;
+  text-align: center;
+}
+
+.tenant-info {
+  flex: 1;
+}
+
+.tenant-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.subdomain {
+  margin: 0;
+  font-size: 14px;
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+}
+
+.business-type {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.arrow-icon {
+  color: #cbd5e0;
+  transition: all 0.3s ease;
+}
+
+.tenant-card:hover .arrow-icon {
+  color: #667eea;
+  transform: translateX(5px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #cbd5e0;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  color: #718096;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-section {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.admin-section button {
+  width: 100%;
+}
+
+.footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.dev-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #a0aec0;
+  font-size: 13px;
+  margin: 0;
+}
+
+.dev-note mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .tenant-selector-card {
+    padding: 24px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .tenant-icon {
+    font-size: 36px;
+    min-width: 50px;
+  }
+
+  .tenant-info h3 {
+    font-size: 18px;
+  }
+}

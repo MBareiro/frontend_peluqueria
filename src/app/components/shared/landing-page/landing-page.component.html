@@ -1,0 +1,232 @@
+<!-- Landing Page Genérica del Sistema -->
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <nav class="landing-nav">
+    <div class="nav-content">
+      <div class="logo">
+        <span class="logo-icon">📅</span>
+        <span class="logo-text">TurnosApp</span>
+      </div>
+      <div class="nav-links">
+        <a (click)="scrollToSection('features')" class="nav-link">Características</a>
+        <a (click)="scrollToSection('pricing')" class="nav-link">Precios</a>
+        <a (click)="scrollToSection('testimonials')" class="nav-link">Testimonios</a>
+        <button mat-stroked-button (click)="goToLogin()">Iniciar Sesión</button>
+        <button mat-raised-button color="primary" (click)="goToSignup()">Comenzar Gratis</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Gestiona tu Negocio de Servicios<br>
+      <span class="gradient-text">Sin Complicaciones</span>
+    </h1>
+    <p class="hero-subtitle">
+      Sistema completo de gestión de turnos para barberías, salones de belleza, spas y más.
+      Aumenta tus reservas, reduce inasistencias y optimiza tu tiempo.
+    </p>
+    <div class="hero-cta">
+      <button mat-raised-button color="primary" class="cta-primary" (click)="goToSignup()">
+        <mat-icon>rocket_launch</mat-icon>
+        Empezar Ahora - Es Gratis
+      </button>
+      <button mat-stroked-button class="cta-secondary" (click)="scrollToSection('features')">
+        <mat-icon>play_circle</mat-icon>
+        Ver Características
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">10,000+</span>
+        <span class="stat-label">Turnos Gestionados</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">500+</span>
+        <span class="stat-label">Negocios Activos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">98%</span>
+        <span class="stat-label">Satisfacción</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <div class="mockup-container">
+      <!-- Placeholder para screenshot o mockup -->
+      <div class="mockup-placeholder">
+        <mat-icon>devices</mat-icon>
+        <p>Vista previa del sistema</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Business Types Section -->
+<section class="business-types-section" id="business-types">
+  <div class="section-container">
+    <h2 class="section-title">Perfecto para Todo Tipo de Negocios</h2>
+    <p class="section-subtitle">Adaptable a las necesidades específicas de tu industria</p>
+    
+    <div class="business-grid">
+      <div *ngFor="let type of businessTypes" class="business-card">
+        <div class="business-icon">{{ type.icon }}</div>
+        <h3>{{ type.name }}</h3>
+        <p>{{ type.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" id="features">
+  <div class="section-container">
+    <h2 class="section-title">Todo lo que Necesitas en un Solo Lugar</h2>
+    <p class="section-subtitle">Herramientas poderosas diseñadas para impulsar tu negocio</p>
+    
+    <div class="features-grid">
+      <div *ngFor="let feature of features" class="feature-card" matRipple>
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section">
+  <div class="section-container">
+    <h2 class="section-title">Comienza en 3 Simples Pasos</h2>
+    
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Regístrate Gratis</h3>
+        <p>Crea tu cuenta en menos de 2 minutos. Sin tarjeta de crédito requerida.</p>
+      </div>
+      
+      <div class="step-arrow">→</div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Configura tu Negocio</h3>
+        <p>Agrega servicios, horarios y personaliza tu página de reservas.</p>
+      </div>
+      
+      <div class="step-arrow">→</div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Recibe Reservas</h3>
+        <p>Comparte tu link y comienza a recibir turnos automáticamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section" id="testimonials">
+  <div class="section-container">
+    <h2 class="section-title">Lo que Dicen Nuestros Clientes</h2>
+    <p class="section-subtitle">Miles de negocios ya confían en nosotros</p>
+    
+    <div class="testimonials-grid">
+      <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+        <div class="testimonial-rating">
+          <span *ngFor="let star of getStars(testimonial.rating)">{{ star }}</span>
+        </div>
+        <p class="testimonial-text">"{{ testimonial.text }}"</p>
+        <div class="testimonial-author">
+          <strong>{{ testimonial.name }}</strong>
+          <span>{{ testimonial.business }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="pricing-section" id="pricing">
+  <div class="section-container">
+    <h2 class="section-title">Planes para Cada Etapa de tu Negocio</h2>
+    <p class="section-subtitle">Comienza gratis, actualiza cuando lo necesites</p>
+    
+    <div class="pricing-grid">
+      <div *ngFor="let plan of pricing" 
+           class="pricing-card" 
+           [class.highlighted]="plan.highlighted">
+        <div class="pricing-badge" *ngIf="plan.highlighted">Más Popular</div>
+        <h3>{{ plan.name }}</h3>
+        <div class="pricing-price">
+          <span class="price">{{ plan.price }}</span>
+          <span class="period" *ngIf="plan.period">{{ plan.period }}</span>
+        </div>
+        <ul class="pricing-features">
+          <li *ngFor="let feature of plan.features">
+            <mat-icon>check_circle</mat-icon>
+            {{ feature }}
+          </li>
+        </ul>
+        <button mat-raised-button 
+                [color]="plan.highlighted ? 'primary' : 'accent'"
+                class="pricing-button"
+                (click)="goToSignup()">
+          Empezar {{ plan.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>¿Listo para Transformar tu Negocio?</h2>
+    <p>Únete a cientos de negocios que ya optimizaron su gestión de turnos</p>
+    <button mat-raised-button color="primary" class="cta-button" (click)="goToSignup()">
+      <mat-icon>rocket_launch</mat-icon>
+      Comenzar Gratis Ahora
+    </button>
+    <p class="cta-note">✓ Sin tarjeta de crédito  ✓ Sin instalación  ✓ Soporte incluido</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="landing-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>📅 TurnosApp</h4>
+      <p>Sistema de gestión de turnos profesional</p>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Producto</h4>
+      <a>Características</a>
+      <a>Precios</a>
+      <a>Casos de Uso</a>
+      <a>Actualizaciones</a>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Soporte</h4>
+      <a>Centro de Ayuda</a>
+      <a>Documentación</a>
+      <a>Contacto</a>
+      <a>Estado del Sistema</a>
+    </div>
+    
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <a>Términos de Servicio</a>
+      <a>Política de Privacidad</a>
+      <a>Cookies</a>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2025 TurnosApp. Todos los derechos reservados.</p>
+  </div>
+</footer>

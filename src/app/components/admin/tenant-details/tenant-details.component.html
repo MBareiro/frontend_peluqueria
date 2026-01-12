@@ -1,0 +1,159 @@
+<div class="tenant-details-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalles del Tenant</h1>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando detalles...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button color="primary" (click)="loadTenantDetails(tenant?.id || 0)">Reintentar</button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="tenant && !loading" class="content">
+    <!-- Tenant Info Card -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Información del Tenant</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Subdomain</label>
+            <span class="subdomain-badge">{{ tenant.subdomain }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Nombre del Negocio</label>
+            <span>{{ tenant.business_name }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Email del Owner</label>
+            <span>{{ tenant.owner_email }}</span>
+          </div>
+
+          <div class="info-item">
+            <label>Estado</label>
+            <span class="status-badge" [style.background-color]="getStatusColor(tenant.status)">
+              {{ tenant.status | titlecase }}
+            </span>
+          </div>
+
+          <div class="info-item">
+            <label>Fecha de Creación</label>
+            <span>{{ formatDate(tenant.created_at) }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.trial_ends_at">
+            <label>Fin del Trial</label>
+            <span [class.text-danger]="isTrialExpiringSoon()">
+              {{ formatDate(tenant.trial_ends_at) }}
+              <small *ngIf="getDaysUntilTrialEnd() >= 0">
+                ({{ getDaysUntilTrialEnd() }} días restantes)
+              </small>
+            </span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.payment_status">
+            <label>Estado de Pago</label>
+            <span class="payment-badge" [style.background-color]="getPaymentStatusColor(tenant.payment_status)">
+              {{ getPaymentStatusLabel(tenant.payment_status) }}
+            </span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.commission_rate">
+            <label>Comisión</label>
+            <span>{{ tenant.commission_rate * 100 }}%</span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.next_billing_date">
+            <label>Próxima Facturación</label>
+            <span>{{ formatDate(tenant.next_billing_date) }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.total_revenue">
+            <label>Ingresos Acumulados</label>
+            <span class="revenue">{{ formatCurrency(tenant.total_revenue) }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="tenant.expires_at">
+            <label>Fecha de Expiración</label>
+            <span>{{ formatDate(tenant.expires_at) }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" *ngIf="tenant.status === 'suspended'" (click)="activateTenant()">
+          <mat-icon>check_circle</mat-icon>
+          Activar Tenant
+        </button>
+        <button mat-raised-button color="warn" *ngIf="tenant.status !== 'suspended'" (click)="suspendTenant()">
+          <mat-icon>block</mat-icon>
+          Suspender Tenant
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Stats Card -->
+    <mat-card class="info-card" *ngIf="stats">
+      <mat-card-header>
+        <mat-card-title>Estadísticas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #9b59b6;">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.users }}</h3>
+              <p>Usuarios</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #3498db;">
+              <mat-icon>work</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.employees }}</h3>
+              <p>Empleados</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #1abc9c;">
+              <mat-icon>event</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.appointments }}</h3>
+              <p>Citas</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #34495e;">
+              <mat-icon>medical_services</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.services }}</h3>
+              <p>Servicios</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,214 @@
+<div class="customization-container">
+  <div class="header">
+    <h1>
+      <i class="fas fa-paint-brush"></i>
+      Personalización del Home
+    </h1>
+    <button class="preview-btn" (click)="previewHome()" type="button">
+      <i class="fas fa-eye"></i> Vista Previa
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Cargando...
+  </div>
+
+  <form [formGroup]="customizationForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    
+    <!-- Hero Section -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i>
+        Sección Hero (Banner Principal)
+      </h2>
+      
+      <div class="form-group">
+        <label for="hero_title">Título Principal</label>
+        <input 
+          type="text" 
+          id="hero_title" 
+          formControlName="hero_title"
+          placeholder="Ejemplo: Bienvenido a Barbería Goku"
+          maxlength="200">
+        <small class="hint">Máximo 200 caracteres</small>
+      </div>
+
+      <div class="form-group">
+        <label for="hero_subtitle">Subtítulo</label>
+        <textarea 
+          id="hero_subtitle" 
+          formControlName="hero_subtitle"
+          placeholder="Ejemplo: ¡Cortes modernos con la potencia Saiyan! Agenda tu turno online"
+          maxlength="500"
+          rows="3"></textarea>
+        <small class="hint">Máximo 500 caracteres</small>
+      </div>
+
+      <div class="form-group">
+        <label for="hero_button_text">Texto del Botón</label>
+        <input 
+          type="text" 
+          id="hero_button_text" 
+          formControlName="hero_button_text"
+          placeholder="Ejemplo: Reservar Turno"
+          maxlength="50">
+        <small class="hint">Máximo 50 caracteres</small>
+      </div>
+
+      <div class="form-group">
+        <label for="hero_background_image">URL Imagen de Fondo (opcional)</label>
+        <input 
+          type="url" 
+          id="hero_background_image" 
+          formControlName="hero_background_image"
+          placeholder="https://ejemplo.com/imagen.jpg">
+        <small class="hint">Si no se especifica, se usará un gradiente de colores</small>
+      </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fas fa-hand-wave"></i>
+        Sección de Bienvenida
+      </h2>
+      
+      <div class="form-group">
+        <label for="welcome_section_title">Título de Bienvenida</label>
+        <input 
+          type="text" 
+          id="welcome_section_title" 
+          formControlName="welcome_section_title"
+          placeholder="Ejemplo: ¡Bienvenido a nuestro negocio!"
+          maxlength="200">
+      </div>
+
+      <div class="form-group">
+        <label for="welcome_section_text">Texto de Bienvenida</label>
+        <textarea 
+          id="welcome_section_text" 
+          formControlName="welcome_section_text"
+          placeholder="Describe tu negocio, valores, servicios, etc. Puedes usar HTML básico."
+          rows="5"></textarea>
+        <small class="hint">Puedes usar HTML: &lt;strong&gt;, &lt;br&gt;, &lt;p&gt;, etc.</small>
+      </div>
+    </div>
+
+    <!-- Business Hours -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fas fa-clock"></i>
+        Horarios de Atención
+      </h2>
+      
+      <div class="form-group">
+        <label for="business_hours">Horarios (opcional)</label>
+        <textarea 
+          id="business_hours" 
+          formControlName="business_hours"
+          placeholder="Ejemplo: Lunes a Viernes: 9:00 - 19:00"
+          rows="4"></textarea>
+        <small class="hint">Puedes usar HTML para formato: &lt;strong&gt;, &lt;br&gt;, etc.</small>
+      </div>
+    </div>
+
+    <!-- WhatsApp Integration -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fab fa-whatsapp"></i>
+        Integración WhatsApp
+      </h2>
+      
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" formControlName="show_whatsapp_button">
+          <span>Mostrar Botón Flotante de WhatsApp</span>
+        </label>
+      </div>
+
+      <div class="form-group" *ngIf="customizationForm.value.show_whatsapp_button">
+        <label for="whatsapp_number">Número de WhatsApp</label>
+        <input 
+          type="text" 
+          id="whatsapp_number" 
+          formControlName="whatsapp_number"
+          placeholder="Ejemplo: +595981234567"
+          maxlength="30">
+        <small class="hint">Incluye el código de país (Ej: +595 para Paraguay)</small>
+      </div>
+    </div>
+
+    <!-- Section Visibility -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fas fa-eye"></i>
+        Visibilidad de Secciones
+      </h2>
+      
+      <div class="checkboxes-grid">
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="show_services_section">
+            <span>Mostrar Sección de Servicios</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="show_team_section">
+            <span>Mostrar Sección de Equipo</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="show_testimonials_section">
+            <span>Mostrar Sección de Testimonios</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="show_map">
+            <span>Mostrar Mapa de Ubicación</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Settings -->
+    <div class="section-card">
+      <h2 class="section-title">
+        <i class="fas fa-images"></i>
+        Configuración del Carrusel
+      </h2>
+      
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" formControlName="carousel_auto_play">
+          <span>Reproducción Automática</span>
+        </label>
+      </div>
+
+      <div class="form-group" *ngIf="customizationForm.value.carousel_auto_play">
+        <label for="carousel_interval">Intervalo (milisegundos)</label>
+        <input 
+          type="number" 
+          id="carousel_interval" 
+          formControlName="carousel_interval"
+          min="1000"
+          max="10000"
+          step="1000">
+        <small class="hint">1000 = 1 segundo. Rango: 1000 - 10000</small>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button type="submit" class="btn-save" [disabled]="saving || customizationForm.invalid">
+        <i class="fas" [class.fa-spinner]="saving" [class.fa-spin]="saving" [class.fa-save]="!saving"></i>
+        {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ScheduleService } from '../../services/schedule.service';
+import { AuthService } from '../../services/auth.service';
 import { MatSelect } from '@angular/material/select';
-import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleComponent {
   dias = [
@@ -47,65 +49,68 @@ export class ScheduleComponent {
 
   horarios: { [key: number]: any } = {};
 
-  constructor(private scheduleService: ScheduleService) {}
+  constructor(
+    private scheduleService: ScheduleService, 
+    private authService: AuthService, 
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   async ngOnInit() {
     this.horarios = {}; // Inicializamos horarios aquí
 
-    // Obtener el ID de usuario de alguna manera (puedes usar localStorage, etc.)
-    const user_id = localStorage.getItem('userId');
-    console.log(user_id);
+    const u = this.authService.currentUserValue;
+    const user_id = u?.id ? String(u.id) : null;
 
     if (user_id) {
-      const response: any = await this.scheduleService.getHorarioUsuario(
-        user_id
-      );
+      const response: any = await this.scheduleService.getHorarioUsuario(user_id);
       if (!response.error) {
         if (response && Object.keys(response).length > 0) {
           this.horarios = response;
-          console.log(this.horarios);
+          this.cdr.markForCheck();
         } else {
           // Si no hay horario para el usuario, inicializa con valores predeterminados
-          this.inicializarHorarios();
+          this.inicializarHorarios(); 
         }
       } else {
-        console.error(
-          'Error al obtener el horario del usuario',
-          response.error
-        );
+        this.snackBar.open('Error al obtener el horario del usuario', 'Cerrar', { duration: 3000 });
         // Inicializa con valores predeterminados si hay un error
-        this.inicializarHorarios();
+        this.inicializarHorarios(); 
       }
     } else {
-      console.error('No se encontró un ID de usuario.');
+      this.snackBar.open('No se encontró un ID de usuario.', 'Cerrar', { duration: 3000 });
       // Inicializa con valores predeterminados si no hay un ID de usuario
       this.inicializarHorarios();
     }
   }
+
   toggleCheckbox(diaKey: number, property: string) {
     if (this.horarios[diaKey]) {
       if (this.horarios[diaKey][property] !== undefined) {
         this.horarios[diaKey][property] = !this.horarios[diaKey][property];
+        this.cdr.markForCheck();
       }
     }
   }
 
-  onSelectMorningStart(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    this.horarios[dia].morning_start = selectedHora;
-  }
-  onSelectMorningEnd(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    this.horarios[dia].morning_end = selectedHora;
+  onSelectMorningStart(value: string, dia: number) {
+    if (!this.horarios[dia]) this.horarios[dia] = {};
+    this.horarios[dia].morning_start = value;
   }
 
-  onSelectAfternoonStart(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    this.horarios[dia].afternoon_start = selectedHora;
+  onSelectMorningEnd(value: string, dia: number) {
+    if (!this.horarios[dia]) this.horarios[dia] = {};
+    this.horarios[dia].morning_end = value;
   }
-  onSelectAfternoonEnd(event: Event, dia: number) {
-    const selectedHora = (event.target as HTMLSelectElement).value;
-    this.horarios[dia].afternoon_end = selectedHora;
+
+  onSelectAfternoonStart(value: string, dia: number) {
+    if (!this.horarios[dia]) this.horarios[dia] = {};
+    this.horarios[dia].afternoon_start = value;
+  }
+
+  onSelectAfternoonEnd(value: string, dia: number) {
+    if (!this.horarios[dia]) this.horarios[dia] = {};
+    this.horarios[dia].afternoon_end = value;
   }
 
   // Convert time strings to numbers for comparison
@@ -115,6 +120,8 @@ export class ScheduleComponent {
   }
 
   private inicializarHorarios(): void {
+    const u = this.authService.currentUserValue;
+    const uid = u?.id ? String(u.id) : null;
     this.dias.forEach((dia) => {
       this.horarios[dia.key] = {
         active_morning: false,
@@ -123,24 +130,26 @@ export class ScheduleComponent {
         morning_end: '12:00',
         afternoon_start: '16:00',
         afternoon_end: '20:00',
-        user_id: localStorage.getItem('userId'),
+        user_id: uid,
       };
     });
   }
 
   async guardarCambios(): Promise<void> {
     // Obtén los horarios para enviar al servidor
-    const horariosToSend = this.horarios;
-    const user_id = localStorage.getItem('userId');
-    if (user_id) {
+  const horariosToSend = this.horarios;
+  const u = this.authService.currentUserValue;
+  const user_id = u?.id ? String(u.id) : null;
+  if (user_id) {
       // Llama al método del servicio para guardar los horarios
       const response: any = await this.scheduleService.guardarHorarios(
         horariosToSend,
         user_id
       );
       if (!response.error) {
-        console.log('Horarios guardados exitosamente', response);
+        this.snackBar.open('Horarios guardados exitosamente', 'Cerrar', { duration: 2500 });
         // Puedes realizar acciones adicionales aquí después de guardar los horarios
+        const { default: Swal } = await import('sweetalert2');
         Swal.fire({
           icon: 'success',
           color: 'white',
@@ -149,9 +158,13 @@ export class ScheduleComponent {
           timer: 1500,
         });
       } else {
-        console.error('Error al guardar los horarios', response.error);
+        this.snackBar.open('Error al guardar los horarios', 'Cerrar', { duration: 3000 });
         // Maneja el error de manera adecuada
-      }
+          } 
     }
   }
+
+  // TrackBy functions para optimizar *ngFor
+  trackByDiaKey = (_index: number, dia: { key: number; valor: string }): number => dia.key;
+  trackByHora = (_index: number, hora: string): string => hora;
 }

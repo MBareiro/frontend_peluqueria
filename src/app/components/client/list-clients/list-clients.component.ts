@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,11 +8,13 @@ import { MatRadioChange } from '@angular/material/radio';
 import { FormControl } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { formatDate } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-list-clients',
   templateUrl: './list-clients.component.html',
-  styleUrls: ['./list-clients.component.css']
+  styleUrls: ['./list-clients.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListClientsComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -24,8 +26,8 @@ export class ListClientsComponent implements AfterViewInit {
   date = new FormControl(new Date());
   searchInput: string = ''; // Término de búsqueda
 
-  constructor(private clientService: ClientService) {
-    this.dataSource = new ListClientDataSource(this.clientService);
+  constructor(private clientService: ClientService, private authService: AuthService) {
+    this.dataSource = new ListClientDataSource(this.clientService, this.authService);
   }
 
   displayedColumns = ['id', 'full_name', 'email', 'phone_number', 'actions'];

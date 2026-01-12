@@ -4,18 +4,23 @@ import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 import { AppointmentService } from '../../../services/appointment.service';
+import { AuthService } from '../../../services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 
 export interface ListAppointmentItem {
   id: number;
-  firstName: string;
-  lastName: string;
+  time: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  phoneNumber: string;
-  peluquero: number;
+  phone_number: string;
+  client_id: number;
+  hairdresser_id: number;
+  service_id: number;
   date: string; 
   schedule: string;
-  selectedRadio: string;
+  status: string;
+  cancellation_token?: string;
 }
 
 const EXAMPLE_DATA: ListAppointmentItem[] = [];
@@ -29,7 +34,7 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
   private selectedRadio: string;
   private selectedDate: string;
 
-  constructor(private appointmentService: AppointmentService, selectedRadio: string, selectedDate: string) {
+  constructor(private appointmentService: AppointmentService, selectedRadio: string, selectedDate: string, private authService?: AuthService) {
     super();
     this.selectedRadio = selectedRadio;
     this.selectedDate = selectedDate;    
@@ -43,16 +48,36 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
    
   connect(): Observable<ListAppointmentItem[]> {
     if (this.paginator && this.sort) {
-      const userId = localStorage.getItem('userId');
+      // Prefer AuthService in-memory user; fallback to temporary window bridge then localStorage
+      const userIdFromAuth = this.authService?.currentUserValue?.id ? String(this.authService!.currentUserValue.id) : null;
+      const globalUser = (window as any).currentUser;
+      const userIdFromGlobal = globalUser?.id ? String(globalUser.id) : null;
+      const userId = userIdFromAuth ?? userIdFromGlobal ?? localStorage.getItem('userId');
       if (userId !== null) {
-        // Si userId no es null, lo convertimos a número
         const userIdNumber = +userId;
         this.appointmentService.getSelectedAppointments(this.selectedRadio, userIdNumber, this.selectedDate).then((data: any) => {
-          const sortedData = this.getSortedData([...data]);
+          // Mapear los datos para aplanar el objeto client
+          const mappedData = data.map((appointment: any) => ({
+            id: appointment.id,
+            time: appointment.time,
+            first_name: appointment.client?.first_name || '',
+            last_name: appointment.client?.last_name || '',
+            email: appointment.client?.email || '',
+            phone_number: appointment.client?.phone_number || '',
+            client_id: appointment.client_id,
+            date: appointment.date,
+            schedule: appointment.schedule,
+            status: appointment.status,
+            hairdresser_id: appointment.hairdresser_id,
+            service_id: appointment.service_id,
+            cancellation_token: appointment.cancellation_token
+          }));
+          
+          const sortedData = this.getSortedData([...mappedData]);
           const pagedData = this.getPagedData(sortedData);
         
           this.data = pagedData;
-          this.paginator!.length = pagedData.length;  // Asegura que el paginador tenga la longitud correcta
+          this.paginator!.length = mappedData.length;  // Longitud basada en datos mapeados, no paginados
           this.dataSubject.next(pagedData);  // Notifica a los observadores de cambios en los datos
         });
         
@@ -112,9 +137,11 @@ export class ListAppointmentDataSource extends DataSource<ListAppointmentItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort?.direction === 'asc';
       switch (this.sort?.active) {
-        case 'selectedRadio': return compare(+a.selectedRadio, +b.selectedRadio, isAsc);
-      /*   case 'firstName': return compare(a.firstName, b.firstName, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc); */
+        case 'time': return compare(a.time, b.time, isAsc);
+        case 'first_name': return compare(a.first_name, b.first_name, isAsc);
+        case 'email': return compare(a.email, b.email, isAsc);
+        case 'phone_number': return compare(a.phone_number, b.phone_number, isAsc);
+        case 'id': return compare(+a.id, +b.id, isAsc);
         default: return 0;
       }
     });

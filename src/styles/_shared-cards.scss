@@ -1,0 +1,127 @@
+// ========================================
+// SHARED CARD STYLES
+// ========================================
+// Estilos reutilizables para cards oscuras
+// Evita duplicación en 10+ componentes
+
+@import 'variables';
+
+// Mixin para card oscura estándar
+@mixin dark-card {
+  max-width: 400px;
+  margin: 20px auto;
+  background-color: var(--bg-dark-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+// Mixin para card oscura full width
+@mixin dark-card-full {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 20px;
+  background-color: var(--bg-dark-card);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+// Clase global reutilizable
+.shipping-card {
+  @include dark-card;
+}
+
+.booking-card {
+  @include dark-card-full;
+  padding: var(--spacing-md);
+}
+
+// Form grid responsivo reutilizable
+@mixin form-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: var(--spacing-sm);
+}
+
+.form-grid {
+  @include form-grid;
+}
+
+// Material overrides comunes
+@mixin material-dark-theme {
+  .mat-radio-button {
+    display: block;
+    margin: 10px 0;
+  }
+
+  .mat-mdc-form-field {
+    width: 100%;
+  }
+
+  .mat-mdc-card {
+    background-color: var(--bg-dark-card);
+  }
+
+  mat-toolbar {
+    background-color: var(--bg-dark-surface);
+  }
+}
+
+// Stats cards
+@mixin stat-card($bg-gradient) {
+  background: $bg-gradient;
+  padding: 15px 20px;
+  border-radius: var(--border-radius-md);
+  color: white;
+  flex: 1;
+  min-width: 150px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.stat-card-purple {
+  @include stat-card(linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+}
+
+.stat-card-blue {
+  @include stat-card(linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+}
+
+.stat-card-green {
+  @include stat-card(linear-gradient(135deg, #f093fb 0%, #f5576c 100%));
+}
+
+.stat-card-red {
+  @include stat-card(linear-gradient(135deg, #4facfe 0%, #00f2fe 100%));
+}
+
+.stat-card-yellow {
+  @include stat-card(linear-gradient(135deg, #43e97b 0%, #38f9d7 100%));
+}
+
+// Actions row
+@mixin actions-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+  flex-wrap: wrap;
+
+  @include respond-to('sm') {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.actions,
+.inline-actions {
+  @include actions-row;
+}

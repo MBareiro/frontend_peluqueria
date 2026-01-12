@@ -1,21 +1,31 @@
-<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="../../../assets/img/carousel/foto1.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="../../../assets/img/carousel/foto2.jpg" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="../../../assets/img/carousel/foto3.jpg" class="d-block w-100" alt="...">
-      </div>
+<div 
+  id="carouselExampleAutoplaying" 
+  class="carousel slide" 
+  [attr.data-bs-ride]="(carouselConfig$ | async)?.autoPlay ? 'carousel' : false"
+  [attr.data-bs-interval]="(carouselConfig$ | async)?.interval">
+  
+  <div class="carousel-inner">
+    <div 
+      *ngFor="let image of (carouselImages$ | async); let i = index; trackBy: trackByUrl" 
+      class="carousel-item"
+      [class.active]="i === 0">
+      <img 
+        [src]="image.url" 
+        [alt]="image.alt" 
+        class="d-block w-100 carousel-image" 
+        width="1200" 
+        height="400" 
+        loading="lazy"
+        (error)="onImageError($event)">
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
   </div>
+  
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
+</div>

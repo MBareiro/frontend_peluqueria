@@ -1,143 +1,235 @@
-<mat-card class="shipping-card">
+<mat-card class="booking-card">
   <mat-card-header>
-    <mat-card-title class="title">Crear Turno</mat-card-title>
+    <div class="card-header">
+      <mat-icon aria-hidden="true" class="title-icon">event</mat-icon>
+      <div class="titles">
+        <mat-card-title class="title">Crear {{ (businessConfig$ | async)?.appointment_label || 'Turno' }}</mat-card-title>
+        <mat-card-subtitle class="subtitle">
+          Complete el formulario para reservar su {{ (businessConfig$ | async)?.appointment_label?.toLowerCase() || 'turno' }}
+        </mat-card-subtitle>
+      </div>
+    </div>
   </mat-card-header>
+
   <mat-card-content>
-    <mat-vertical-stepper [linear]="true" #stepper>
+    <mat-vertical-stepper [linear]="true" #stepper labelPosition="bottom" [animationDuration]="'200ms'">
+
       <!-- Paso 1: Datos Personales -->
       <mat-step [stepControl]="personalDataForm" label="Datos Personales">
-        <form [formGroup]="personalDataForm">
-          <div class="form-section">
-            <mat-form-field class="full-width">
-              <mat-label>Nombre</mat-label>
-              <input matInput formControlName="first_name" />
-              <mat-error *ngIf="personalDataForm.controls['first_name'].hasError('required')">
-                Nombre es <strong>requerido</strong>
-              </mat-error>
-            </mat-form-field>
+        <form [formGroup]="personalDataForm" class="form-grid">
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="first_name" autocomplete="given-name" aria-label="Nombre" />
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="personalDataForm.get('first_name')?.hasError('required') && personalDataForm.get('first_name')?.touched">
+              El nombre es <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field class="full-width">
-              <mat-label>Apellido</mat-label>
-              <input matInput formControlName="last_name" />
-              <mat-error *ngIf="personalDataForm.controls['last_name'].hasError('required')">
-                Apellido es <strong>requerido</strong>
-              </mat-error>
-            </mat-form-field>
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="last_name" autocomplete="family-name" aria-label="Apellido" />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="personalDataForm.get('last_name')?.hasError('required') && personalDataForm.get('last_name')?.touched">
+              El apellido es <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field class="full-width">
-              <mat-label>Teléfono</mat-label>
-              <input
-                matInput
-                type="number"
-                formControlName="phoneNumber"
-                (keydown)="formValidator.onlyNumbers($event)"
-              />
-              <mat-error *ngIf="personalDataForm.controls['phoneNumber'].hasError('required')">
-                Teléfono es <strong>requerido</strong>
-              </mat-error>
-<!--               <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
- -->            </mat-form-field>
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input
+              matInput
+              type="tel"
+              inputmode="numeric"
+              formControlName="phoneNumber"
+              (keydown)="formValidator.onlyNumbers($event)"
+              autocomplete="tel"
+              aria-label="Teléfono"
+            />
+            <mat-icon matSuffix>call</mat-icon>
+            <mat-hint>Ej: 3764 123456</mat-hint>
+            <mat-error *ngIf="personalDataForm.get('phoneNumber')?.hasError('required') && personalDataForm.get('phoneNumber')?.touched">
+              Teléfono <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
 
-            <mat-form-field class="full-width">
-              <mat-label>Correo electrónico</mat-label>
-              <input matInput type="email" formControlName="email" />
-              <mat-error *ngIf="personalDataForm.controls['email'].hasError('required')">
-                Correo electrónico es <strong>requerido</strong>
-              </mat-error>
-              <mat-error *ngIf="personalDataForm.controls['email'].hasError('email')">
-                Correo electrónico es <strong>inválido</strong>
-              </mat-error>
-              <mat-hint *ngIf="isUser()">(Opcional)</mat-hint>
-            </mat-form-field>
-          </div>
-          <div class="button-group">
-            <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" aria-label="Correo electrónico" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+            <mat-hint *ngIf="isUser()">Opcional</mat-hint>
+            <mat-error *ngIf="personalDataForm.get('email')?.hasError('required') && personalDataForm.get('email')?.touched">
+              Correo electrónico <strong>requerido</strong>.
+            </mat-error>
+            <mat-error *ngIf="personalDataForm.get('email')?.hasError('email') && personalDataForm.get('email')?.touched">
+              Formato de correo <strong>inválido</strong>.
+            </mat-error>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-stroked-button type="button" color="primary" matStepperNext aria-label="Siguiente paso">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
           </div>
         </form>
       </mat-step>
 
       <!-- Paso 2: Estilista y Fecha -->
       <mat-step [stepControl]="styleDresserAndDateForm" label="Estilista y Fecha">
-        <form [formGroup]="styleDresserAndDateForm">
-          <div class="form-section">
-            <mat-form-field class="full-width">
-              <mat-label>{{
-                loadingUsers ? "Cargando peluqueros..." : "Peluqueros"
-              }}</mat-label>
-              <mat-select formControlName="hairdresserId" (selectionChange)="peluquero()">
-                <mat-option *ngFor="let user of users" [value]="user.id">
-                  {{ user.first_name }} {{ user.last_name }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="styleDresserAndDateForm.controls['hairdresserId'].hasError('required')">
-                Peluquero es <strong>requerido</strong>
-              </mat-error>
-            </mat-form-field>
+        <form [formGroup]="styleDresserAndDateForm" class="form-grid">
 
-            <mat-form-field class="full-width">
-              <mat-label>{{
-                loadingCalendar ? "Cargando calendario..." : "Fecha"
-              }}</mat-label>
-              <input
-                readonly
-                matInput
-                [matDatepickerFilter]="esHabilitado"
-                [matDatepicker]="picker"
-                formControlName="date"
-                (dateChange)="fechaSeleccionada($event)"
-                [min]="minDate"
-                (click)="picker.open()"
-              />
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              <mat-error *ngIf="styleDresserAndDateForm.controls['date'].hasError('required')">
-                Fecha es <strong>requerido</strong>
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div class="button-group">
-            <button mat-raised-button matStepperPrevious>Atrás</button>
-            <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>{{ (businessConfig$ | async)?.service_label_singular || 'Servicio' }}</mat-label>
+            <mat-select formControlName="serviceId" (selectionChange)="onServiceSelect($event)">
+              <mat-option *ngFor="let svc of services; trackBy: trackByServiceId" [value]="svc.id" [disabled]="!svc.active">
+                {{ svc.description }} — {{ svc.duration }} min — {{ svc.cost | currency:'ARS' }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="styleDresserAndDateForm.get('serviceId')?.hasError('required') && styleDresserAndDateForm.get('serviceId')?.touched">
+              Seleccione un {{ (businessConfig$ | async)?.service_label_singular?.toLowerCase() || 'servicio' }}.
+            </mat-error>
+          </mat-form-field>
+
+          
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>{{ loadingUsers ? "Cargando..." : (businessConfig$ | async)?.employee_label_singular || 'Profesional' }}</mat-label>
+            <!-- The hairdresser select is enabled only after selecting a service and loading availableBarbers -->
+            <mat-select formControlName="hairdresserId" (selectionChange)="peluquero()">
+              <mat-option *ngFor="let user of availableBarbers; trackBy: trackByUserId" [value]="user.id">
+                {{ user.first_name }} {{ user.last_name }}
+              </mat-option>
+            </mat-select>
+            <mat-hint *ngIf="!loadingUsers && styleDresserAndDateForm.get('serviceId')?.value && availableBarbers.length === 0">
+              No hay {{ (businessConfig$ | async)?.employee_label_plural?.toLowerCase() || 'profesionales' }} disponibles para este {{ (businessConfig$ | async)?.service_label_singular?.toLowerCase() || 'servicio' }}.
+            </mat-hint>
+            <mat-error *ngIf="styleDresserAndDateForm.get('hairdresserId')?.hasError('required') && styleDresserAndDateForm.get('hairdresserId')?.touched">
+              {{ (businessConfig$ | async)?.employee_label_singular || 'Profesional' }} <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
+
+          
+
+          <mat-form-field class="col" appearance="outline">
+            <mat-label>{{ loadingCalendar ? "Cargando calendario..." : "Fecha" }}</mat-label>
+            <input
+              matInput
+              readonly
+              [matDatepickerFilter]="esHabilitado"
+              [matDatepicker]="picker"
+              formControlName="date"
+              (dateChange)="fechaSeleccionada($event)"
+              [min]="minDate"
+              (click)="picker.open()"
+              aria-label="Fecha"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <!-- Open directly to month view so users can pick a day without selecting year first -->
+            <mat-datepicker #picker startView="month" [startAt]="minDate"></mat-datepicker>
+            <mat-error *ngIf="styleDresserAndDateForm.get('date')?.hasError('required') && styleDresserAndDateForm.get('date')?.touched">
+              La fecha es <strong>requerida</strong>.
+            </mat-error>
+          </mat-form-field>
+
+          <div class="inline-actions">
+            <button mat-stroked-button type="button" matStepperPrevious aria-label="Volver">
+              <mat-icon>arrow_back</mat-icon>
+              Atrás
+            </button>
+            <!-- Podés evitar avanzar mientras carga o si el form es inválido -->
+            <button mat-flat-button color="primary" type="button" matStepperNext
+                    [disabled]="loadingUsers || loadingCalendar || styleDresserAndDateForm.invalid"
+                    aria-label="Siguiente paso">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
           </div>
         </form>
       </mat-step>
 
       <!-- Paso 3: Disponibilidad -->
       <mat-step [stepControl]="disponibilityForm" label="Disponibilidad">
-        <form [formGroup]="disponibilityForm">
-          <div class="form-section">
-            <mat-radio-group formControlName="schedule" (change)="onRadioChange($event)">
+        <form [formGroup]="disponibilityForm" class="form-grid">
+          <div class="col full">
+            <label class="group-label">Turno</label>
+            <mat-radio-group
+              class="segment-group"
+              formControlName="schedule"
+              (change)="onRadioChange($event)"
+              aria-label="Seleccionar mañana o tarde"
+            >
               <mat-radio-button value="morning">Mañana</mat-radio-button>
               <mat-radio-button value="afternoon">Tarde</mat-radio-button>
             </mat-radio-group>
-            <mat-error *ngIf="disponibilityForm.controls['schedule'].hasError('required')">
-              Elija una opción <strong>requerido</strong>
+            <mat-error *ngIf="disponibilityForm.get('schedule')?.hasError('required') && disponibilityForm.get('schedule')?.touched">
+              Elija una opción.
             </mat-error>
+          </div>
 
-            <div *ngIf="loadingSchedule" class="loading-indicator">
-              Cargando horario...
+          <div class="col full" *ngIf="loadingSchedule" aria-live="polite">
+            <div class="loading">
+              <mat-progress-spinner mode="indeterminate" diameter="24"></mat-progress-spinner>
+              <span>Cargando horarios…</span>
             </div>
+          </div>
 
-            <mat-radio-group formControlName="time">
+          <div class="col full" *ngIf="!loadingSchedule">
+            <label class="group-label">Horarios disponibles</label>
+            <mat-radio-group formControlName="time" class="time-grid" aria-label="Seleccionar horario">
               <mat-radio-button
-                *ngFor="let schedule of turnos"
+                *ngFor="let schedule of turnos; trackBy: trackByTurnoId"
                 [id]="schedule.id"
                 [value]="schedule.value"
-                class="vertical-radio-button"
+                class="time-slot"
               >
                 {{ schedule.label }}
               </mat-radio-button>
             </mat-radio-group>
+            <div class="error" *ngIf="error">
+              <mat-icon>error_outline</mat-icon>
+              <mat-error>No hay turnos disponibles para la selección.</mat-error>
+            </div>
           </div>
-          <div class="error" *ngIf="error">
-            <mat-error>No hay turnos disponibles</mat-error>
-          </div>
-          <div class="button-group">
-            <button mat-raised-button matStepperPrevious>Atrás</button>
-            <button mat-raised-button color="accent" type="submit" (click)="onSubmit()">Enviar</button>
+
+          <div class="inline-actions">
+            <button mat-stroked-button type="button" matStepperPrevious aria-label="Volver">
+              <mat-icon>arrow_back</mat-icon>
+              Atrás
+            </button>
+            <!-- Compact summary shown prior to submit -->
+           <!--  <div class="summary" *ngIf="selectedService || selectedBarberName || styleDresserAndDateForm.get('date')?.value || disponibilityForm.get('time')?.value">
+              <div class="summary-row">
+                <strong>Servicio:</strong>
+                <span *ngIf="selectedService">{{ selectedService.description }} — {{ selectedService.duration }} min — {{ selectedService.cost | currency:'ARS' }}</span>
+                <span *ngIf="!selectedService">N/D</span>
+              </div>
+              <div class="summary-row">
+                <strong>Peluquero/a:</strong>
+                <span>{{ selectedBarberName || 'No seleccionado' }}</span>
+              </div>
+              <div class="summary-row">
+                <strong>Fecha / Hora:</strong>
+                <span *ngIf="styleDresserAndDateForm.get('date')?.value">{{ (styleDresserAndDateForm.get('date')?.value | date:'longDate') }}</span>
+                <span *ngIf="disponibilityForm.get('time')?.value"> — {{ disponibilityForm.get('time')?.value }}</span>
+              </div>
+            </div> -->
+
+            <button mat-flat-button color="accent" type="button" (click)="onSubmit()"
+                    [disabled]="submitting || loadingSchedule || disponibilityForm.invalid"
+                    aria-label="Enviar turno">
+              <ng-container *ngIf="!submitting">
+                Enviar
+                <mat-icon>send</mat-icon>
+              </ng-container>
+              <ng-container *ngIf="submitting">
+                <mat-progress-spinner mode="indeterminate" diameter="20" color="accent"></mat-progress-spinner>
+                Enviando…
+              </ng-container>
+            </button>
           </div>
         </form>
       </mat-step>
+
     </mat-vertical-stepper>
   </mat-card-content>
 </mat-card>

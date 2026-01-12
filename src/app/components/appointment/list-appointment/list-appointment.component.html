@@ -1,7 +1,25 @@
 <mat-card class="mat-elevation-z8">
   
   <mat-card-content>
-    <mat-card-title>Agenda</mat-card-title><br>
+    <mat-card-title>Agenda</mat-card-title>
+    
+    <!-- Contadores visuales -->
+    <div class="stats-container" style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+      <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 20px; border-radius: 10px; color: white; flex: 1; min-width: 150px;">
+        <div style="font-size: 12px; opacity: 0.9;">📊 Total Turnos</div>
+        <div style="font-size: 28px; font-weight: bold;">{{totalAppointments}}</div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 15px 20px; border-radius: 10px; color: white; flex: 1; min-width: 150px;">
+        <div style="font-size: 12px; opacity: 0.9;">🌅 Mañana</div>
+        <div style="font-size: 28px; font-weight: bold;">{{morningCount}}</div>
+      </div>
+      <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 15px 20px; border-radius: 10px; color: white; flex: 1; min-width: 150px;">
+        <div style="font-size: 12px; opacity: 0.9;">🌆 Tarde</div>
+        <div style="font-size: 28px; font-weight: bold;">{{afternoonCount}}</div>
+      </div>
+    </div>
+    
+    <br>
     <mat-form-field>
       <mat-label>Selecciona una fecha</mat-label>
       <input matInput [matDatepicker]="datepicker" [value]="date.value" (dateChange)="onDateChange($event)" >
@@ -65,6 +83,16 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
           <td mat-cell *matCellDef="let row">{{row.phone_number}}</td>
         </ng-container>
+        
+        <!-- status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="status-badge" [ngClass]="getStatusClass(row.status)">
+              {{getStatusText(row.status)}}
+            </span>
+          </td>
+        </ng-container>
 
         <!-- peluquero Column -->
         <ng-container matColumnDef="peluquero">
@@ -91,15 +119,15 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="clientAbsense(row.id)">
+              <button mat-menu-item (click)="clientAbsense(row.id, row.first_name + ' ' + row.last_name, row.time)">
                 <mat-icon>person_alert</mat-icon>
                 <span>Ausente</span>
               </button>
-              <button mat-menu-item (click)="cancelAppointment(row.id)">
+              <button mat-menu-item (click)="cancelAppointment(row.id, row.first_name + ' ' + row.last_name, row.time)">
                 <mat-icon>cancel</mat-icon>
                 <span>Cancelar</span>
               </button>
-              <button mat-menu-item (click)="blockClient(row.client_id, row.email, row.phone_number, row.id )">
+              <button mat-menu-item (click)="blockClient(row.client_id, row.email, row.phone_number, row.id, row.first_name + ' ' + row.last_name)">
                 <mat-icon>block</mat-icon>
                 <span>Bloquear</span>
               </button>

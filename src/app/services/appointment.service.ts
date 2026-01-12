@@ -15,11 +15,20 @@ export class AppointmentService {
   confirmAppointment(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/confirm-appointment`, data);
   }
+  
+  check_active_appointment(data: any) {
+    return firstValueFrom(this.http.post<any>(`${this.apiUrl}/check-active-appointment`, data));
+  }
+  
   send_confirmation_code(data: any) {
     return firstValueFrom(this.http.post<any>(`${this.apiUrl}/send-confirmation-code`, data));
   }
   createAppointment(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/create-appointment`, data);
+  }
+
+  getAppointmentById(id: number) {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
   //---------------------GET-------------------------
@@ -36,9 +45,9 @@ export class AppointmentService {
     return firstValueFrom(this.http.get<any[]>(`${this.apiUrl}/get-specific-appointments/${selectedTime}/${selectedDate}/${peluqueroID}`));
     
   }
-  checkIfAppointmentTaken(email: string, selectedDate: string, peluqueroId: number): Observable<{ appointment_taken: boolean }> {
+  checkIfAppointmentTaken(email: string, date: Date | string, peluqueroId: number): Observable<{ appointment_taken: boolean }> {
     return this.http.get<{ appointment_taken : boolean }>(
-      `${this.apiUrl}/get-appointment-email/${email}/${selectedDate}/${peluqueroId}`
+      `${this.apiUrl}/get-appointment-email/${email}/${date}/${peluqueroId}`
     );
   }
 

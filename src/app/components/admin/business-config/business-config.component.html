@@ -1,0 +1,222 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>settings</mat-icon>
+        Configuración del Negocio
+      </mat-card-title>
+      <mat-card-subtitle>
+        Personaliza la información y etiquetas de tu sistema
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Información Básica -->
+        <h3>📋 Información Básica</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Negocio</mat-label>
+            <input matInput formControlName="business_name" placeholder="Ej: Spa Relax">
+            <mat-icon matPrefix>business</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tipo de Negocio</mat-label>
+            <mat-select formControlName="business_type">
+              <mat-option *ngFor="let type of businessTypes" [value]="type.value">
+                {{ type.icon }} {{ type.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Etiquetas Personalizables -->
+        <h3>🏷️ Etiquetas Personalizables</h3>
+        <p class="hint">Estas etiquetas se usarán en toda la aplicación y en los emails</p>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Profesional (singular)</mat-label>
+            <input matInput formControlName="employee_label_singular" placeholder="Ej: Masajista">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Profesionales (plural)</mat-label>
+            <input matInput formControlName="employee_label_plural" placeholder="Ej: Masajistas">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Servicio (singular)</mat-label>
+            <input matInput formControlName="service_label_singular" placeholder="Ej: Tratamiento">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Servicios (plural)</mat-label>
+            <input matInput formControlName="service_label_plural" placeholder="Ej: Tratamientos">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Cita/Turno</mat-label>
+            <input matInput formControlName="appointment_label" placeholder="Ej: Sesión, Turno, Cita">
+          </mat-form-field>
+        </div>
+
+        <!-- Información de Contacto -->
+        <h3>📞 Información de Contacto</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="contacto@negocio.com">
+            <mat-icon matPrefix>email</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="phone" placeholder="+595 XXX XXX XXX">
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="address" placeholder="Calle Principal 123">
+            <mat-icon matPrefix>location_on</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Sitio Web</mat-label>
+            <input matInput formControlName="website" placeholder="https://minegocio.com">
+            <mat-icon matPrefix>language</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Branding -->
+        <h3>🎨 Branding</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Color Primario</mat-label>
+            <input matInput type="color" formControlName="primary_color">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Color Secundario</mat-label>
+            <input matInput type="color" formControlName="secondary_color">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL del Logo</mat-label>
+            <input matInput formControlName="logo_url" placeholder="https://...">
+            <mat-icon matPrefix>image</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Emails -->
+        <h3>✉️ Configuración de Emails</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Firma de Email</mat-label>
+            <input matInput formControlName="email_signature" placeholder="¡Te esperamos!">
+          </mat-form-field>
+        </div>
+
+        <!-- Página de Inicio -->
+        <h3>🏠 Personalización del Home</h3>
+        <p class="hint">Personaliza el carrusel de imágenes. Si no configuras URLs, se usarán imágenes por defecto según el tipo de negocio.</p>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tagline / Eslogan</mat-label>
+            <input matInput formControlName="home_tagline" placeholder="Tu lugar de confianza">
+            <mat-icon matPrefix>format_quote</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="home_description" rows="3" 
+              placeholder="Descripción breve de tu negocio..."></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL Imagen Carrusel 1</mat-label>
+            <input matInput formControlName="carousel_image_1" placeholder="https://ejemplo.com/imagen1.jpg">
+            <mat-icon matPrefix>image</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL Imagen Carrusel 2</mat-label>
+            <input matInput formControlName="carousel_image_2" placeholder="https://ejemplo.com/imagen2.jpg">
+            <mat-icon matPrefix>image</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>URL Imagen Carrusel 3</mat-label>
+            <input matInput formControlName="carousel_image_3" placeholder="https://ejemplo.com/imagen3.jpg">
+            <mat-icon matPrefix>image</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-slide-toggle formControlName="carousel_auto_play">
+            Avance automático del carrusel
+          </mat-slide-toggle>
+        </div>
+
+        <div class="form-row" *ngIf="configForm.get('carousel_auto_play')?.value">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Intervalo (milisegundos)</mat-label>
+            <input matInput type="number" formControlName="carousel_interval" placeholder="5000">
+            <mat-hint>Tiempo entre imágenes en milisegundos (ej: 5000 = 5 segundos)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Redes Sociales -->
+        <h3>📱 Redes Sociales (Opcional)</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Facebook</mat-label>
+            <input matInput formControlName="facebook_url" placeholder="https://facebook.com/...">
+            <mat-icon matPrefix>facebook</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Instagram</mat-label>
+            <input matInput formControlName="instagram_url" placeholder="https://instagram.com/...">
+            <mat-icon matPrefix>camera_alt</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="actions">
+          <button mat-button type="button" (click)="resetForm()" [disabled]="loading">
+            Restablecer
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="loading || configForm.invalid">
+            <mat-icon>save</mat-icon>
+            {{ loading ? 'Guardando...' : 'Guardar Configuración' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

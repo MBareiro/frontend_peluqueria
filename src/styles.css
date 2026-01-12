@@ -1,5 +1,8 @@
 @import '@angular/material/prebuilt-themes/purple-green.css';
 
+/* Importar sistema de variables y mixins SCSS */
+@import './styles/variables';
+@import './styles/mixins';
 
 
 /* Tema base oscuro que ya usabas */

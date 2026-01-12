@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../../services/client.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 
 @Component({
@@ -14,7 +15,7 @@ export class InfoClientComponent implements OnInit {
   appointments: any[] = [];
   displayedColumns: string[] = ['date', 'time', 'status', 'hairdresser'];
 
-  constructor(private route: ActivatedRoute, private clientService: ClientService, private router: Router, private location: Location) { }
+  constructor(private route: ActivatedRoute, private clientService: ClientService, private router: Router, private location: Location, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -22,7 +23,7 @@ export class InfoClientComponent implements OnInit {
       this.route.queryParams.subscribe(queryParams => {
         this.blocked = queryParams['blocked'] === '1';
       });
-      console.log(this.blocked);
+      // blocked state loaded from query params
       this.loadClientAppointments(this.clientId);
     });
   }
@@ -35,7 +36,7 @@ export class InfoClientComponent implements OnInit {
         status: this.translateStatus(appointment.status)
       }));
     }, error => {
-      console.error('Error fetching client appointments:', error);
+      this.snackBar.open('Error al obtener turnos del cliente', 'Cerrar', { duration: 3000 });
     });
   }
 
@@ -60,7 +61,7 @@ export class InfoClientComponent implements OnInit {
     this.clientService.toggleClientBlockedStatus(this.clientId, null, null).subscribe(response => {
       this.blocked = !this.blocked; // Toggle the blocked state
     }, error => {
-      console.error('Error blocking client:', error);
+      this.snackBar.open('Error al bloquear/desbloquear cliente', 'Cerrar', { duration: 3000 });
     });
   }
 }

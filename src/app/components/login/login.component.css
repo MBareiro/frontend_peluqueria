@@ -1,23 +1,24 @@
+/* Usa la clase global .shipping-card de _shared-cards.scss */
+
+/* Fondo oscuro consistente */
 .shipping-card {
-    max-width: 400px;
-    margin: 20px auto;
-    background-color: #191c24;
+    background-color: #191c24 !important;
 }
 
 .mat-radio-button {
     display: block;
-    margin: 10px 0;
+    margin: var(--spacing-xs) 0;
 }
 
 .row {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-xs);
 }
 
 .col {
     flex: 1;
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-xs);
 }
 
 .col:last-child {
@@ -29,14 +30,25 @@
 }
 
 .error {
-    margin-bottom: 5px;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-error);
 }
 
 .card-title {
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-md);
 }
 
 a {
-    color: white;
- }
+    color: rgba(255, 255, 255, 0.9);
+    transition: color var(--transition-base);
+}
+
+a:hover {
+    color: var(--color-primary);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
  

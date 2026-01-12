@@ -1,0 +1,71 @@
+<div class="tenant-selector-container">
+  <div class="tenant-selector-card">
+    <!-- Header -->
+    <div class="header">
+      <h1>🏢 Sistema de Gestión de Turnos</h1>
+      <p class="subtitle">Selecciona un negocio para continuar</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando negocios disponibles...</p>
+    </div>
+
+    <!-- Production Warning -->
+    <div *ngIf="isProduction" class="production-warning">
+      <mat-icon>warning</mat-icon>
+      <p>Esta página no está disponible en producción.</p>
+      <p>Por favor, accede a tu negocio usando el subdominio correspondiente:</p>
+      <code>tunegocio.mipeluqueria.com</code>
+    </div>
+
+    <!-- Tenant List -->
+    <div *ngIf="!loading && !isProduction" class="tenant-list">
+      <div 
+        *ngFor="let tenant of tenants" 
+        class="tenant-card"
+        (click)="selectTenant(tenant.subdomain)"
+        matRipple
+      >
+        <div class="tenant-icon">
+          {{ getBusinessTypeIcon(tenant.business_type) }}
+        </div>
+        <div class="tenant-info">
+          <h3>{{ tenant.business_name }}</h3>
+          <p class="subdomain">{{ tenant.subdomain }}.mipeluqueria.com</p>
+          <p class="business-type" *ngIf="tenant.business_type">
+            {{ tenant.business_type | titlecase }}
+          </p>
+        </div>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="tenants.length === 0" class="empty-state">
+        <mat-icon>store</mat-icon>
+        <p>No hay negocios disponibles</p>
+        <button mat-raised-button color="primary" (click)="goToCreateTenant()">
+          <mat-icon>add</mat-icon>
+          Crear Primer Negocio
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Access -->
+    <div *ngIf="!loading && !isProduction" class="admin-section">
+      <button mat-stroked-button (click)="goToCreateTenant()">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Panel de Administración
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="dev-note">
+        <mat-icon>info</mat-icon>
+        Modo desarrollo: localhost sin subdomain
+      </p>
+    </div>
+  </div>
+</div>

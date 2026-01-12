@@ -1,6 +1,58 @@
 <!-- home component -->
 
 <app-header></app-header>
+
+<!-- Hero Section -->
+<section class="hero-section" [style.background-image]="getHeroBackground()">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">{{ config?.hero_title || 'Bienvenido' }}</h1>
+    <p class="hero-subtitle">{{ config?.hero_subtitle || 'Reserva tu turno online' }}</p>
+    <button class="hero-button" routerLink="/create-appointment">
+      {{ config?.hero_button_text || 'Turno Online' }}
+    </button>
+  </div>
+</section>
+
+<!-- Welcome Section -->
+<section class="welcome-section" *ngIf="config?.welcome_section_title || config?.welcome_section_text">
+  <div class="container">
+    <h2 class="welcome-title">{{ config?.welcome_section_title || 'Bienvenido' }}</h2>
+    <p class="welcome-text" [innerHTML]="config?.welcome_section_text"></p>
+  </div>
+</section>
+
+<!-- Carousel Section -->
 <app-carousel></app-carousel>
-<app-map></app-map>
+
+<!-- Services Section -->
+<section class="services-section" *ngIf="config?.show_services_section !== false">
+  <div class="container">
+    <h2 class="section-title">Nuestros Servicios</h2>
+    <!-- Los servicios se cargarán dinámicamente aquí -->
+    <div class="services-placeholder">
+      <p>Los servicios se mostrarán aquí cuando estén configurados</p>
+    </div>
+  </div>
+</section>
+
+<!-- Business Hours -->
+<section class="hours-section" *ngIf="config?.business_hours">
+  <div class="container">
+    <h2 class="section-title">Horarios de Atención</h2>
+    <div class="hours-content" [innerHTML]="config?.business_hours"></div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<app-map *ngIf="config?.show_map !== false"></app-map>
+
+<!-- WhatsApp Floating Button -->
+<a *ngIf="config?.show_whatsapp_button && config?.whatsapp_number" 
+   [href]="getWhatsAppLink()" 
+   target="_blank"
+   class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
 <app-footer></app-footer>

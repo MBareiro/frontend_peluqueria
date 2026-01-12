@@ -33,3 +33,17 @@
     }
   }
   
+  /* Ensure images render at a reasonable displayed height and keep aspect ratio */
+  .carousel-image {
+    width: 100%;
+    height: 400px; /* displayed height; adjust as needed */
+    object-fit: cover; /* crop to fit container */
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .carousel-image {
+      height: 220px;
+    }
+  }
+  

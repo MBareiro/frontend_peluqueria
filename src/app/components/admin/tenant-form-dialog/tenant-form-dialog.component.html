@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>{{ getTitle() }}</h2>
+
+<form [formGroup]="tenantForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <!-- Error Message -->
+    <mat-error *ngIf="error" class="error-banner">
+      <mat-icon>error</mat-icon>
+      {{ error }}
+    </mat-error>
+
+    <div class="form-grid">
+      <!-- Subdomain -->
+      <mat-form-field appearance="outline">
+        <mat-label>Subdomain</mat-label>
+        <input matInput formControlName="subdomain" placeholder="mi-barberia" required>
+        <mat-hint *ngIf="mode === 'create'">Solo letras minúsculas, números y guiones</mat-hint>
+        <mat-hint *ngIf="mode === 'edit'">El subdomain no se puede modificar</mat-hint>
+        <mat-error *ngIf="tenantForm.get('subdomain')?.hasError('required')">
+          El subdomain es requerido
+        </mat-error>
+        <mat-error *ngIf="tenantForm.get('subdomain')?.hasError('pattern')">
+          Solo se permiten letras minúsculas, números y guiones
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Business Name -->
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre del Negocio</mat-label>
+        <input matInput formControlName="business_name" placeholder="Mi Barbería" required>
+        <mat-error *ngIf="tenantForm.get('business_name')?.hasError('required')">
+          El nombre del negocio es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Owner Email -->
+      <mat-form-field appearance="outline">
+        <mat-label>Email del Owner</mat-label>
+        <input matInput type="email" formControlName="owner_email" placeholder="owner@example.com" required>
+        <mat-error *ngIf="tenantForm.get('owner_email')?.hasError('required')">
+          El email es requerido
+        </mat-error>
+        <mat-error *ngIf="tenantForm.get('owner_email')?.hasError('email')">
+          Ingresa un email válido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Owner Name (Only for create) -->
+      <mat-form-field appearance="outline" *ngIf="mode === 'create'">
+        <mat-label>Nombre del Owner</mat-label>
+        <input matInput formControlName="owner_name" placeholder="Juan Pérez" required>
+        <mat-error *ngIf="tenantForm.get('owner_name')?.hasError('required')">
+          El nombre del owner es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Owner Password (Only for create) -->
+      <mat-form-field appearance="outline" *ngIf="mode === 'create'">
+        <mat-label>Contraseña del Owner</mat-label>
+        <input matInput type="password" formControlName="owner_password" required>
+        <mat-hint>Mínimo 8 caracteres</mat-hint>
+        <mat-error *ngIf="tenantForm.get('owner_password')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="tenantForm.get('owner_password')?.hasError('minlength')">
+          La contraseña debe tener al menos 8 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="tenantForm.invalid || loading">
+      <mat-spinner *ngIf="loading" diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+      {{ getSubmitButtonText() }}
+    </button>
+  </mat-dialog-actions>
+</form>

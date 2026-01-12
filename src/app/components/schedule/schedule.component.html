@@ -1,92 +1,108 @@
-<mat-card class="shipping-card">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>Cronograma</mat-card-title>
-    </mat-card-header>
-    <form id="formHorario" (ngSubmit)="guardarCambios()" class="form">
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Dia</th>
-              <th>Activo</th>
-              <th>Turno mañana</th>
-              <th>Activo</th>
-              <th>Turno tarde</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let dia of dias">
-              <td>{{ dia.valor }}</td>
-              <td>
-                <div class="form-group form-switch">
-                  <input type="checkbox" name="active_morning" class="form-check-input"
-                    [checked]="horarios[dia.key]?.active_morning" (change)="toggleCheckbox(dia.key, 'active_morning')">
-                </div>
-              </td>
-              <!-- MORNING -------------------------------------------->
-              <td>
-                <div class="form-group">
-                  <label for="morning_start">Desde:</label>
-                  <select name="morning_start" (change)="onSelectMorningStart($event, dia.key)">
-                    <option *ngFor="let hora of horasAM" [value]="hora"
-                            [attr.disabled]="horarios[dia.key]?.morning_end && timeToNumber(horarios[dia.key].morning_end) <= timeToNumber(hora) ? true : null"
-                            [selected]="horarios[dia.key]?.morning_start === hora">
-                      {{ hora }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="morning_end">Hasta:</label>
-                  <select name="morning_end" (change)="onSelectMorningEnd($event, dia.key)">
-                    <option *ngFor="let hora of horasAM" [value]="hora"
-                            [attr.disabled]="horarios[dia.key]?.morning_start && timeToNumber(horarios[dia.key].morning_start) >= timeToNumber(hora) ? true : null"
-                            [selected]="horarios[dia.key]?.morning_end === hora">
-                      {{ hora }}
-                    </option>
-                  </select>
-                  
-                </div>
-              </td>
-              <!-- ------------------------------------------------------------------------------------------- -->
-              <td>
-                <div class="form-group form-switch">
-                  <input type="checkbox" name="active_afternoon" class="form-check-input"
-                    [checked]="horarios[dia.key]?.active_afternoon"
-                    (change)="toggleCheckbox(dia.key, 'active_afternoon')">
-                </div>
-              </td>
-              <td>
-                <div class="form-group">
-                  <label for="afternoon_start" class="ml-2">Desde:</label>
-                  <select name="afternoon_start" (change)="onSelectAfternoonStart($event, dia.key)">
-                    <option *ngFor="let hora of horasPM" [value]="hora"
-                            [attr.disabled]="horarios[dia.key]?.afternoon_end && timeToNumber(horarios[dia.key].afternoon_end) <= timeToNumber(hora) ? true : null"
-                            [selected]="horarios[dia.key]?.afternoon_start === hora">
-                      {{ hora }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="afternoon_end">Hasta:</label>
-                  <select name="afternoon_end" (change)="onSelectAfternoonEnd($event, dia.key)">
-                    <option *ngFor="let hora of horasPM" [value]="hora"
-                    
-                      [attr.disabled]="horarios[dia.key]?.afternoon_start && timeToNumber(horarios[dia.key].afternoon_start) >= timeToNumber(hora) ? true : null"
-                      [selected]="horarios[dia.key]?.afternoon_end === hora">
-                      {{ hora }}
-                    </option>
-                  </select>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <mat-card-actions>
-        <button mat-raised-button color="accent" type="submit">Guardar</button>
-      </mat-card-actions>
-    </form>
-  </mat-card-content>
+<mat-card class="schedule-card">
+  <table class="schedule-table">
+    <thead>
+      <tr>
+        <th>Día</th>
+        <th>Activo</th>
+        <th>Turno mañana</th>
+        <th>Activo</th>
+        <th>Turno tarde</th>
+      </tr>
+    </thead>
 
+    <tbody>
+      <tr *ngFor="let dia of dias; trackBy: trackByDiaKey">
+        <td data-label="Día" class="day-cell">{{ dia.valor }}</td>
+
+        <td data-label="Activo mañana" class="check-cell">
+          <mat-checkbox
+            [checked]="horarios[dia.key]?.active_morning"
+            (change)="toggleCheckbox(dia.key, 'active_morning')">
+          </mat-checkbox>
+        </td>
+
+        <td data-label="Turno mañana" class="slot-cell">
+          <div class="slot-grid">
+            <mat-form-field appearance="outline" class="slot-field">
+              <mat-label>Desde</mat-label>
+              <mat-select
+                [value]="horarios[dia.key]?.morning_start"
+                (selectionChange)="onSelectMorningStart($event.value, dia.key)">
+                <mat-option
+                  *ngFor="let hora of horasAM; trackBy: trackByHora"
+                  [value]="hora"
+                  [disabled]="horarios[dia.key]?.morning_end
+                              && timeToNumber(horarios[dia.key].morning_end) <= timeToNumber(hora)">
+                  {{ hora }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="slot-field">
+              <mat-label>Hasta</mat-label>
+              <mat-select
+                [value]="horarios[dia.key]?.morning_end"
+                (selectionChange)="onSelectMorningEnd($event.value, dia.key)">
+                <mat-option
+                  *ngFor="let hora of horasAM; trackBy: trackByHora"
+                  [value]="hora"
+                  [disabled]="horarios[dia.key]?.morning_start
+                              && timeToNumber(horarios[dia.key].morning_start) >= timeToNumber(hora)">
+                  {{ hora }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+
+        <td data-label="Activo tarde" class="check-cell">
+          <mat-checkbox
+            [checked]="horarios[dia.key]?.active_afternoon"
+            (change)="toggleCheckbox(dia.key, 'active_afternoon')">
+          </mat-checkbox>
+        </td>
+
+        <td data-label="Turno tarde" class="slot-cell">
+          <div class="slot-grid">
+            <mat-form-field appearance="outline" class="slot-field">
+              <mat-label>Desde</mat-label>
+              <mat-select
+                [value]="horarios[dia.key]?.afternoon_start"
+                (selectionChange)="onSelectAfternoonStart($event.value, dia.key)">
+                <mat-option
+                  *ngFor="let hora of horasPM; trackBy: trackByHora"
+                  [value]="hora"
+                  [disabled]="horarios[dia.key]?.afternoon_end
+                              && timeToNumber(horarios[dia.key].afternoon_end) <= timeToNumber(hora)">
+                  {{ hora }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="slot-field">
+              <mat-label>Hasta</mat-label>
+              <mat-select
+                [value]="horarios[dia.key]?.afternoon_end"
+                (selectionChange)="onSelectAfternoonEnd($event.value, dia.key)">
+                <mat-option
+                  *ngFor="let hora of horasPM; trackBy: trackByHora"
+                  [value]="hora"
+                  [disabled]="horarios[dia.key]?.afternoon_start
+                              && timeToNumber(horarios[dia.key].afternoon_start) >= timeToNumber(hora)">
+                  {{ hora }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="actions-container">
+    <button mat-raised-button color="primary" (click)="guardarCambios()" class="save-button">
+      <mat-icon>save</mat-icon>
+      Guardar Horarios
+    </button>
+  </div>
 </mat-card>

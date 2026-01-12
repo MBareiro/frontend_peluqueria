@@ -1,0 +1,50 @@
+@import '@angular/material/prebuilt-themes/purple-green.css';
+
+/* Importar sistema de variables y mixins SCSS */
+@import './styles/variables';
+@import './styles/mixins';
+@import './styles/shared-cards';
+
+/* Variables CSS dinámicas para multi-tenant branding */
+:root {
+  --primary-color: #1976d2;
+  --secondary-color: #0d47a1;
+  --brand-primary: var(--primary-color);
+  --brand-secondary: var(--secondary-color);
+  --brand-text-on-primary: #ffffff;
+  --brand-text-on-secondary: #ffffff;
+}
+
+/* Tema base oscuro que ya usabas */
+body {
+  background-color: #000 !important;
+  color: white !important;
+}
+
+/* Enlaces y acentos */
+a { color: var(--brand-primary); }
+
+/* Bordes/acentos en header, etc. */
+.app-toolbar, header.app-toolbar, mat-toolbar.app-toolbar {
+  border-bottom: 3px solid var(--brand-primary);
+}
+
+/* Botón “primario” material (override simple) */
+.mat-mdc-raised-button.mat-primary,
+.mdc-button--raised.mat-primary,
+.mdc-button.mat-primary {
+  background-color: var(--brand-primary) !important;
+  color: var(--brand-text-on-primary) !important;
+}
+
+/* Chips/Badges o elementos propios */
+.badge, .pill {
+  background: var(--brand-secondary);
+  color: var(--brand-text-on-secondary);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* Titulares en cards */
+mat-card-title { font-size: 25px !important; }

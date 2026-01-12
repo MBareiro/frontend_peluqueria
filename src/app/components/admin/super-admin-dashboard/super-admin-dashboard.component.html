@@ -1,0 +1,122 @@
+<div class="super-admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Panel de Super Administrador</h1>
+    <button mat-raised-button color="primary" (click)="navigateToTenants()">
+      <mat-icon>business</mat-icon>
+      Gestionar Tenants
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-button color="primary" (click)="loadStats()">Reintentar</button>
+  </div>
+
+  <!-- Stats Display -->
+  <div *ngIf="stats && !loading" class="stats-container">
+    <!-- Tenant Stats -->
+    <div class="stats-section">
+      <h2>Tenants</h2>
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #3498db;">
+              <mat-icon>business</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.total_tenants }}</h3>
+              <p>Total Tenants</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #2ecc71;">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.active_tenants }}</h3>
+              <p>Activos</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #f39c12;">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.trial_tenants }}</h3>
+              <p>En Trial</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #e74c3c;">
+              <mat-icon>block</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.suspended_tenants }}</h3>
+              <p>Suspendidos</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Platform Stats -->
+    <div class="stats-section">
+      <h2>Estadísticas Globales</h2>
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #9b59b6;">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.total_users }}</h3>
+              <p>Total Usuarios</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #1abc9c;">
+              <mat-icon>event</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.total_appointments }}</h3>
+              <p>Total Citas</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon" style="background-color: #34495e;">
+              <mat-icon>medical_services</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.total_services }}</h3>
+              <p>Total Servicios</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+</div>

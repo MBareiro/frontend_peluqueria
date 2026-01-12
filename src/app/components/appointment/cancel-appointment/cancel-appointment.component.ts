@@ -27,8 +27,7 @@ export class CancelAppointmentComponent implements OnInit {
         this.router.navigate(['/appointment-cancelled']);
       },
       (error) => {
-        if (error.status === 400) {                  
-          //const statusCode = error.status;                  
+        if (error.status === 400) {
           const errorMessage = error.error.message;   
           Swal.fire({
             icon: 'error',

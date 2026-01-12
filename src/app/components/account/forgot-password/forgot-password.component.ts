@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-forgot-password',
@@ -18,7 +19,7 @@ export class ForgotPasswordComponent {
   email = new FormControl('', [Validators.required, Validators.email]);
   responseMessage: any;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
 
   getErrorMessage() {
     if (this.email.hasError('required')) {
@@ -32,10 +33,9 @@ export class ForgotPasswordComponent {
     if (emailValue !== null) {
       try {
         const response = await this.userService.requestPasswordReset(emailValue); // Esperar la respuesta de la Promesa
-        console.log(response);
         this.responseMessage = response.message;
       } catch (error) {
-        console.error(error); // Manejo de errores
+        this.snackBar.open('Error al solicitar restablecimiento', 'Cerrar', { duration: 3000 });
       }
     }
   }

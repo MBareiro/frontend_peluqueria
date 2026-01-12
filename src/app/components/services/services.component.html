@@ -1,0 +1,51 @@
+<div class="my-services">
+  <div class="my-services-header">
+    <div>
+      <h2>{{ (businessConfig$ | async)?.service_label_plural || 'Servicios' }}</h2>
+      <div class="small-muted">Lista de {{ (businessConfig$ | async)?.service_label_plural?.toLowerCase() || 'servicios' }} globales</div>
+    </div>
+    <div class="header-actions">
+      <button mat-fab color="accent" (click)="openCreateDialog()" *ngIf="userRole === 'owner'" matTooltip="Nuevo {{ (businessConfig$ | async)?.service_label_singular || 'servicio' }}">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-center">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="error" class="empty-state">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="!loading && services && services.length === 0" class="empty-state">
+    <p>No hay {{ (businessConfig$ | async)?.service_label_plural?.toLowerCase() || 'servicios' }}.</p>
+  </div>
+
+  <div class="my-services-grid" *ngIf="!loading && services && services.length > 0">
+    <mat-card class="svc-card" *ngFor="let s of services; trackBy: trackById" [class.inactive]="!s.active">
+      <mat-card-content class="svc-top">
+        <div class="svc-main">
+          <div class="svc-title">{{ s.description }}</div>
+          <div class="svc-meta">{{ s.duration }} min • {{ s.cost | currency:'ARS' }}</div>
+          <div *ngIf="!s.active" class="small-muted">Servicio desactivado</div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="svc-bottom" align="end">
+        <div class="badge-wrap">
+          <span *ngIf="s.active" class="active-badge">Activo</span>
+          <span *ngIf="!s.active" class="inactive-badge">Inactivo</span>
+          <button mat-icon-button color="primary" (click)="openEditDialog(s)" [disabled]="userRole !== 'owner'" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="delete(s)" [disabled]="userRole !== 'owner'" matTooltip="Eliminar (solo si no tiene uso)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <mat-slide-toggle [checked]="s.active" (change)="toggleActive(s)" [disabled]="userRole !== 'owner'" matTooltip="Activar/Desactivar"></mat-slide-toggle>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

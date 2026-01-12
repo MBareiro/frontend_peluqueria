@@ -1,0 +1,138 @@
+.map-config-container {
+  padding: var(--spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+mat-card {
+  margin-bottom: var(--spacing-md);
+  background-color: var(--bg-dark-card) !important;
+  border-radius: var(--border-radius-lg);
+}
+
+mat-card-header {
+  margin-bottom: var(--spacing-md);
+  background-color: transparent !important;
+}
+
+mat-card-content {
+  background-color: transparent !important;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.form-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+.coordinates-info {
+  margin: var(--spacing-md) 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+mat-chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.map-actions {
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  justify-content: center;
+}
+
+.map-actions button {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.map-container {
+  width: 100%;
+  height: 500px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--border-radius-lg);
+  margin: var(--spacing-md) 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.instructions-card {
+  background-color: var(--bg-dark-card) !important;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.instructions-card h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-primary);
+}
+
+.instructions-card ul {
+  margin: 0;
+  padding-left: var(--spacing-md);
+}
+
+.instructions-card li {
+  margin-bottom: var(--spacing-xs);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+mat-card-actions {
+  padding: var(--spacing-md);
+  gap: var(--spacing-xs);
+  background-color: transparent !important;
+}
+
+mat-card-actions button {
+  margin-left: var(--spacing-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .map-config-container {
+    padding: var(--spacing-xs);
+  }
+
+  .map-container {
+    height: 400px;
+  }
+
+  mat-chip-set {
+    flex-direction: column;
+  }
+  
+  mat-card-actions {
+    flex-direction: column;
+  }
+  
+  mat-card-actions button {
+    margin-left: 0;
+    width: 100%;
+  }
+}

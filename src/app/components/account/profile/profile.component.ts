@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormValidators } from '../../shared/form-validators/form-validators';
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    public formValidator: FormValidators
+    public formValidator: FormValidators,
+    private snackBar: MatSnackBar
   ) {
     this.addressForm = this.formBuilder.group({
       id: [''],
@@ -42,14 +43,12 @@ export class ProfileComponent implements OnInit {
       if (userId !== null) {
         // Llamada a getUserById dentro de esta condición
         const response: any = await this.userService.getUserById(userId);
-        console.log(response);
-
         this.addressForm.patchValue(response); // Pobla el formulario con los datos del usuario
       } else {
-        console.error('No se pudo obtener el User ID desde localStorage.');
+        this.snackBar.open('No se pudo obtener el User ID', 'Cerrar', { duration: 3000 });
       }
     } catch (error) {
-      console.error('Error al obtener datos del usuario:', error);
+      this.snackBar.open('Error al obtener datos del usuario', 'Cerrar', { duration: 3000 });
     }
   }
 
@@ -59,7 +58,8 @@ export class ProfileComponent implements OnInit {
     if (this.addressForm.valid) {
       try {
         await this.userService.updateUser(formData);
-        console.log('User updated successfully.', Response);
+        this.snackBar.open('Perfil actualizado', 'Cerrar', { duration: 2000 });
+        const { default: Swal } = await import('sweetalert2');
         Swal.fire({
           icon: 'success',
           color: 'white',
@@ -68,10 +68,10 @@ export class ProfileComponent implements OnInit {
           timer: 1500,
         });
       } catch (error) {
-        console.error('Error al actualizar datos del usuario:', error);
+        this.snackBar.open('Error al actualizar perfil', 'Cerrar', { duration: 3000 });
       }
     } else {
-      console.log('Formulario inválido. Por favor, revisa los campos.');
+      this.snackBar.open('Formulario inválido. Por favor, revisa los campos.', 'Cerrar', { duration: 3000 });
     }
     this.formularioEnviadoExitoso = false;
   }

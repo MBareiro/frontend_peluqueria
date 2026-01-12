@@ -1,60 +1,328 @@
-/* Establece el ancho máximo de la tarjeta */
-.shipping-card {
-  max-width: 400px; /* Ajusta este valor según tu preferencia para el ancho máximo */
-  margin: 20px auto;
-  background-color: #191c24 !important;
-}
-
-/* Estilo para los botones radio */
-.mat-radio-button {
+:host {
   display: block;
-  margin: 10px 0; /* Ajusta el margen según tu preferencia */
+  padding: var(--spacing-md);
+  background-color: transparent;
 }
 
-/* Estilo para las filas */
-.row {
+/* Responsive: padding reducido en mobile */
+@media (max-width: 600px) {
+  :host {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Card responsiva - ahora usa mixin compartido */
+.booking-card {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  background-color: var(--bg-dark-card);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+}
+
+/* Responsive: padding reducido en mobile */
+@media (max-width: 600px) {
+  .booking-card {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs) auto;
+  }
+}
+
+/* Header compacto y accesible */
+.card-header {
   display: flex;
-  flex-direction: column; /* Cambia la dirección a columna para que los elementos se apilen verticalmente */
-  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+}
+.title-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: var(--color-primary);
+}
+.title {
+  margin: 0;
+  line-height: 1.1;
+}
+.subtitle {
+  margin-top: var(--spacing-xs);
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Estilo para las columnas */
+/* Grilla responsiva para formularios - usa variables */
+.form-grid {
+  display: grid;
+  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: var(--spacing-sm);
+}
+
+/* Mobile: grid a 1 columna y gap reducido */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Columnas utilitarias */
 .col {
-  flex: 1;
-  margin-bottom: 10px; /* Ajusta el margen inferior según tu preferencia */
+  min-width: 0;  
+}
+.col.full {
+  grid-column: 1 / -1;
 }
 
-/* Elimina el margen inferior del último elemento de la columna */
-.col:last-child {
-  margin-bottom: 0;
+/* Acciones: responsive (stack en mobile) - usa variables */
+.actions,
+.inline-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+.inline-actions button {
+  min-width: 140px;
+}
+@media (max-width: 600px) {
+  .inline-actions,
+  .actions {
+    flex-direction: column-reverse;
+  }
+  .inline-actions button,
+  .actions button {
+    width: 100%;
+  }
 }
 
-/* Estilo para los botones radio en posición vertical */
-.vertical-radio-button {
-  display: block;
+/* Segmentación (mañana/tarde) estilo "chips" - usa variables de color */
+.segment-group {
+  display: inline-flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+.segment-group .mat-mdc-radio-button .mdc-form-field {
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--border-radius-xl);
+  transition: all var(--transition-base);
+}
+.segment-group .mat-mdc-radio-checked .mdc-form-field {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 63, 81, 181), 0.12);
 }
 
-/* Estilo para el título de la tarjeta */
-mat-card-title {
-  margin-bottom: 15px;
+/* Grilla de horarios (chips) - usa variables */
+.time-grid {
+  display: grid;
+  gap: var(--spacing-sm);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
-.error{
-  margin-bottom: 5px;
+/* Mobile: columnas más pequeñas para horarios */
+@media (max-width: 600px) {
+  .time-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--spacing-xs);
+  }
 }
+.time-slot {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: center;
+  height: 44px;
+  transition: all var(--transition-base);
+}
+.time-slot.mat-mdc-radio-checked {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 63, 81, 181), 0.12);
+}
+.time-slot:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Loading */
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  color: var(--color-info);
+}
+
+/* Errores */
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  color: var(--color-error);
+}
+
+/* Form fields más compactos y bordes consistentes */
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: var(--border-radius-lg);
+}
+
+/* Bordes consistentes en todos los estados */
+::ng-deep .mat-mdc-form-field .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.23) !important;
+}
+
+/* Ocultar notch (muesca del label) */
+::ng-deep .mat-mdc-form-field .mdc-notched-outline__notch {
+  border-color: rgba(255, 255, 255, 0.23) !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Hover state */
+::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline__notch {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Focus state */
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--color-primary) !important;
+  border-width: 2px !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch {
+  border-color: var(--color-primary) !important;
+  border-width: 2px 0 !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Mejora datepicker: fechas bloqueadas - sin !important */
 .example-blocked-date-class {
-  background-color: #FF5733 !important;
-  color: #fff !important;
-  border-radius: 50% !important;
-  pointer-events: none !important;
+  background-color: var(--color-error);
+  color: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
-button.example-custom-date-class {
-  background: orange !important;
-  border-radius: 100% !important;
+/* Helpers */
+.group-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.disabled-cell {
-  pointer-events: none; /* Hace que la celda no sea interactiva, como si estuviera deshabilitada */
+/* Focus states accesibles */
+button:focus-visible,
+.mat-mdc-radio-button:focus-visible,
+.time-slot:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ==================== STEPPER OVERRIDES ==================== */
+/* Eliminar todos los fondos grises del Material Stepper */
+::ng-deep .mat-stepper-vertical,
+::ng-deep .mat-vertical-stepper-header,
+::ng-deep .mat-vertical-stepper-content {
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-step-header {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-step-header:hover:not([aria-disabled="true"]) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Headers disabled (pasos futuros) sin fondo gris */
+::ng-deep .mat-step-header[aria-disabled="true"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Contenido del step sin fondo gris */
+::ng-deep .mat-vertical-content-container {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-vertical-content {
+  padding: var(--spacing-md) 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Eliminar cualquier otro fondo gris del stepper */
+::ng-deep .mat-step {
+  background: transparent !important;
+}
+
+::ng-deep mat-step {
+  background: transparent !important;
+}
+
+/* Línea vertical del stepper - ocultar o hacer sutil */
+::ng-deep .mat-stepper-vertical-line::before {
+  border-left-width: 0 !important;
+  display: none !important;
+}
+
+/* Alternativa: línea muy sutil si se prefiere mantenerla */
+::ng-deep .mat-stepper-vertical-line {
+  border-left-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Icon del step header */
+::ng-deep .mat-step-icon {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+::ng-deep .mat-step-icon-selected {
+  background-color: var(--color-primary) !important;
+}
+
+/* Label del step */
+::ng-deep .mat-step-label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+::ng-deep .mat-step-label-selected {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Eliminar box-shadow o borders grises */
+::ng-deep .mat-step-header {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Stepper header spacing en mobile */
+@media (max-width: 600px) {
+  ::ng-deep .mat-vertical-content {
+    padding: var(--spacing-sm) 0 !important;
+  }
   
+  ::ng-deep .mat-step-header {
+    padding: var(--spacing-xs) var(--spacing-sm) !important;
+  }
 }

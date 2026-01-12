@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { map } from 'rxjs/operators';
 import { Observable, merge } from 'rxjs';
 import { ClientService } from '../../../services/client.service';
+import { AuthService } from '../../../services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 
 export interface ListClientItem {
@@ -36,7 +37,7 @@ export class ListClientDataSource extends DataSource<ListClientItem> {
     this.dataSubject.next(this.applyFilter(this.data)); // Aplicar el filtro y actualizar el BehaviorSubject
   }  
 
-  constructor(private clientService: ClientService) {
+  constructor(private clientService: ClientService, private authService?: AuthService) {
     super();
   }
 
@@ -59,7 +60,11 @@ export class ListClientDataSource extends DataSource<ListClientItem> {
 
   connect(): Observable<ListClientItem[]> {
     if (this.paginator && this.sort) {
-      const userId = localStorage.getItem('userId');
+      // Prefer AuthService in-memory user; fallback to temporary window bridge then localStorage
+      const userIdFromAuth = this.authService?.currentUserValue?.id ? String(this.authService!.currentUserValue.id) : null;
+      const globalUser = (window as any).currentUser;
+      const userIdFromGlobal = globalUser?.id ? String(globalUser.id) : null;
+      const userId = userIdFromAuth ?? userIdFromGlobal ?? localStorage.getItem('userId');
       if (userId !== null) {
         const userIdNumber = +userId;
         this.clientService.getClients().then((data: any) => {

@@ -1,0 +1,43 @@
+<div class="my-services">
+  <div class="my-services-header">
+    <div>
+      <h2>Mis servicios</h2>
+      <div class="small-muted">Marca los servicios que ofrecés</div>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="primary" (click)="load()"><mat-icon>refresh</mat-icon></button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-center">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && services?.length === 0" class="empty-state">
+    <p>No hay servicios disponibles.</p>
+    <p class="small-muted">Contactá al owner para que cargue los servicios globales.</p>
+  </div>
+
+  <div class="my-services-grid" *ngIf="!loading && services.length > 0">
+    <mat-card class="svc-card" *ngFor="let s of services; trackBy: trackById" [class.inactive]="!s.active">
+      <mat-card-content class="svc-top">
+        <!-- <div class="svc-avatar">
+          <mat-icon>{{ getIconForService(s) }}</mat-icon>
+        </div> -->
+        <div class="svc-main">
+          <div class="svc-title">{{ s.description }}</div>
+      <div class="svc-meta">{{ s.duration }} min • {{ s.cost | currency:'ARS' }}</div>
+      <div *ngIf="!s.active" class="small-muted">Servicio fuera de oferta en este local</div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="svc-bottom" align="end">
+        <div class="badge-wrap">
+          <span *ngIf="s.active" [class.offered-badge]="isOffered(s)" [class.not-offered]="!isOffered(s)">{{ isOffered(s) ? 'Ofrecido' : 'No ofrecido' }}</span>
+          <span *ngIf="!s.active" class="inactive-badge">No disponible</span>
+        </div>
+        <mat-slide-toggle [checked]="isOffered(s)" (change)="toggle(s)" [disabled]="!s.active"></mat-slide-toggle>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

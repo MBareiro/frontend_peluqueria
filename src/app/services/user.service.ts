@@ -1,6 +1,7 @@
 import { firstValueFrom, Observable } from 'rxjs'; // Asegúrate de importar Observable
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
@@ -9,9 +10,10 @@ import { environment } from '../../environments/environment';
 })
 export class UserService {
   
-  private apiUrl = `${environment.apiUrl}/users/usuarios`;
+  // Keep apiUrl without a trailing slash to avoid accidental double-slashes when composing endpoints
+  private apiUrl = `${environment.apiUrl}/users`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getUsers() { // Cambia a Observable
     return firstValueFrom(this.http.get<User[]>(this.apiUrl));
@@ -34,21 +36,10 @@ export class UserService {
   }
   
   verifyIdUser(): number | null {
-    const userId: string | null = localStorage.getItem('userId');
-
-    if (userId !== null) {
-      const userIdNumber: number = parseInt(userId, 10); // Convertir a número
-
-      if (!isNaN(userIdNumber)) {
-        return userIdNumber;
-      } else {
-        console.error('No se pudo convertir a número:', userId);
-        return null;
-      }
-    } else {
-      console.error('No se pudo obtener el User ID desde localStorage.');
-      return null;
-    }
+    const u = this.authService.currentUserValue;
+    if (u && u.id) return Number(u.id);
+    console.error('No se pudo obtener el User ID desde el estado en memoria.');
+    return null;
   }
 
   changePassword(userId: number, oldPassword: string, newPassword: string, confirmPassword: string) {
@@ -57,7 +48,8 @@ export class UserService {
       new_password: newPassword,
       confirm_password: confirmPassword,
     };
-    return firstValueFrom(this.http.post(`${this.apiUrl}/change-password/${userId}`, body));
+    // Backend exposes password change under /api/password/change-password/:id
+    return firstValueFrom(this.http.post(`${environment.apiUrl}/password/change-password/${userId}`, body));
   }
 
   resetPassword(token: string, newPassword: string, confirmPassword: string): Promise<{ message: string }> {

@@ -1,0 +1,72 @@
+<div class="map-config-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>location_on</mat-icon>
+        Configuración del Mapa
+      </mat-card-title>
+      <mat-card-subtitle>
+        Haz click en el mapa o arrastra el marcador para seleccionar la ubicación de tu negocio
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Cargando configuración...</p>
+      </div>
+
+      <div *ngIf="!isLoading">
+        <!-- Coordenadas (solo lectura) -->
+        <div class="form-section">
+          <div class="coordinates-info">
+            <mat-chip-set aria-label="Coordenadas">
+              <mat-chip>
+                <mat-icon matChipAvatar>my_location</mat-icon>
+                Lat: {{ settings.latitude | number: '1.6-6' }}
+              </mat-chip>
+              <mat-chip>
+                <mat-icon matChipAvatar>location_searching</mat-icon>
+                Lng: {{ settings.longitude | number: '1.6-6' }}
+              </mat-chip>
+              <mat-chip>
+                <mat-icon matChipAvatar>zoom_in</mat-icon>
+                Zoom: {{ settings.zoom }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Mapa interactivo -->
+        <div class="map-actions">
+          <button mat-raised-button color="accent" (click)="centerOnCurrentLocation()" [disabled]="isLoading">
+            <mat-icon>my_location</mat-icon>
+            Usar Mi Ubicación Actual
+          </button>
+        </div>
+        
+        <div id="map-admin" class="map-container"></div>
+
+        <!-- Instrucciones -->
+        <mat-card class="instructions-card">
+          <mat-card-content>
+            <h4><mat-icon>info</mat-icon> Instrucciones:</h4>
+            <ul>
+              <li><strong>Click en el mapa:</strong> Coloca el marcador en una nueva ubicación</li>
+              <li><strong>Arrastra el marcador:</strong> Mueve el pin a la ubicación exacta</li>
+              <li><strong>Zoom:</strong> Usa la rueda del mouse o los botones +/- para ajustar el nivel de zoom</li>
+              <li><strong>Guardar:</strong> No olvides hacer click en "Guardar Cambios" para aplicar la configuración</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="isSaving">
+        <mat-icon>save</mat-icon>
+        {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

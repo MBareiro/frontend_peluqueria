@@ -5,9 +5,10 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import Swal from 'sweetalert2';
+// dynamic import of sweetalert2 inside methods to reduce initial bundle
 
 import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-change-password',
@@ -37,11 +38,13 @@ export class ChangePasswordComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   async changePassword(): Promise<void> {
-    const userId = localStorage.getItem('userId');
+    const u = this.authService.currentUserValue;
+    const userId = u?.id ? String(u.id) : null;
     if (userId) {
       const user = {
         old_password: this.passwordForm.value.oldPassword,
@@ -56,7 +59,7 @@ export class ChangePasswordComponent {
         user.confirm_password
       );
       if (!changePassword.error) {
-        //console.log('Password changed successfully:', data);
+        const { default: Swal } = await import('sweetalert2');
         Swal.fire({
           icon: 'success',
           color: 'white',
@@ -67,6 +70,7 @@ export class ChangePasswordComponent {
         this.passwordForm.reset();
       } else {
         console.error('Error changing password:', changePassword.error);
+        const { default: Swal } = await import('sweetalert2');
         Swal.fire({
           icon: 'error',
           color: 'white',
@@ -79,11 +83,12 @@ export class ChangePasswordComponent {
     }
   }
 
-  onSubmit() {
+  async onSubmit(): Promise<void> {
     if (
       this.passwordForm.value.newPassword !==
       this.passwordForm.value.confirmPassword
     ) {
+      const { default: Swal } = await import('sweetalert2');
       Swal.fire({
         icon: 'warning',
         color: 'white',

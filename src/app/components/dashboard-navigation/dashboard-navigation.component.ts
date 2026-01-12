@@ -1,9 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, shareReplay, takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { BusinessConfigService } from '../../services/business-config.service';
+import { BusinessConfig } from '../../models/business-config.model';
 
 @Component({
   selector: 'app-dashboard-navigation',
@@ -11,10 +13,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard-navigation.component.css'],
 })
 
-export class DashboardNavigationComponent {
+export class DashboardNavigationComponent implements OnDestroy {
   private breakpointObserver = inject(BreakpointObserver);
-  userName: string | null;
-  userRole: string | null;
+  private destroy$ = new Subject<void>();
+  userName: string | null = null;
+  userRole: string | null = null;
+  isOwner = false;
+  businessConfig$: Observable<BusinessConfig | null>;
   showEmail = false;
   showChangePassword = false;
   showCreateAppointment = false;
@@ -32,10 +37,28 @@ export class DashboardNavigationComponent {
       shareReplay()
     );
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.userName = localStorage.getItem('userName');
-    this.userRole = localStorage.getItem('userRole');    
-    authService.authorized();    
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private businessConfigService: BusinessConfigService
+  ) {
+    // Subscribe to current user populated by APP_INITIALIZER
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.userName = user?.name || null;
+        this.userRole = user?.role_obj?.name || user?.role || null;
+        this.isOwner = (user?.role_obj?.name || user?.role) === 'owner';
+      });
+    this.authService.authorized();
+    
+    // Subscribe to business config
+    this.businessConfig$ = this.businessConfigService.config$;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private resetViews() {

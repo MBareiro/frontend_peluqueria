@@ -8,7 +8,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { DashboardNavigationComponent } from './dashboard-navigation.component';
 
-console.log(localStorage.getItem("userId"))
 describe('DashboardNavigationComponent', () => {
   let component: DashboardNavigationComponent;
   let fixture: ComponentFixture<DashboardNavigationComponent>;
