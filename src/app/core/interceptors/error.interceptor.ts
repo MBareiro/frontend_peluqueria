@@ -29,22 +29,20 @@ export class ErrorInterceptor implements HttpInterceptor {
         let errorMessage = 'Ha ocurrido un error inesperado';
 
         if (error.error instanceof ErrorEvent) {
-          // Error del lado del cliente
           errorMessage = `Error: ${error.error.message}`;
         } else {
-          // Error del lado del servidor
           errorMessage = this.getServerErrorMessage(error);
-          
-          // Manejo especial para ciertos códigos de estado
           this.handleSpecialStatusCodes(error.status);
         }
 
-        // Mostrar notificación al usuario (solo si no es un 401 que redirige)
-        if (error.status !== 401) {
+        // Condición para suprimir modal: header explícito o error de red en business-config
+        const suppress = request.headers.has('X-Suppress-Error-Modal')
+          || (error.status === 0 && request.url.includes('/business-config'));
+
+        if (error.status !== 401 && !suppress) {
           this.notification.showError(errorMessage);
         }
 
-        // Log para debugging (solo en desarrollo)
         if (!this.isProduction()) {
           console.error('HTTP Error:', error);
         }

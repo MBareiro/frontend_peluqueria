@@ -26,7 +26,9 @@ export class BusinessConfigService {
   async loadConfig(): Promise<BusinessConfig> {
     try {
       const config = await firstValueFrom(
-        this.http.get<BusinessConfig>(this.baseUrl)
+        this.http.get<BusinessConfig>(this.baseUrl, {
+          headers: { 'X-Suppress-Error-Modal': 'true' }
+        })
       );
       this.configSubject.next(config);
       return config;
