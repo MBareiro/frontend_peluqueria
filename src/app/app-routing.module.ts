@@ -15,11 +15,12 @@ import { SuperAdminDashboardComponent } from './components/admin/super-admin-das
 import { TenantListComponent } from './components/admin/tenant-list/tenant-list.component';
 import { TenantDetailsComponent } from './components/admin/tenant-details/tenant-details.component';
 import { BillingListComponent } from './components/admin/billing-list/billing-list.component';
-import { LandingPageComponent } from './components/shared/landing-page/landing-page.component';
+import { LeadsManagementComponent } from './components/admin/leads-management/leads-management.component';
+import { LandingComponent } from './components/landing/landing.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'landing', component: LandingPageComponent },
+  { path: 'landing', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   
   // Public appointment routes (for guests without login)
@@ -80,12 +81,33 @@ const routes: Routes = [
   // Super Admin Routes (outside dashboard)
   {
     path: 'super-admin',
-    canActivate: [SuperAdminGuard],
     children: [
-      { path: '', component: SuperAdminDashboardComponent },
-      { path: 'tenants', component: TenantListComponent },
-      { path: 'tenants/:id', component: TenantDetailsComponent },
-      { path: 'billing', component: BillingListComponent },
+      { path: 'login', component: LoginComponent }, // Login sin autenticación requerida
+      { 
+        path: '', 
+        component: SuperAdminDashboardComponent,
+        canActivate: [SuperAdminGuard]
+      },
+      { 
+        path: 'tenants', 
+        component: TenantListComponent,
+        canActivate: [SuperAdminGuard]
+      },
+      { 
+        path: 'tenants/:id', 
+        component: TenantDetailsComponent,
+        canActivate: [SuperAdminGuard]
+      },
+      { 
+        path: 'billing', 
+        component: BillingListComponent,
+        canActivate: [SuperAdminGuard]
+      },
+      { 
+        path: 'leads', 
+        component: LeadsManagementComponent,
+        canActivate: [SuperAdminGuard]
+      },
     ]
   },
   

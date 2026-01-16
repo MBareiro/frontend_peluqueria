@@ -1,10 +1,16 @@
 <div class="super-admin-dashboard">
   <div class="dashboard-header">
     <h1>Panel de Super Administrador</h1>
-    <button mat-raised-button color="primary" (click)="navigateToTenants()">
-      <mat-icon>business</mat-icon>
-      Gestionar Tenants
-    </button>
+    <div class="header-actions">
+      <button mat-raised-button color="accent" routerLink="/super-admin/leads">
+        <mat-icon>contacts</mat-icon>
+        Leads
+      </button>
+      <button mat-raised-button color="primary" (click)="navigateToTenants()">
+        <mat-icon>business</mat-icon>
+        Gestionar Tenants
+      </button>
+    </div>
   </div>
 
   <!-- Loading State -->

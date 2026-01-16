@@ -38,7 +38,7 @@ import { ErrorPageComponent } from './components/shared/error-page/error-page.co
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { MapComponent } from './components/map/map.component';
-import { LandingPageComponent } from './components/shared/landing-page/landing-page.component';
+import { LandingComponent } from './components/landing/landing.component';
 
 // Public appointment components (accessible to guests without login)
 import { CancelAppointmentComponent } from './components/appointment/cancel-appointment/cancel-appointment.component';
@@ -50,6 +50,7 @@ import { TenantListComponent } from './components/admin/tenant-list/tenant-list.
 import { TenantDetailsComponent } from './components/admin/tenant-details/tenant-details.component';
 import { TenantFormDialogComponent } from './components/admin/tenant-form-dialog/tenant-form-dialog.component';
 import { BillingListComponent } from './components/admin/billing-list/billing-list.component';
+import { LeadsManagementComponent } from './components/admin/leads-management/leads-management.component';
 
 // Interceptors & utils
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -87,9 +88,10 @@ import { TenantSelectorComponent } from './components/shared/tenant-selector/ten
     TenantDetailsComponent,
     TenantFormDialogComponent,
     BillingListComponent,
+    LeadsManagementComponent,
     
-    // Landing page genérica
-    LandingPageComponent,
+    // Landing page
+    LandingComponent,
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,17 @@ import { TenantSelectorComponent } from './components/shared/tenant-selector/ten
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
-      useFactory: (auth: AuthService) => () => auth.init(),
+      useFactory: (auth: AuthService) => {
+        // No inicializar auth en la landing page
+        const hostname = window.location.hostname;
+        const isLanding = hostname === 'localhost' || hostname === 'miturno.com' || hostname === 'www.miturno.com';
+        
+        if (isLanding) {
+          return () => Promise.resolve();
+        }
+        
+        return () => auth.init();
+      },
       deps: [AuthService],
       multi: true,
     },

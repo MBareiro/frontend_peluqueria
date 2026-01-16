@@ -35,9 +35,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.handleSpecialStatusCodes(error.status);
         }
 
-        // Condición para suprimir modal: header explícito o error de red en business-config
+        // Condición para suprimir modal: header explícito o error de red en business-config, users/me, o leads
         const suppress = request.headers.has('X-Suppress-Error-Modal')
-          || (error.status === 0 && request.url.includes('/business-config'));
+          || (error.status === 0 && (request.url.includes('/business-config') || request.url.includes('/users/me') || request.url.includes('/api/leads')));
 
         if (error.status !== 401 && !suppress) {
           this.notification.showError(errorMessage);

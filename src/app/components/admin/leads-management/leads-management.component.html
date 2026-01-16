@@ -1,0 +1,210 @@
+<div class="leads-container">
+  <div class="header">
+    <h1>Gestión de Leads</h1>
+    <button mat-raised-button color="primary" (click)="loadLeads()">
+      <mat-icon>refresh</mat-icon>
+      Actualizar
+    </button>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.total }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon new">
+        <mat-icon>fiber_new</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.new }}</div>
+        <div class="stat-label">Nuevos</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon contacted">
+        <mat-icon>phone</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.contacted }}</div>
+        <div class="stat-label">Contactados</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon converted">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.converted }}</div>
+        <div class="stat-label">Convertidos</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon rejected">
+        <mat-icon>cancel</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.rejected }}</div>
+        <div class="stat-label">Rechazados</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="selectedStatus" (selectionChange)="onStatusFilterChange()">
+            <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar</mat-label>
+          <input matInput 
+                 [(ngModel)]="searchTerm" 
+                 (ngModelChange)="onSearchChange()"
+                 placeholder="Negocio, email o teléfono">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de leads -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <div *ngIf="isLoading" class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando leads...</p>
+        </div>
+
+        <table mat-table [dataSource]="filteredLeads" *ngIf="!isLoading && filteredLeads.length > 0" class="leads-table">
+          
+          <!-- Fecha Column -->
+          <ng-container matColumnDef="created_at">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let lead">
+              <div class="date-cell">
+                <mat-icon>schedule</mat-icon>
+                {{ formatDate(lead.created_at) }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Negocio Column -->
+          <ng-container matColumnDef="business_name">
+            <th mat-header-cell *matHeaderCellDef>Negocio</th>
+            <td mat-cell *matCellDef="let lead">
+              <div class="business-cell">
+                <strong>{{ lead.business_name }}</strong>
+                <small *ngIf="lead.message">{{ lead.message }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let lead">
+              <button mat-button (click)="openEmail(lead.email)" class="contact-btn">
+                <mat-icon>email</mat-icon>
+                {{ lead.email }}
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Teléfono Column -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+            <td mat-cell *matCellDef="let lead">
+              <button mat-button 
+                      *ngIf="lead.phone" 
+                      (click)="callPhone(lead.phone)" 
+                      class="contact-btn">
+                <mat-icon>phone</mat-icon>
+                {{ lead.phone }}
+              </button>
+              <span *ngIf="!lead.phone" class="no-data">-</span>
+            </td>
+          </ng-container>
+
+          <!-- Estado Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let lead">
+              <mat-form-field appearance="outline" class="status-select">
+                <mat-select [(value)]="lead.status" 
+                            (selectionChange)="updateLeadStatus(lead, $event.value)"
+                            [ngClass]="getStatusClass(lead.status)">
+                  <mat-option value="new">
+                    <mat-icon class="status-icon new">fiber_new</mat-icon>
+                    Nuevo
+                  </mat-option>
+                  <mat-option value="contacted">
+                    <mat-icon class="status-icon contacted">phone</mat-icon>
+                    Contactado
+                  </mat-option>
+                  <mat-option value="converted">
+                    <mat-icon class="status-icon converted">check_circle</mat-icon>
+                    Convertido
+                  </mat-option>
+                  <mat-option value="rejected">
+                    <mat-icon class="status-icon rejected">cancel</mat-icon>
+                    Rechazado
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let lead">
+              <button mat-icon-button 
+                      [matMenuTriggerFor]="menu" 
+                      [matTooltip]="'Más opciones'">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEmail(lead.email)">
+                  <mat-icon>email</mat-icon>
+                  <span>Enviar email</span>
+                </button>
+                <button mat-menu-item *ngIf="lead.phone" (click)="callPhone(lead.phone)">
+                  <mat-icon>phone</mat-icon>
+                  <span>Llamar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="!isLoading && filteredLeads.length === 0" class="no-data-container">
+          <mat-icon>inbox</mat-icon>
+          <p>No hay leads para mostrar</p>
+          <p class="subtitle">Los leads capturados aparecerán aquí</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

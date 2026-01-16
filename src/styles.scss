@@ -48,3 +48,15 @@ a { color: var(--brand-primary); }
 
 /* Titulares en cards */
 mat-card-title { font-size: 25px !important; }
+/* Snackbar personalizado */
+.success-snackbar {
+  background: #48bb78 !important;
+  color: white !important;
+  font-weight: 500;
+}
+
+.error-snackbar {
+  background: #f56565 !important;
+  color: white !important;
+  font-weight: 500;
+}

@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "MiTurno - Sistema de Gestión de Turnos",
+    "short_name": "MiTurno",
     "icons": [
         {
             "src": "android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#667eea",
+    "background_color": "#667eea",
     "display": "standalone"
 }

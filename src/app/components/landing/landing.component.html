@@ -1,0 +1,206 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">
+        Gestiona tu negocio con <span class="highlight">MiTurno</span>
+      </h1>
+      <p class="hero-subtitle">
+        La plataforma todo-en-uno para peluquerías, barberías, salones de belleza y spas. 
+        Ahorra tiempo, reduce ausencias y aumenta tus ingresos.
+      </p>
+      <div class="hero-buttons">
+        <button mat-raised-button color="primary" class="cta-primary" (click)="scrollToContact()">
+          <mat-icon>rocket_launch</mat-icon>
+          Solicitar Información
+        </button>
+      </div>
+      <p class="hero-note">
+        <mat-icon>check_circle</mat-icon>
+        Sin tarjeta de crédito • Configuración en 5 minutos
+      </p>
+    </div>
+    <div class="hero-image">
+      <div class="hero-placeholder">
+        <mat-icon class="hero-icon">event_available</mat-icon>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits-section">
+  <div class="container">
+    <h2 class="section-title">¿Por qué elegir MiTurno?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let benefit of benefits">
+        <div class="benefit-number">{{ benefit.number }}</div>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <h2 class="section-title">Todas las herramientas que necesitas</h2>
+    <p class="section-subtitle">
+      Una solución completa para llevar tu negocio al siguiente nivel
+    </p>
+    <div class="features-grid">
+      <mat-card class="feature-card" *ngFor="let feature of features">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">{{ feature.icon }}</mat-icon>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<!-- How it Works Section -->
+<section class="how-it-works-section">
+  <div class="container">
+    <h2 class="section-title">Cómo funciona</h2>
+    <p class="section-subtitle">
+      Empieza a recibir turnos online en 3 simples pasos
+    </p>
+    <div class="steps-grid">
+      <div class="step-card" *ngFor="let step of howItWorks">
+        <div class="step-icon-wrapper">
+          <mat-icon class="step-icon">{{ step.icon }}</mat-icon>
+          <div class="step-number">{{ step.step }}</div>
+        </div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <mat-card class="contact-card">
+      <mat-card-content>
+        <div class="contact-content">
+          <div class="contact-text">
+            <h2>¿Listo para comenzar?</h2>
+            <p>
+              Únete a cientos de negocios que ya confían en nosotros para gestionar sus turnos.
+              Contáctanos y te ayudaremos a configurar tu cuenta.
+            </p>
+            <div class="contact-info">
+              <div class="contact-item">
+                <mat-icon>email</mat-icon>
+                <span>contacto&#64;miturno.com</span>
+              </div>
+              <div class="contact-item">
+                <mat-icon>phone</mat-icon>
+                <span>+595 981 123 456</span>
+              </div>
+            </div>
+          </div>
+          <div class="contact-form">
+            <h3>Solicita una demostración</h3>
+            
+            <div *ngIf="submitSuccess" class="success-message">
+              <mat-icon>check_circle</mat-icon>
+              <p>¡Gracias! Te contactaremos pronto.</p>
+            </div>
+
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre del negocio</mat-label>
+                <input matInput 
+                       formControlName="business_name"
+                       placeholder="Mi Barbería"
+                       required>
+                <mat-error *ngIf="contactForm.get('business_name')?.invalid">
+                  {{ getErrorMessage('business_name') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput 
+                       type="email"
+                       formControlName="email"
+                       placeholder="tu&#64;email.com"
+                       required>
+                <mat-error *ngIf="contactForm.get('email')?.invalid">
+                  {{ getErrorMessage('email') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Teléfono</mat-label>
+                <input matInput 
+                       type="tel"
+                       formControlName="phone"
+                       placeholder="+595 981 123456">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Mensaje</mat-label>
+                <textarea matInput 
+                          rows="4"
+                          formControlName="message"
+                          placeholder="Cuéntanos sobre tu negocio"></textarea>
+              </mat-form-field>
+
+              <button mat-raised-button 
+                      color="primary" 
+                      class="submit-button" 
+                      type="submit"
+                      [disabled]="isSubmitting">
+                <mat-icon>{{ isSubmitting ? 'hourglass_empty' : 'send' }}</mat-icon>
+                {{ isSubmitting ? 'Enviando...' : 'Enviar Solicitud' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>MiTurno</h3>
+        <p>La mejor solución para gestionar turnos online</p>
+      </div>
+      <div class="footer-section">
+        <h4>Producto</h4>
+        <ul>
+          <li><a href="#features">Características</a></li>
+          <li><a href="#contact">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Política de Privacidad</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Síguenos</h4>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><mat-icon>facebook</mat-icon></a>
+          <a href="#" aria-label="Instagram"><mat-icon>camera_alt</mat-icon></a>
+          <a href="#" aria-label="Twitter"><mat-icon>tag</mat-icon></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MiTurno. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

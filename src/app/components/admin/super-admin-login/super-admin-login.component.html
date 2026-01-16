@@ -1,0 +1,52 @@
+<div class="super-admin-login-container">
+  <div class="login-card">
+    <div class="header">
+      <div class="logo">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+      <h1>Super Admin</h1>
+      <p>Panel de Administración MiTurno</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput 
+               type="email" 
+               [(ngModel)]="email" 
+               name="email"
+               required
+               autocomplete="username">
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput 
+               type="password" 
+               [(ngModel)]="password" 
+               name="password"
+               required
+               autocomplete="current-password">
+        <mat-icon matPrefix>lock</mat-icon>
+      </mat-form-field>
+
+      <button mat-raised-button 
+              color="primary" 
+              type="submit" 
+              class="submit-btn"
+              [disabled]="isLoading">
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+      </button>
+    </form>
+
+    <div class="footer">
+      <p>Acceso exclusivo para administradores del sistema</p>
+      <a mat-button routerLink="/" color="accent">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al inicio
+      </a>
+    </div>
+  </div>
+</div>

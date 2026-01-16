@@ -17,15 +17,27 @@ export class TenantService {
    * Detecta el subdomain de la URL actual
    * Ejemplos:
    * - goku.localhost:4200 → "goku"
-   * - localhost:4200 → "goku" (auto-asignado para desarrollo)
+   * - localhost:4200?tenant=mi-barberia → "mi-barberia"
    * - goku.mipeluqueria.com → "goku"
    */
   private detectSubdomain(): void {
     const hostname = window.location.hostname;
     
-    // Si es localhost o IP, usar "goku" automáticamente para desarrollo
+    // SIEMPRE verificar query params primero (tiene prioridad)
+    const urlParams = new URLSearchParams(window.location.search);
+    const tenantParam = urlParams.get('tenant');
+    
+    if (tenantParam) {
+      // Query param tiene máxima prioridad
+      this.setTenant(tenantParam);
+      console.log('🏢 Tenant detectado desde query param:', tenantParam);
+      return;
+    }
+    
+    // Si es localhost o IP, usar "goku" por defecto para desarrollo
     if (hostname === 'localhost' || hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
       this.setTenant('goku');
+      console.log('🏢 Tenant detectado (localhost por defecto): goku');
       return;
     }
 
@@ -36,12 +48,14 @@ export class TenantService {
       // No usar "www" como subdomain
       if (subdomain !== 'www') {
         this.setTenant(subdomain);
+        console.log('🏢 Tenant detectado desde subdomain:', subdomain);
         return;
       }
     }
 
     // Si no se detecta subdomain, usar "default"
     this.setTenant('default');
+    console.log('🏢 Tenant detectado (por defecto): default');
   }
 
   /**

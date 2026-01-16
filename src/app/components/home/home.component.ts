@@ -24,39 +24,39 @@ export class HomeComponent implements OnInit {
   // Default images by business type
   private readonly defaultImages: Record<string, CarouselImage[]> = {
     barbershop: [
-      { url: 'assets/img/carousel/barbershop-1.jpg', alt: 'Barbería profesional' },
-      { url: 'assets/img/carousel/barbershop-2.jpg', alt: 'Cortes modernos' },
-      { url: 'assets/img/carousel/barbershop-3.jpg', alt: 'Servicio de calidad' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Barbería profesional' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Cortes modernos' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Servicio de calidad' }
     ],
     beauty_salon: [
-      { url: 'assets/img/carousel/salon-1.jpg', alt: 'Salón de belleza' },
-      { url: 'assets/img/carousel/salon-2.jpg', alt: 'Tratamientos capilares' },
-      { url: 'assets/img/carousel/salon-3.jpg', alt: 'Estilismo profesional' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Salón de belleza' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Tratamientos capilares' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Estilismo profesional' }
     ],
     nails: [
-      { url: 'assets/img/carousel/nails-1.jpg', alt: 'Manicure profesional' },
-      { url: 'assets/img/carousel/nails-2.jpg', alt: 'Diseños de uñas' },
-      { url: 'assets/img/carousel/nails-3.jpg', alt: 'Cuidado de uñas' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Manicure profesional' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Diseños de uñas' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Cuidado de uñas' }
     ],
     spa: [
-      { url: 'assets/img/carousel/spa-1.jpg', alt: 'Spa y relajación' },
-      { url: 'assets/img/carousel/spa-2.jpg', alt: 'Tratamientos faciales' },
-      { url: 'assets/img/carousel/spa-3.jpg', alt: 'Masajes terapéuticos' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Spa y relajación' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Tratamientos faciales' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Masajes terapéuticos' }
     ],
     massage: [
-      { url: 'assets/img/carousel/massage-1.jpg', alt: 'Masajes profesionales' },
-      { url: 'assets/img/carousel/massage-2.jpg', alt: 'Terapias corporales' },
-      { url: 'assets/img/carousel/massage-3.jpg', alt: 'Relajación total' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Masajes profesionales' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Terapias corporales' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Relajación total' }
     ],
     tattoo: [
-      { url: 'assets/img/carousel/tattoo-1.jpg', alt: 'Arte corporal' },
-      { url: 'assets/img/carousel/tattoo-2.jpg', alt: 'Diseños personalizados' },
-      { url: 'assets/img/carousel/tattoo-3.jpg', alt: 'Tatuajes profesionales' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Arte corporal' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Diseños personalizados' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Tatuajes profesionales' }
     ],
     other: [
-      { url: 'assets/img/carousel/default-1.jpg', alt: 'Bienvenido' },
-      { url: 'assets/img/carousel/default-2.jpg', alt: 'Nuestros servicios' },
-      { url: 'assets/img/carousel/default-3.jpg', alt: 'Reserva tu turno' }
+      { url: 'assets/img/defaults/barbershop-1.jpg', alt: 'Bienvenido' },
+      { url: 'assets/img/defaults/barbershop-2.jpg', alt: 'Nuestros servicios' },
+      { url: 'assets/img/defaults/barbershop-3.jpg', alt: 'Reserva tu turno' }
     ]
   };
 
@@ -76,10 +76,16 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     // Verificar si hay un tenant seleccionado
     const tenant = this.tenantService.getTenant();
+    const hostname = window.location.hostname;
     
-    // Si es 'default' (solo en producción sin subdomain)
-    if (tenant === 'default') {
-      // Producción: Redirigir a landing page genérica
+    // Solo redirigir a landing si:
+    // 1. Es producción (no localhost)
+    // 2. Y el tenant es 'default' o 'www' (sin subdomain específico)
+    const isProduction = hostname !== 'localhost' && hostname !== '127.0.0.1' && !/^\d+\.\d+\.\d+\.\d+$/.test(hostname);
+    const isRootDomain = tenant === 'default' || tenant === 'www';
+    
+    if (isProduction && isRootDomain) {
+      // Producción sin subdomain: Redirigir a landing page genérica
       this.router.navigate(['/landing']);
       return;
     }
