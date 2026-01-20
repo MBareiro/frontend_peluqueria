@@ -1,0 +1,217 @@
+<div class="billing-container">
+  <div class="billing-header">
+    <h1>
+      <span class="material-icons">receipt_long</span>
+      Mis Facturas
+    </h1>
+    <p class="subtitle">Gestiona tus facturas y pagos</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando facturas...</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div *ngIf="!loading">
+    
+    <!-- Resumen actual -->
+    <mat-card *ngIf="summary" class="summary-card">
+      <mat-card-header>
+        <mat-card-title>📊 Resumen del Mes Actual</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <div class="summary-label">Citas del mes</div>
+            <div class="summary-value">{{summary.currentMonth.appointments}}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Ingresos</div>
+            <div class="summary-value">{{formatCurrency(summary.currentMonth.revenue)}}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Comisión estimada ({{getCommissionPercentage()}}%)</div>
+            <div class="summary-value highlight">{{formatCurrency(summary.currentMonth.estimatedCommission)}}</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Próxima facturación</div>
+            <div class="summary-value">{{formatDate(summary.tenant.next_billing_date)}}</div>
+          </div>
+        </div>
+        
+        <div *ngIf="summary.pendingInvoice" class="pending-alert">
+          <span class="material-icons">warning</span>
+          <div>
+            <strong>Factura pendiente de pago</strong><br>
+            {{summary.pendingInvoice.invoice_number}} - Vence: {{formatDate(summary.pendingInvoice.due_date)}} - 
+            <strong>{{formatCurrency(summary.pendingInvoice.commission_amount)}}</strong>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <div class="stat-icon blue">
+          <span class="material-icons">receipt</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{stats.total_invoices}}</div>
+          <div class="stat-label">Total Facturas</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon orange">
+          <span class="material-icons">schedule</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{stats.pending_count}}</div>
+          <div class="stat-label">Pendientes</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon green">
+          <span class="material-icons">check_circle</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{stats.paid_count}}</div>
+          <div class="stat-label">Pagadas</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon red">
+          <span class="material-icons">error</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{stats.overdue_count}}</div>
+          <div class="stat-label">Vencidas</div>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card total">
+        <div class="stat-icon purple">
+          <span class="material-icons">attach_money</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{formatCurrency(stats.total_commissions)}}</div>
+          <div class="stat-label">Total Comisiones</div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Tabla de facturas -->
+    <mat-card class="table-card">
+      <mat-card-header>
+        <mat-card-title>📋 Historial de Facturas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="invoices.length === 0" class="empty-state">
+          <span class="material-icons">inbox</span>
+          <p>No hay facturas generadas aún</p>
+          <small>Las facturas se generan automáticamente cada mes</small>
+        </div>
+
+        <table *ngIf="invoices.length > 0" mat-table [dataSource]="invoices" class="invoices-table">
+          
+          <ng-container matColumnDef="invoice_number">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">confirmation_number</span> Número
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              <strong>{{invoice.invoice_number}}</strong>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="period">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">calendar_month</span> Período
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              {{formatDate(invoice.period_start)}} - {{formatDate(invoice.period_end)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total_appointments">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">event</span> Citas
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              {{invoice.total_appointments}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total_revenue">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">monetization_on</span> Ingresos
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              {{formatCurrency(invoice.total_revenue)}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="commission_amount">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">request_quote</span> Comisión
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              <strong class="commission">{{formatCurrency(invoice.commission_amount)}}</strong>
+              <small>({{(invoice.commission_rate * 100).toFixed(1)}}%)</small>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">fiber_manual_record</span> Estado
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              <mat-chip [class]="getStatusClass(invoice.status)">
+                {{getStatusLabel(invoice.status)}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="due_date">
+            <th mat-header-cell *matHeaderCellDef>
+              <span class="material-icons">event_available</span> Vencimiento
+            </th>
+            <td mat-cell *matCellDef="let invoice">
+              {{formatDate(invoice.due_date)}}
+              <div *ngIf="invoice.paid_date" class="paid-date">
+                Pagada: {{formatDate(invoice.paid_date)}}
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Información de pago -->
+    <mat-card class="payment-info-card">
+      <mat-card-header>
+        <mat-card-title>💳 Información de Pago</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Para realizar el pago de tus facturas, por favor contacta al administrador:</p>
+        <div class="contact-info">
+          <span class="material-icons">email</span>
+          <span>contacto&#64;sistema.com</span>
+        </div>
+        <p class="payment-note">
+          <span class="material-icons">info</span>
+          Las facturas se generan automáticamente el primer día de cada mes por el uso del mes anterior.
+          La comisión es del {{getCommissionPercentage()}}% sobre tus ingresos.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

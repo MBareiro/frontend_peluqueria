@@ -9,6 +9,7 @@ import { AdminListComponent } from '../../components/admin/admin-list.component'
 import { MapConfigComponent } from '../../components/admin/map-config/map-config.component';
 import { BusinessConfigComponent } from '../../components/admin/business-config/business-config.component';
 import { HomeCustomizationComponent } from '../../components/admin/home-customization/home-customization.component';
+import { MyBillingComponent } from '../../components/admin/my-billing/my-billing.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'map-config', component: MapConfigComponent },
       { path: 'business-config', component: BusinessConfigComponent },
       { path: 'home-customization', component: HomeCustomizationComponent },
+      { path: 'my-billing', component: MyBillingComponent },
     ]
   }
 ];

@@ -8,7 +8,7 @@ import { BillingInvoice, BillingStats, MarkPaidRequest } from '../models/tenant.
   providedIn: 'root'
 })
 export class BillingService {
-  private apiUrl = `${environment.apiUrl}/billing`;
+  private apiUrl = `${environment.apiUrl}/super-admin`;
 
   constructor(private http: HttpClient) {}
 
@@ -24,7 +24,7 @@ export class BillingService {
     let params: any = {};
     if (filters) {
       if (filters.status) params.status = filters.status;
-      if (filters.tenantId) params.tenantId = filters.tenantId.toString();
+      if (filters.tenantId) params.tenant_id = filters.tenantId.toString();
       if (filters.startDate) params.startDate = filters.startDate;
       if (filters.endDate) params.endDate = filters.endDate;
     }
@@ -49,7 +49,7 @@ export class BillingService {
    * Marca una factura como pagada
    */
   markAsPaid(invoiceId: number, data: MarkPaidRequest): Observable<{ success: boolean; message: string; invoice: BillingInvoice }> {
-    return this.http.post<{ success: boolean; message: string; invoice: BillingInvoice }>(
+    return this.http.put<{ success: boolean; message: string; invoice: BillingInvoice }>(
       `${this.apiUrl}/invoices/${invoiceId}/mark-paid`,
       data,
       { withCredentials: true }

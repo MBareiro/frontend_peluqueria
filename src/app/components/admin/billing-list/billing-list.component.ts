@@ -61,7 +61,20 @@ export class BillingListComponent implements OnInit {
     this.billingService.getAllInvoices(filters).subscribe({
       next: (response) => {
         this.dataSource.data = response.invoices;
-        this.stats = response.stats;
+        
+        // Mapear las estadísticas del backend al formato esperado por el frontend
+        if (response.stats) {
+          const backendStats = response.stats as any;
+          this.stats = {
+            total: backendStats.total_invoices || 0,
+            pending: backendStats.pending_count || 0,
+            paid: backendStats.paid_count || 0,
+            overdue: backendStats.overdue_count || 0,
+            totalRevenue: parseFloat(backendStats.total_revenue) || 0,
+            totalCommissions: parseFloat(backendStats.total_revenue) || 0
+          };
+        }
+        
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.loading = false;
